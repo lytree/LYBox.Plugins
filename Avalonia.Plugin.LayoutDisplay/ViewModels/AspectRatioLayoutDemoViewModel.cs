@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("AspectRatioLayout", MenuKeys.MenuKeyAspectRatioLayout)]
+
 public class AspectRatioLayoutDemoViewModel : ViewModelBase
 {
 }

@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("NumPad", MenuKeys.MenuKeyNumPad)]
+
 public class NumPadDemoViewModel
 {
     

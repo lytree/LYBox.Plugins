@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("PathPicker", MenuKeys.MenuKeyPathPicker)]
+
 public partial class PathPickerDemoViewModel : ViewModelBase
 {
     [ObservableProperty] private string? _path;

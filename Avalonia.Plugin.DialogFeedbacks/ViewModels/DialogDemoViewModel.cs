@@ -10,7 +10,7 @@ using Avalonia.Plugin.Shared.Dialogs;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("Dialog", MenuKeys.MenuKeyDialog)]
+
 public partial class DialogDemoViewModel: ObservableObject
 {
     public const string LocalHost = "LocalHost";

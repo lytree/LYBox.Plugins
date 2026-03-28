@@ -11,7 +11,7 @@ using Avalonia.Plugin.Shared.Dialogs;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("Drawer", MenuKeys.MenuKeyDrawer)]
+
 public partial class DrawerDemoViewModel : ObservableObject
 {
     public ICommand ShowDialogCommand { get; set; }

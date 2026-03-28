@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Badge", MenuKeys.MenuKeyBadge)]
+
 public partial class BadgeDemoViewModel: ViewModelBase
 {
     [ObservableProperty] private string? _text = null;

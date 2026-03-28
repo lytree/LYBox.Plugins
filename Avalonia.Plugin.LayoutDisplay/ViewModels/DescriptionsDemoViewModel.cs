@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Descriptions", MenuKeys.MenuKeyDescriptions)]
+
 public partial class DescriptionsDemoViewModel : ObservableObject
 {
     public ObservableCollection<DescriptionItemViewModel> Items { get; set; }

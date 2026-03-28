@@ -8,7 +8,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-[Menu("Breadcrumb", MenuKeys.MenuKeyBreadcrumb)]
+
 public class BreadcrumbDemoViewModel: ObservableObject
 {
     public ObservableCollection<BreadcrumbDemoItem> Items1 { get; set; } =

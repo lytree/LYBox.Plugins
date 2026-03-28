@@ -7,7 +7,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("PinCode", MenuKeys.MenuKeyPinCode)]
+
 public partial class PinCodeDemoViewModel: ObservableObject
 {
     public ICommand CompleteCommand { get; set; }

@@ -6,7 +6,7 @@ using Avalonia.Layout;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("ElasticWrapPanel", MenuKeys.MenuKeyElasticWrapPanel)]
+
 public partial class ElasticWrapPanelDemoViewModel : ObservableObject
 {
     [ObservableProperty] private Orientation _selectedOrientation = Orientation.Horizontal;

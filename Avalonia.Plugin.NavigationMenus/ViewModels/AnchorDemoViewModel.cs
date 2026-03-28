@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-[Menu("Anchor", MenuKeys.MenuKeyAnchor)]
+
 public partial class AnchorDemoViewModel : ObservableObject
 {
     public List<AnchorItemViewModel> AnchorItems { get; } = new()

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("TagInput", MenuKeys.MenuKeyTagInput)]
+
 public class TagInputDemoViewModel: ViewModelBase
 {
     private ObservableCollection<string> _tags = new () ;

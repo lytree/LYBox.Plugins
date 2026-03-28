@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("NumberDisplayer", MenuKeys.MenuKeyNumberDisplayer)]
+
 public partial class NumberDisplayerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private int _value;

@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("ScrollToButton", MenuKeys.MenuKeyScrollToButton)]
+
 public class ScrollToButtonDemoViewModel: ObservableObject
 {
     public ObservableCollection<string> Items { get; set; }

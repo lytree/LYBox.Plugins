@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("NumericUpDown", MenuKeys.MenuKeyNumericUpDown)]
+
 public partial class NumericUpDownDemoViewModel : ObservableObject
 {
 

@@ -8,7 +8,7 @@ using WindowNotificationManager = Ursa.Controls.WindowNotificationManager;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("Notification", MenuKeys.MenuKeyNotification)]
+
 public partial class NotificationDemoViewModel : ObservableObject
 {
     public WindowNotificationManager? NotificationManager { get; set; }

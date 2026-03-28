@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-[Menu("TimeBox", MenuKeys.MenuKeyTimeBox)]
+
 public partial class TimeBoxDemoViewModel : ObservableObject
 {
     [ObservableProperty] private TimeSpan? _timeSpan;

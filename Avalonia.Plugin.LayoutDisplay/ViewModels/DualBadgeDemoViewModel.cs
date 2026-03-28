@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("DualBadge", MenuKeys.MenuKeyDualBadge)]
+
 public class DualBadgeDemoViewModel : ViewModelBase
 {
 }

@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("IPv4Box", MenuKeys.MenuKeyIpBox)]
+
 public partial class IPv4BoxDemoViewModel: ObservableObject
 {
     [ObservableProperty] private IPAddress? _address;

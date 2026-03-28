@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Banner", MenuKeys.MenuKeyBanner)]
+
 public partial class BannerDemoViewModel : ViewModelBase
 {
     private string? _oldTitle = string.Empty;

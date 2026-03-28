@@ -10,7 +10,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-[Menu("Pagination", MenuKeys.MenuKeyPagination)]
+
 public class PaginationDemoViewModel : ViewModelBase
 {
     public AvaloniaList<int> PageSizes { get; set; } = new() { 10, 20, 50, 100 };

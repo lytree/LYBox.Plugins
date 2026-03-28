@@ -12,7 +12,7 @@ using Avalonia.Layout;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Enum Selector", MenuKeys.MenuKeyEnumSelector)]
+
 public partial class EnumSelectorDemoViewModel : ObservableObject
 {
     [ObservableProperty] private Type? _selectedType;

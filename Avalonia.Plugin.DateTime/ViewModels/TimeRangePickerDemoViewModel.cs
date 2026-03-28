@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-[Menu("TimeRangePicker", MenuKeys.MenuKeyTimeRangePicker)]
+
 public partial class TimeRangePickerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private TimeSpan? _startTime;

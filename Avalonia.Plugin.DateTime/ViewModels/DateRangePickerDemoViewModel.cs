@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-[Menu("DateRangePicker", MenuKeys.MenuKeyDateRangePicker)]
+
 public partial class DateRangePickerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private System.DateTime? _startDate;

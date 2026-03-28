@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("AutoCompleteBox", MenuKeys.MenuKeyAutoCompleteBox)]
+
 public class AutoCompleteBoxDemoViewModel : ObservableObject
 {
     public AutoCompleteBoxDemoViewModel()

@@ -5,7 +5,7 @@ using Avalonia.Input;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("KeyGestureInput", MenuKeys.MenuKeyKeyGestureInput)]
+
 public class KeyGestureInputDemoViewModel: ObservableObject
 {
     public List<Key> AcceptableKeys { get; set; } = new List<Key>()

@@ -8,7 +8,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-[Menu("ToolBar", MenuKeys.MenuKeyToolBar)]
+
 public partial class ToolBarDemoViewModel : ObservableObject
 {
     public ObservableCollection<ToolBarItemViewModel> Items { get; set; }

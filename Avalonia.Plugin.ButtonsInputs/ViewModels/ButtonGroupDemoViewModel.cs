@@ -7,7 +7,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Button Group", MenuKeys.MenuKeyButtonGroup)]
+
 public class ButtonGroupDemoViewModel: ViewModelBase
 {
     public ObservableCollection<ButtonItem> Items { get; set; } = new ()

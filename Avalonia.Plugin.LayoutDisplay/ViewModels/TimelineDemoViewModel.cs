@@ -5,7 +5,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Timeline", MenuKeys.MenuKeyTimeline)]
+
 public class TimelineDemoViewModel: ViewModelBase
 {
     public TimelineItemViewModel[] Items { get; } =

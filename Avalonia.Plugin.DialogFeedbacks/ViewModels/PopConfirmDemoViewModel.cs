@@ -8,7 +8,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("PopConfirm", MenuKeys.MenuKeyPopConfirm)]
+
 public class PopConfirmDemoViewModel : ObservableObject
 {
     public PopConfirmDemoViewModel()

@@ -27,7 +27,7 @@
             </Style>
         </StackPanel.Styles>
 
-        <TextBlock Text="{Binding #box.((models:ControlData)SelectedItem).MenuHeader}" />
+        <!--<TextBlock Text="{Binding #box.((models:ControlData)SelectedItem).MenuHeader}" />-->
         
         <u:AutoCompleteBox
             Name="box"

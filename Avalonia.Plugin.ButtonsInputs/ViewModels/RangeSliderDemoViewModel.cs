@@ -6,7 +6,7 @@ using Avalonia.Layout;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("RangeSlider", MenuKeys.MenuKeyRangeSlider)]
+
 public partial class RangeSliderDemoViewModel: ObservableObject
 {
     public ObservableCollection<Orientation> Orientations { get; set; } = new ObservableCollection<Orientation>()

@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Selection List", MenuKeys.MenuKeySelectionList)]
+
 public partial class SelectionListDemoViewModel: ObservableObject
 {
     public ObservableCollection<string> Items { get; set; }

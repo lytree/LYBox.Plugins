@@ -7,7 +7,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("Toast", MenuKeys.MenuKeyToast)]
+
 public partial class ToastDemoViewModel : ObservableObject
 {
     public WindowToastManager? ToastManager { get; set; }

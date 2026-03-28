@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("TreeComboBox", MenuKeys.MenuKeyTreeComboBox)]
+
 public partial class TreeComboBoxDemoViewModel: ObservableObject
 {
     [ObservableProperty] private TreeComboBoxItemViewModel? _selectedItem;

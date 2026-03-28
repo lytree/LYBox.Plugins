@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Rating", MenuKeys.MenuKeyRating)]
+
 public partial class RatingDemoViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _allowClear = true;

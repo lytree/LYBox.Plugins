@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("MultiComboBox", MenuKeys.MenuKeyMultiComboBox)]
+
 public class MultiComboBoxDemoViewModel: ObservableObject
 {
     public ObservableCollection<string> Items { get; set; }

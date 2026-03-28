@@ -5,16 +5,16 @@ using System.Timers;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-[Menu("Clock", MenuKeys.MenuKeyClock)]
+
 public partial class ClockDemoViewModel: ObservableObject, IDisposable
 {
     private System.Timers.Timer _timer;
     
     [ObservableProperty] 
-    private DateTimeOffset _time;
+    private DateTime _time;
     public ClockDemoViewModel()
     {
-        Time = DateTimeOffset.Now;
+        Time = DateTime.Now;
         _timer = new System.Timers.Timer(1000);
         _timer.Elapsed += TimerOnElapsed;
         _timer.Start();
@@ -22,7 +22,7 @@ public partial class ClockDemoViewModel: ObservableObject, IDisposable
 
     private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
     {
-        Time = DateTimeOffset.Now;
+        Time = DateTime.Now;
     }
 
     public void Dispose()

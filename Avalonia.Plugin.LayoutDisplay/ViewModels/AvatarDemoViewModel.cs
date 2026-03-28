@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Avatar", MenuKeys.MenuKeyAvatar)]
+
 public partial class AvatarDemoViewModel : ViewModelBase
 {
     [ObservableProperty] private string _content = "AS";

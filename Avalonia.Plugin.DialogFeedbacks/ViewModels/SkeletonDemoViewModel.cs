@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-[Menu("Skeleton", MenuKeys.MenuKeySkeleton)]
+
 public class SkeletonDemoViewModel : ViewModelBase
 {
 }

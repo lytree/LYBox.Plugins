@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Form", MenuKeys.MenuKeyForm)]
+
 public partial class FormDemoViewModel : ObservableObject
 {
     [ObservableProperty] private DataModel _model;

@@ -7,7 +7,7 @@ using Avalonia.Plugin.Shared.Models;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Multi AutoCompleteBox", MenuKeys.MenuKeyMultiAutoCompleteBox)]
+
 public class MultiAutoCompleteBoxDemoViewModel : ObservableObject
 {
     public ObservableCollection<ControlData> Items { get; set; }

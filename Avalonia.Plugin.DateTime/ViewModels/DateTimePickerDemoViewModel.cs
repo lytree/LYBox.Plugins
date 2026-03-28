@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-[Menu("DateTimePicker", MenuKeys.MenuKeyDateTimePicker)]
+
 public class DateTimePickerDemoViewModel
 {
     

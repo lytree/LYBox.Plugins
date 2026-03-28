@@ -5,7 +5,7 @@ using Ursa.Common;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-[Menu("Icon Button", MenuKeys.MenuKeyIconButton)]
+
 public partial class IconButtonDemoViewModel : ObservableObject
 {
     [ObservableProperty] private bool _isLoading;

@@ -8,7 +8,7 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-[Menu("Nav Menu", MenuKeys.MenuKeyNavMenu)]
+
 public class NavMenuDemoViewModel: ObservableObject
 {
     private MenuItem? _selectedMenuItem;

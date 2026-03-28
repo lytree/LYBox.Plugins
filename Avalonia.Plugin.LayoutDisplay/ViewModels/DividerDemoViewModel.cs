@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-[Menu("Divider", MenuKeys.MenuKeyDivider)]
+
 public class DividerDemoViewModel: ViewModelBase
 {
     
