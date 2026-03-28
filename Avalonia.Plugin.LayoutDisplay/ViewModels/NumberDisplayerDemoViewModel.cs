@@ -1,0 +1,39 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+
+namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
+
+[Menu("NumberDisplayer", MenuKeys.MenuKeyNumberDisplayer)]
+public partial class NumberDisplayerDemoViewModel: ObservableObject
+{
+    [ObservableProperty] private int _value;
+    [ObservableProperty] private long _longValue;
+    [ObservableProperty] private double _doubleValue;
+    [ObservableProperty] private DateTime _dateValue;
+    public ICommand IncreaseCommand { get; }
+    public NumberDisplayerDemoViewModel()
+    {
+        IncreaseCommand = new RelayCommand(OnChange);
+        Value = 0;
+        LongValue = 0L;
+        DoubleValue = 0d;
+        DateValue = DateTime.Now;
+    }
+
+    private void OnChange()
+    {
+        Random r = new Random();
+        Value = r.Next(int.MaxValue);
+        LongValue = ((long)r.Next(int.MaxValue)) * 1000 + r.Next(1000);
+        DoubleValue = r.NextDouble() * 100000;
+        DateValue = DateTime.Today.AddDays(r.Next(1000));
+    }
+}
+
+
+
+
+

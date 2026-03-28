@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Avalonia.Plugin.Shared\Avalonia.Plugin.Shared.csproj" />
+    <ProjectReference Include="..\..\Avalonia.UI\Avalonia.UI.csproj" />
+  </ItemGroup>
+
+</Project>
