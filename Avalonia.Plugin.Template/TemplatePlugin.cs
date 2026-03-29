@@ -1,3 +1,5 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.ViewModels;
 using System.Collections.Generic;
 
 
@@ -7,6 +9,14 @@ public class TemplatePlugin : IPlugin
 {
     public string Name => "Template Plugin";
     public string Version => "1.0.0";
+
+    public string Author => throw new NotImplementedException();
+
+    public string Description => throw new NotImplementedException();
+
+    public IEnumerable<string> Dependencies => throw new NotImplementedException();
+
+    public string PluginId => throw new NotImplementedException();
 
     public void Initialize()
     {
@@ -25,6 +35,11 @@ public class TemplatePlugin : IPlugin
         var menuItems = new List<(string? ParentKey, MenuItemViewModel MenuItem)>();
         // 添加菜单项
         return menuItems;
+    }
+
+    IEnumerable<(string? ParentKey, MenuItemViewModel MenuItem)> IPlugin.GetMenuItems()
+    {
+        throw new NotImplementedException();
     }
 }
 
