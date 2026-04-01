@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.LayoutDisplay.ViewModels;
 using Avalonia.Plugin.Shared.ViewModels;
-using System.Reflection;
 
 namespace Avalonia.Plugin.LayoutDisplay;
 
-public class LayoutDisplayPlugin : IPlugin
+public  partial  class LayoutDisplayPlugin : IPluginMetadata
 {
     public string Name => "Layout & Display Plugin";
     public string Version => "1.0.0";
@@ -81,10 +79,7 @@ public class LayoutDisplayPlugin : IPlugin
         return menuItems;
     }
 
-    public Assembly GetAssembly()
-    {
-        throw new NotImplementedException();
-    }
+
 }
 
 

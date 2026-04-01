@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.DateTimeControls.ViewModels;
 using Avalonia.Plugin.Shared.ViewModels;
-using System.Reflection;
 
 namespace Avalonia.Plugin.DateTimeControls;
 
-public class DateTimePlugin : IPlugin
+public  partial  class DateTimePlugin : IPluginMetadata
 {
     public string Name => "Date & Time Plugin";
     public string Version => "1.0.0";
@@ -63,10 +61,7 @@ public class DateTimePlugin : IPlugin
         return menuItems;
     }
 
-    public Assembly GetAssembly()
-    {
-        throw new NotImplementedException();
-    }
+
 }
 
 

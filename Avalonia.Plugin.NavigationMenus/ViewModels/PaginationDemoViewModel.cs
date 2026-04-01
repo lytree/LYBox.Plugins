@@ -1,8 +1,4 @@
-using System;
-using System.Collections.ObjectModel;
 using Avalonia.Plugin.Shared;
-using Avalonia.Plugin.Shared.Attributes;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia.Collections;

@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.NavigationMenus.ViewModels;
 using Avalonia.Plugin.Shared.ViewModels;
-using System.Reflection;
 
 namespace Avalonia.Plugin.NavigationMenus;
 
-public class NavigationMenusPlugin : IPlugin
+public  partial  class NavigationMenusPlugin : IPluginMetadata
 {
     public string Name => "Navigation & Menus Plugin";
     public string Version => "1.0.0";
@@ -59,10 +57,7 @@ public class NavigationMenusPlugin : IPlugin
         return menuItems;
     }
 
-    public Assembly GetAssembly()
-    {
-        throw new NotImplementedException();
-    }
+
 }
 
 

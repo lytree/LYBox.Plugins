@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using Avalonia.Animation;
@@ -12,7 +12,9 @@ using Avalonia.Layout;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("EnumSelector")]
+[Menu("Enum Selector", "EnumSelector", "ButtonsInputs")]
+[ViewMap(typeof(EnumSelectorDemo))]
 public partial class EnumSelectorDemoViewModel : ObservableObject
 {
     [ObservableProperty] private Type? _selectedType;

@@ -1,11 +1,13 @@
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Net;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("IpBox")]
+[Menu("IPv4Box", "IpBox", "ButtonsInputs")]
+[ViewMap(typeof(IPv4BoxDemo))]
 public partial class IPv4BoxDemoViewModel: ObservableObject
 {
     [ObservableProperty] private IPAddress? _address;

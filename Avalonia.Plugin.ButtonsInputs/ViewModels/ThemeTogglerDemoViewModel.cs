@@ -1,12 +1,11 @@
-using System;
-using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
-using CommunityToolkit.Mvvm.ComponentModel;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("ThemeToggler")]
+[Menu("Theme Toggler", "ThemeToggler", "ButtonsInputs")]
+[ViewMap(typeof(ThemeTogglerDemo))]
 public class ThemeTogglerDemoViewModel
 {
     

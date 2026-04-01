@@ -1,5 +1,5 @@
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Layout;
 using CommunityToolkit.Mvvm.Input;
@@ -7,7 +7,9 @@ using System.Globalization;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("NumericUpDown")]
+[Menu("Numeric UpDown", "NumericUpDown", "ButtonsInputs")]
+[ViewMap(typeof(NumericUpDownDemo))]
 public partial class NumericUpDownDemoViewModel : ObservableObject
 {
 

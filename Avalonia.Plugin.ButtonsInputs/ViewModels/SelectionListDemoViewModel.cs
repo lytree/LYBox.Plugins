@@ -1,11 +1,13 @@
 using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("SelectionList")]
+[Menu("Selection List", "SelectionList", "ButtonsInputs")]
+[ViewMap(typeof(SelectionListDemo))]
 public partial class SelectionListDemoViewModel: ObservableObject
 {
     public ObservableCollection<string> Items { get; set; }

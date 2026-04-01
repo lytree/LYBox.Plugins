@@ -1,12 +1,10 @@
-using System.Collections.Generic;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.DialogFeedbacks.ViewModels;
 using Avalonia.Plugin.Shared.ViewModels;
-using System.Reflection;
 
 namespace Avalonia.Plugin.DialogFeedbacks;
 
-public class DialogFeedbacksPlugin : IPlugin
+public  partial  class DialogFeedbacksPlugin : IPluginMetadata
 {
     public string Name => "Dialog & Feedbacks Plugin";
     public string Version => "1.0.0";
@@ -65,10 +63,7 @@ public class DialogFeedbacksPlugin : IPlugin
         return menuItems;
     }
 
-    public Assembly GetAssembly()
-    {
-        throw new NotImplementedException();
-    }
+
 }
 
 

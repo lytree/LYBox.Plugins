@@ -1,13 +1,15 @@
 using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("MultiComboBox")]
+[Menu("MultiComboBox", "MultiComboBox", "ButtonsInputs")]
+[ViewMap(typeof(MultiComboBoxDemo))]
 public class MultiComboBoxDemoViewModel: ObservableObject
 {
     public ObservableCollection<string> Items { get; set; }

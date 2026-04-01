@@ -1,10 +1,13 @@
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("Rating")]
+[Menu("Rating", "Rating", "ButtonsInputs")]
+[ViewMap(typeof(RatingDemo))]
 public partial class RatingDemoViewModel : ViewModelBase
 {
     [ObservableProperty] private bool _allowClear = true;

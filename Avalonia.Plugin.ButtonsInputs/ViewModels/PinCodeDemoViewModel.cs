@@ -1,5 +1,5 @@
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -7,7 +7,9 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("PinCode")]
+[Menu("PinCode", "PinCode", "ButtonsInputs")]
+[ViewMap(typeof(PinCodeDemo))]
 public partial class PinCodeDemoViewModel: ObservableObject
 {
     public ICommand CompleteCommand { get; set; }

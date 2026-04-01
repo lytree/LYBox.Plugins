@@ -1,13 +1,15 @@
 using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Plugin.Shared.Models;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("MultiAutoCompleteBox")]
+[Menu("Multi AutoCompleteBox", "MultiAutoCompleteBox", "ButtonsInputs")]
+[ViewMap(typeof(MultiAutoCompleteBoxDemo))]
 public class MultiAutoCompleteBoxDemoViewModel : ObservableObject
 {
     public ObservableCollection<ControlData> Items { get; set; }

@@ -1,12 +1,15 @@
 using System.Collections.ObjectModel;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
-
+[NavigationItem("Form")]
+[Menu("Form", "Form", "ButtonsInputs")]
+[ViewMap(typeof(FormDemo))]
 public partial class FormDemoViewModel : ObservableObject
 {
     [ObservableProperty] private DataModel _model;
