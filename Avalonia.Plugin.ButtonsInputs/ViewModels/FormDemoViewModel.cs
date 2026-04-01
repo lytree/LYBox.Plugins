@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.ButtonsInputs.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +11,8 @@ namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 [ViewMap(typeof(FormDemo))]
 public partial class FormDemoViewModel : ObservableObject
 {
-    [ObservableProperty] private DataModel _model;
+    [ObservableProperty] 
+    private DataModel _model;
 
     public FormDemoViewModel()
     {
@@ -113,6 +113,29 @@ public partial class FormDateRangeViewModel : ObservableObject, IFromItemViewMod
 }
 
 
+/// <summary>
+/// 表单元素接口
+/// </summary>
+public interface IFormElement
+{
+}
+
+/// <summary>
+/// 表单组视图模型接口
+/// </summary>
+public interface IFormGroupViewModel : IFormElement
+{
+    string? Title { get; set; }
+    ObservableCollection<IFromItemViewModel> Items { get; set; }
+}
+
+/// <summary>
+/// 表单项视图模型接口
+/// </summary>
+public interface IFromItemViewModel : IFormElement
+{
+    string? Label { get; set; }
+}
 
 
 
