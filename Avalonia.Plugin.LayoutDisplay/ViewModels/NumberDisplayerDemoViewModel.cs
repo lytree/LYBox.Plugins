@@ -1,10 +1,15 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.LayoutDisplay.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-
+[NavigationItem("KeyNumberDisplayer")]
+[Menu("Number Displayer", "KeyNumberDisplayer", "Layout & Display", Status = "Updated")]
+[ViewMap(typeof(NumberDisplayerDemo))]
 public partial class NumberDisplayerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private int _value;

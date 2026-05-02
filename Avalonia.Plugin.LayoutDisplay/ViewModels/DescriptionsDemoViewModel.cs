@@ -1,9 +1,14 @@
 using System.Collections.ObjectModel;
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.LayoutDisplay.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-
+[NavigationItem("KeyDescriptions")]
+[Menu("Descriptions", "KeyDescriptions", "Layout & Display", Status = "New")]
+[ViewMap(typeof(DescriptionsDemo))]
 public partial class DescriptionsDemoViewModel : ObservableObject
 {
     public ObservableCollection<DescriptionItemViewModel> Items { get; set; }

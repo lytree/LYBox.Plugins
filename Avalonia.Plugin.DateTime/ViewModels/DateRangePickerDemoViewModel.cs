@@ -1,8 +1,13 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DateTimeControls.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-
+[NavigationItem("KeyDateRangePicker")]
+[Menu("Date Range Picker", "KeyDateRangePicker", "Date & Time")]
+[ViewMap(typeof(DateRangePickerDemo))]
 public partial class DateRangePickerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private System.DateTime? _startDate;

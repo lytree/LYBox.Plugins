@@ -1,3 +1,6 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DialogFeedbacks.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using Avalonia.Controls;
@@ -8,7 +11,9 @@ using Avalonia.Plugin.Shared.Dialogs;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-
+[NavigationItem("KeyDialog")]
+[Menu("Dialog", "KeyDialog", "Dialog & Feedbacks")]
+[ViewMap(typeof(DialogDemo))]
 public partial class DialogDemoViewModel: ObservableObject
 {
     public const string LocalHost = "LocalHost";

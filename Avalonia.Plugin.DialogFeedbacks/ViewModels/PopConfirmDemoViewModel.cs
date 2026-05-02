@@ -1,3 +1,6 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DialogFeedbacks.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using Avalonia.Controls.Notifications;
@@ -6,8 +9,10 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-
-public class PopConfirmDemoViewModel : ObservableObject
+[NavigationItem("KeyPopConfirm")]
+[Menu("PopConfirm", "KeyPopConfirm", "Dialog & Feedbacks")]
+[ViewMap(typeof(PopConfirmDemo))]
+public partial class PopConfirmDemoViewModel : ObservableObject
 {
     public PopConfirmDemoViewModel()
     {

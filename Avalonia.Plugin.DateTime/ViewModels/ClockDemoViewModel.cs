@@ -1,9 +1,14 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DateTimeControls.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Timers;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-
+[NavigationItem("KeyClock")]
+[Menu("Clock", "KeyClock", "Date & Time")]
+[ViewMap(typeof(ClockDemo))]
 public partial class ClockDemoViewModel: ObservableObject, IDisposable
 {
     private System.Timers.Timer _timer;

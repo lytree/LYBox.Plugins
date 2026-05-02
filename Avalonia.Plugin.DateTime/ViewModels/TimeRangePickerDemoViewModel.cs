@@ -1,8 +1,13 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DateTimeControls.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-
+[NavigationItem("KeyTimeRangePicker")]
+[Menu("Time Range Picker", "KeyTimeRangePicker", "Date & Time")]
+[ViewMap(typeof(TimeRangePickerDemo))]
 public partial class TimeRangePickerDemoViewModel: ObservableObject
 {
     [ObservableProperty] private TimeSpan? _startTime;

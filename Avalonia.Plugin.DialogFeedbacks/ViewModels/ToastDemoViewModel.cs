@@ -1,3 +1,6 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DialogFeedbacks.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Input;
@@ -5,7 +8,9 @@ using Ursa.Controls;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-
+[NavigationItem("KeyToast")]
+[Menu("Toast", "KeyToast", "Dialog & Feedbacks")]
+[ViewMap(typeof(ToastDemo))]
 public partial class ToastDemoViewModel : ObservableObject
 {
     public WindowToastManager? ToastManager { get; set; }

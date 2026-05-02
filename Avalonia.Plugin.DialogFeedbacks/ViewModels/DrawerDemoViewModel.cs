@@ -1,3 +1,6 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DialogFeedbacks.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -9,7 +12,9 @@ using Avalonia.Plugin.Shared.Dialogs;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-
+[NavigationItem("KeyDrawer")]
+[Menu("Drawer", "KeyDrawer", "Dialog & Feedbacks")]
+[ViewMap(typeof(DrawerDemo))]
 public partial class DrawerDemoViewModel : ObservableObject
 {
     public ICommand ShowDialogCommand { get; set; }

@@ -1,10 +1,15 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.LayoutDisplay.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-
+[NavigationItem("KeyElasticWrapPanel")]
+[Menu("ElasticWrapPanel", "KeyElasticWrapPanel", "Layout & Display")]
+[ViewMap(typeof(ElasticWrapPanelDemo))]
 public partial class ElasticWrapPanelDemoViewModel : ObservableObject
 {
     [ObservableProperty] private Orientation _selectedOrientation = Orientation.Horizontal;

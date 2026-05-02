@@ -1,26 +1,19 @@
 using Avalonia.Plugin.Shared;
-
+using Avalonia.Plugin.Shared.Attributes;
 
 namespace Avalonia.Plugin.Template;
 
-public class TemplatePlugin : IPluginMetadata
+[GenerateMetadata]
+public partial class TemplatePlugin : IPluginMetadata
 {
     public string Name => "Template Plugin";
     public string Version => "1.0.0";
-
-    public string Author => throw new NotImplementedException();
-
-    public string Description => throw new NotImplementedException();
-
-    public IEnumerable<string> Dependencies => throw new NotImplementedException();
-
-    public string PluginId => throw new NotImplementedException();
+    public string Author => "AvaloniaTemplate";
+    public string Description => "A minimal template plugin demonstrating the plugin system with ViewModel-View binding and menu integration.";
+    public IEnumerable<string> Dependencies => [];
+    public string PluginId => "Avalonia.Plugin.Template";
 
     public void Initialize()
     {
-        // 插件初始化逻辑
     }
 }
-
-
-

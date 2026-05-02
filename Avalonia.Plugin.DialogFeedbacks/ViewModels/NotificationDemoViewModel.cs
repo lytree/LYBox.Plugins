@@ -1,3 +1,6 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DialogFeedbacks.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Input;
@@ -6,7 +9,9 @@ using WindowNotificationManager = Ursa.Controls.WindowNotificationManager;
 
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
-
+[NavigationItem("KeyNotification")]
+[Menu("Notification", "KeyNotification", "Dialog & Feedbacks")]
+[ViewMap(typeof(NotificationDemo))]
 public partial class NotificationDemoViewModel : ObservableObject
 {
     public WindowNotificationManager? NotificationManager { get; set; }

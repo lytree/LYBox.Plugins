@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Debug Plugin - Launcher": {
+      "commandName": "Executable",
+      "executablePath": "$(SolutionDir)src\\launcher\\Avalonia.Launcher.Desktop\\bin\\Debug\\net10.0\\Avalonia.Launcher.Desktop.exe",
+      "environmentVariables": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "$(TargetDir)"
+      }
+    }
+  }
+}

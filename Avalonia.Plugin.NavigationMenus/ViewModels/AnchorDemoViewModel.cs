@@ -1,9 +1,14 @@
 using System.Collections.ObjectModel;
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.NavigationMenus.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
-
+[NavigationItem("Anchor")]
+[Menu("Anchor", "Anchor", "Navigation & Menus")]
+[ViewMap(typeof(AnchorDemo))]
 public partial class AnchorDemoViewModel : ObservableObject
 {
     public List<AnchorItemViewModel> AnchorItems { get; } = new()

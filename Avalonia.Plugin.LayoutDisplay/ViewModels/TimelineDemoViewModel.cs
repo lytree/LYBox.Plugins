@@ -1,11 +1,15 @@
 using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.LayoutDisplay.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Ursa.Controls;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-
-public class TimelineDemoViewModel: ViewModelBase
+[NavigationItem("KeyTimeline")]
+[Menu("Timeline", "KeyTimeline", "Layout & Display")]
+[ViewMap(typeof(TimelineDemo))]
+public partial class TimelineDemoViewModel: ViewModelBase
 {
     public TimelineItemViewModel[] Items { get; } =
     {

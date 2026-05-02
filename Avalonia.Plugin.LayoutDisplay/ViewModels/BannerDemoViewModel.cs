@@ -1,9 +1,13 @@
 using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.LayoutDisplay.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
-
+[NavigationItem("KeyBanner")]
+[Menu("Banner", "KeyBanner", "Layout & Display")]
+[ViewMap(typeof(BannerDemo))]
 public partial class BannerDemoViewModel : ViewModelBase
 {
     private string? _oldTitle = string.Empty;

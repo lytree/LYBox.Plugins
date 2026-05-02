@@ -1,9 +1,14 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.DateTimeControls.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
-
+[NavigationItem("KeyTimeBox")]
+[Menu("Time Box", "KeyTimeBox", "Date & Time")]
+[ViewMap(typeof(TimeBoxDemo))]
 public partial class TimeBoxDemoViewModel : ObservableObject
 {
     [ObservableProperty] private TimeSpan? _timeSpan;
