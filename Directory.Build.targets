@@ -1,0 +1,4 @@
+<Project>
+  <Import Project="..\src\Avalonia.Plugin.Shared\buildTransitive\Avalonia.Plugin.Shared.targets"
+          Condition="Exists('..\src\Avalonia.Plugin.Shared\buildTransitive\Avalonia.Plugin.Shared.targets')" />
+</Project>

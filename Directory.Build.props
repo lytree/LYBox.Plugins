@@ -7,9 +7,7 @@
         <ErrorOnDuplicatePublishOutputFiles>False</ErrorOnDuplicatePublishOutputFiles>
         <CheckEolWorkloads>false</CheckEolWorkloads>
     </PropertyGroup>
-    <!-- <PropertyGroup>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 
-        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
-    </PropertyGroup> -->
+    <Import Project="..\src\Avalonia.Plugin.Shared\buildTransitive\Avalonia.Plugin.Shared.props"
+            Condition="Exists('..\src\Avalonia.Plugin.Shared\buildTransitive\Avalonia.Plugin.Shared.props')" />
 </Project>
