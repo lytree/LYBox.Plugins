@@ -1,30 +1,21 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
 
-public class TdlMessageExporterService
+public partial class TdlService
 {
-    private readonly TdlClientManager _clientManager;
-    private readonly ILogger _logger;
-
-    public TdlMessageExporterService(TdlClientManager clientManager, ILogger<TdlMessageExporterService> logger)
+    public async Task ExportMessagesAsync(string channelLink, string? outputPath, bool exportComments, int limit, CancellationToken ct = default)
     {
-        _clientManager = clientManager;
-        _logger = logger;
-    }
+        await EnsureReadyAsync();
 
-    public async Task ExecuteAsync(string channelLink, string? outputPath, bool exportComments, int limit, CancellationToken ct = default)
-    {
-        await _clientManager.InitializeAsync();
-        await _clientManager.WaitReadyAsync();
+        var client = Client;
 
-        var client = _clientManager.Client;
-
-        long chatId = await ResolveChatIdAsync(client, channelLink);
+        long chatId = await ResolveChatIdAsync(channelLink);
         if (chatId == 0)
         {
             _logger.LogError("无法解析频道: {Link}", channelLink);
@@ -41,7 +32,7 @@ public class TdlMessageExporterService
             outputPath = Path.Combine(saveDir, $"{chatId}.json");
         }
 
-        var exportResult = await ExportChannelMessages(client, chatId, exportComments, limit);
+        var exportResult = await ExportChannelMessages(client, chatId, exportComments, limit, ct);
 
         var jsonOptions = new JsonSerializerOptions
         {
@@ -61,7 +52,7 @@ public class TdlMessageExporterService
         _logger.LogInformation("文件已保存到: {Path}", outputPath);
     }
 
-    async Task<ChannelExport> ExportChannelMessages(TdClient client, long chatId, bool exportComments, int limit)
+    async Task<ChannelExport> ExportChannelMessages(TdClient client, long chatId, bool exportComments, int limit, CancellationToken ct)
     {
         long fromMessageId = 0;
         bool hasMore = true;
@@ -72,6 +63,7 @@ public class TdlMessageExporterService
 
         while (hasMore)
         {
+            ct.ThrowIfCancellationRequested();
             try
             {
                 var history = await client.GetChatHistoryAsync(chatId, fromMessageId, 0, 100, false);
@@ -92,18 +84,18 @@ public class TdlMessageExporterService
                     hasMore = false;
                 }
 
-                await Task.Delay(300);
+                await Task.Delay(300, ct);
             }
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
                 _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
-                await Task.Delay(retryAfter * 1000);
+                await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "拉取消息时发生异常");
-                await Task.Delay(5000);
+                await Task.Delay(5000, ct);
             }
         }
 
@@ -125,6 +117,7 @@ public class TdlMessageExporterService
 
         foreach (var group in groups)
         {
+            ct.ThrowIfCancellationRequested();
             var exportGroup = new MessageGroup
             {
                 MediaAlbumId = group.First().MediaAlbumId != 0 ? group.First().MediaAlbumId.ToString() : null,
@@ -157,7 +150,7 @@ public class TdlMessageExporterService
                         _logger.LogWarning("获取评论失败: MsgId={MsgId}, 错误: {Error}", msg.Id, ex.Error.Message);
                     }
 
-                    await Task.Delay(200);
+                    await Task.Delay(200, ct);
                 }
 
                 exportGroup.Messages.Add(msgInfo);
@@ -178,7 +171,7 @@ public class TdlMessageExporterService
             Date = DateTimeOffset.FromUnixTimeSeconds(msg.Date).DateTime,
             EditDate = msg.EditDate != 0 ? DateTimeOffset.FromUnixTimeSeconds(msg.EditDate).DateTime : null,
             Type = GetMessageType(msg.Content),
-            Text = GetText(msg.Content),
+            Text = GetExportText(msg.Content),
             Media = GetMediaInfo(msg.Content),
             ForwardInfo = msg.ForwardInfo != null ? new ForwardInfoExport
             {
@@ -305,7 +298,7 @@ public class TdlMessageExporterService
         };
     }
 
-    string? GetText(TdApi.MessageContent content)
+    string? GetExportText(TdApi.MessageContent content)
     {
         return content switch
         {
@@ -318,89 +311,6 @@ public class TdlMessageExporterService
             TdApi.MessageContent.MessageAnimation ani => ani.Caption?.Text,
             _ => null
         };
-    }
-
-    List<List<TdApi.Message>> GroupMessagesByAlbum(List<TdApi.Message> messages)
-    {
-        var result = new List<List<TdApi.Message>>();
-        if (messages.Count == 0) return result;
-
-        var currentGroup = new List<TdApi.Message> { messages[0] };
-        long currentAlbumId = messages[0].MediaAlbumId;
-
-        for (int i = 1; i < messages.Count; i++)
-        {
-            if (messages[i].MediaAlbumId != 0 && messages[i].MediaAlbumId == currentAlbumId)
-            {
-                currentGroup.Add(messages[i]);
-            }
-            else
-            {
-                result.Add(currentGroup);
-                currentGroup = [messages[i]];
-                currentAlbumId = messages[i].MediaAlbumId;
-            }
-        }
-
-        result.Add(currentGroup);
-        return result;
-    }
-
-    async Task<long> ResolveChatIdAsync(TdClient client, string? link)
-    {
-        if (string.IsNullOrWhiteSpace(link)) return 0;
-
-        try
-        {
-            var linkInfo = await client.GetMessageLinkInfoAsync(link);
-            if (linkInfo.Message != null) return linkInfo.Message.ChatId;
-        }
-        catch (TdException) { }
-
-        try
-        {
-            var username = ExtractUsername(link);
-            if (!string.IsNullOrEmpty(username))
-            {
-                var chat = await client.SearchPublicChatAsync(username);
-                if (chat != null) return chat.Id;
-            }
-        }
-        catch (TdException) { }
-
-        if (long.TryParse(link.Trim(), out long chatId)) return chatId;
-
-        return 0;
-    }
-
-    string? ExtractUsername(string input)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return null;
-        input = input.Trim();
-        if (input.StartsWith("@")) return input.Substring(1);
-        if (!input.Contains("/")) return null;
-
-        var match = Regex.Match(input,
-            @"(?:https?:\/\/)?(?:t\.me|telegram\.me)\/(?<name>[^\/\?\#]+)",
-            RegexOptions.IgnoreCase);
-
-        if (!match.Success) return null;
-        var name = match.Groups["name"].Value;
-        if (name.StartsWith("+")) return null;
-        return name;
-    }
-
-    int ParseRetryAfter(TdException ex)
-    {
-        if (ex.Error?.Message != null)
-        {
-            var match = Regex.Match(ex.Error.Message, @"(\d+)");
-            if (match.Success && int.TryParse(match.Groups[1].Value, out int seconds) && seconds > 0)
-            {
-                return Math.Min(seconds + 2, 300);
-            }
-        }
-        return 15;
     }
 }
 

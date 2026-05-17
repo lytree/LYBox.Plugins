@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -9,9 +10,13 @@ namespace Avalonia.Plugin.TDLSharp.Services;
 public class ForwardRecord
 {
     public long MessageId { get; set; }
+    public long NewMessageId { get; set; }
     public long SourceChatId { get; set; }
     public long TargetChatId { get; set; }
     public long MediaAlbumId { get; set; }
+    public string? SourceUrl { get; set; }
+
+    public string? TargetUrl { get; set; }
     public bool IsSuccess { get; set; }
     public DateTime ForwardedAt { get; set; }
     public string? ExtraData { get; set; }
@@ -53,9 +58,12 @@ public class ForwardDbContext : DbContext
     {
         modelBuilder.Entity<ForwardRecord>(entity =>
         {
-            entity.HasKey(e => e.MessageId);
+
+            entity.HasKey(_ => new { _.SourceChatId, _.MessageId });
+            entity.HasIndex(e => e.NewMessageId);
             entity.HasIndex(e => e.MediaAlbumId);
             entity.HasIndex(e => new { e.SourceChatId, e.TargetChatId });
+            entity.Property(e => e.SourceUrl).HasColumnType("TEXT");
             entity.Property(e => e.ExtraData).HasColumnType("TEXT");
         });
     }

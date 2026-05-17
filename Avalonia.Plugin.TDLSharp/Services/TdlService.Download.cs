@@ -3,25 +3,16 @@ using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
 
-public class TdlGroupMediaDownloadService
+public partial class TdlService
 {
-    private readonly TdlClientManager _clientManager;
-    private readonly ILogger _logger;
     private readonly HashSet<int> _downloadedFileIds = [];
     private readonly Dictionary<int, long> _fileIdToAlbumId = new();
 
-    public TdlGroupMediaDownloadService(TdlClientManager clientManager, ILogger<TdlGroupMediaDownloadService> logger)
+    public async Task GroupMediaDownloadAsync(string linksRaw, string? outputPath, bool includeComments, CancellationToken ct = default)
     {
-        _clientManager = clientManager;
-        _logger = logger;
-    }
+        await EnsureReadyAsync();
 
-    public async Task ExecuteAsync(string linksRaw, string? outputPath, bool includeComments, CancellationToken ct = default)
-    {
-        await _clientManager.InitializeAsync();
-        await _clientManager.WaitReadyAsync();
-
-        var client = _clientManager.Client;
+        var client = Client;
 
         if (string.IsNullOrWhiteSpace(outputPath))
         {
@@ -33,17 +24,18 @@ public class TdlGroupMediaDownloadService
 
         foreach (var link in links)
         {
+            ct.ThrowIfCancellationRequested();
             _logger.LogInformation("开始处理链接: {Link}", link);
-            await DownloadMediaFromLink(client, link, includeComments, outputPath);
+            await DownloadMediaFromLink(client, link, includeComments, outputPath, ct);
         }
 
         _logger.LogInformation("等待所有下载完成...");
-        await Task.Delay(10000);
+        await Task.Delay(10000, ct);
 
         _logger.LogInformation("全部下载完毕！已下载文件数: {Count}", _downloadedFileIds.Count);
     }
 
-    async Task DownloadMediaFromLink(TdClient client, string link, bool includeComments, string outputPath)
+    async Task DownloadMediaFromLink(TdClient client, string link, bool includeComments, string outputPath, CancellationToken ct)
     {
         try
         {
@@ -67,7 +59,7 @@ public class TdlGroupMediaDownloadService
             if (message.MediaAlbumId != 0)
             {
                 _logger.LogInformation("发现媒体组: {AlbumId}", message.MediaAlbumId);
-                totalDownloaded += await DownloadMediaGroupByAlbumId(client, chatId, message.MediaAlbumId, messageId, outputPath, messageId);
+                totalDownloaded += await DownloadMediaGroupByAlbumId(client, chatId, message.MediaAlbumId, messageId, outputPath, messageId, ct);
             }
             else
             {
@@ -84,6 +76,7 @@ public class TdlGroupMediaDownloadService
                 int commentsSkipped = 0;
                 foreach (var comment in comments)
                 {
+                    ct.ThrowIfCancellationRequested();
                     var fileId = GetFileIdFromMessage(comment);
                     if (fileId > 0)
                     {
@@ -110,7 +103,7 @@ public class TdlGroupMediaDownloadService
         }
     }
 
-    async Task<int> DownloadMediaGroupByAlbumId(TdClient client, long chatId, long mediaAlbumId, long startMessageId, string outputPath, long messageId)
+    async Task<int> DownloadMediaGroupByAlbumId(TdClient client, long chatId, long mediaAlbumId, long startMessageId, string outputPath, long messageId, CancellationToken ct)
     {
         int totalDownloaded = 0;
 
@@ -137,6 +130,7 @@ public class TdlGroupMediaDownloadService
             int backwardAttempts = 0;
             while (backwardAttempts < 5)
             {
+                ct.ThrowIfCancellationRequested();
                 try
                 {
                     var messages = await client.GetChatHistoryAsync(chatId, searchBackwardId, 0, 50, false);
@@ -156,7 +150,7 @@ public class TdlGroupMediaDownloadService
                     if (!foundMore) backwardAttempts++;
                     else backwardAttempts = 0;
 
-                    await Task.Delay(100);
+                    await Task.Delay(100, ct);
                 }
                 catch (Exception ex)
                 {
@@ -188,6 +182,7 @@ public class TdlGroupMediaDownloadService
 
             foreach (var msg in foundMessages.OrderBy(m => m.Id))
             {
+                ct.ThrowIfCancellationRequested();
                 var count = await DownloadMessageMedia(client, msg, outputPath, messageId);
                 totalDownloaded += count;
             }

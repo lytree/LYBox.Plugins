@@ -6,46 +6,58 @@ namespace Avalonia.Plugin.TDLSharp.Services;
 
 public class TdlClientManager : IDisposable
 {
+    private static readonly object _initLock = new();
+
     private TdClient? _client;
     private TdlUpdateHandler? _updateHandler;
     private readonly ManualResetEventSlim _ready = new();
     private readonly ILogger _logger;
-    private readonly string _tdlRoot;
-    private readonly string _apiId;
-    private readonly string _apiHash;
-    private readonly string _proxyServer;
-    private readonly int _proxyPort;
-    private readonly bool _enableProxy;
+    private bool _initialized;
+    private bool _disposed;
+
+    public string TdlRoot { get; }
+    public string ApiId { get; }
+    public string ApiHash { get; }
+    public string ProxyServer { get; }
+    public int ProxyPort { get; }
+    public bool EnableProxy { get; }
 
     public bool AuthNeeded => _updateHandler?.AuthNeeded ?? false;
     public bool PasswordNeeded => _updateHandler?.PasswordNeeded ?? false;
     public bool IsReady => _ready.IsSet;
-    public TdClient Client => _client ?? throw new InvalidOperationException("Client not initialized. Call InitializeAsync first.");
+    public TdClient Client => _client ?? throw new InvalidOperationException("Client not initialized. Call EnsureInitializedAsync first.");
 
     public event Func<string, Task>? AuthCodeRequested;
     public event Func<string, Task>? PasswordRequested;
     public event Func<TdApi.File, Task>? FileUpdated;
 
-    public TdlClientManager(ILogger logger, string apiId, string apiHash,
+    public TdlClientManager(ILogger<TdlClientManager> logger, string apiId, string apiHash,
         string proxyServer = "127.0.0.1", int proxyPort = 7897, bool enableProxy = true)
     {
         _logger = logger;
-        _apiId = apiId;
-        _apiHash = apiHash;
-        _proxyServer = proxyServer;
-        _proxyPort = proxyPort;
-        _enableProxy = enableProxy;
+        ApiId = apiId;
+        ApiHash = apiHash;
+        ProxyServer = proxyServer;
+        ProxyPort = proxyPort;
+        EnableProxy = enableProxy;
 
         string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        _tdlRoot = Path.Combine(userProfile, ".tdl");
-        if (!Directory.Exists(_tdlRoot))
+        TdlRoot = Path.Combine(userProfile, ".tdl");
+        if (!Directory.Exists(TdlRoot))
         {
-            Directory.CreateDirectory(_tdlRoot);
+            Directory.CreateDirectory(TdlRoot);
         }
     }
 
-    public async Task InitializeAsync()
+    public async Task EnsureInitializedAsync()
     {
+        if (_initialized) return;
+
+        lock (_initLock)
+        {
+            if (_initialized) return;
+        }
+
         _client = new TdClient();
         _client.Bindings.SetLogVerbosityLevel(TdLogLevel.Fatal);
 
@@ -55,8 +67,13 @@ public class TdlClientManager : IDisposable
 
         _client.UpdateReceived += async (_, update) =>
         {
-            await _updateHandler.ProcessUpdates(_client, update, _tdlRoot);
+            await _updateHandler.ProcessUpdates(_client, update, TdlRoot);
         };
+
+        lock (_initLock)
+        {
+            _initialized = true;
+        }
     }
 
     public async Task WaitReadyAsync()
@@ -67,7 +84,6 @@ public class TdlClientManager : IDisposable
     public async Task AuthenticateAsync(string phoneNumber)
     {
         if (_client == null) throw new InvalidOperationException("Client not initialized.");
-
         await _client.ExecuteAsync(new TdApi.SetAuthenticationPhoneNumber
         {
             PhoneNumber = phoneNumber
@@ -92,32 +108,32 @@ public class TdlClientManager : IDisposable
         return await _client.ExecuteAsync(new TdApi.GetMe());
     }
 
-    public string GetTdlRoot() => _tdlRoot;
+    public string GetTdlRoot() => TdlRoot;
 
     private async Task ConfigureTdlibParameters(TdClient client, string outputPath, ILogger cbLogger)
     {
         await client.ExecuteAsync(new TdApi.SetTdlibParameters
         {
-            ApiId = int.TryParse(_apiId, out var id) ? id : 0,
-            ApiHash = _apiHash,
+            ApiId = int.TryParse(ApiId, out var id) ? id : 0,
+            ApiHash = ApiHash,
             DeviceModel = "PC",
             SystemLanguageCode = "en",
             ApplicationVersion = "1.0.0",
-            DatabaseDirectory = Path.Combine(_tdlRoot, "db"),
-            FilesDirectory = Path.Combine(_tdlRoot, "files"),
+            DatabaseDirectory = Path.Combine(TdlRoot, "db"),
+            FilesDirectory = Path.Combine(TdlRoot, "files"),
             UseFileDatabase = true,
             UseChatInfoDatabase = true,
             UseMessageDatabase = true,
         });
 
-        if (_enableProxy)
+        if (EnableProxy)
         {
             cbLogger.LogInformation("正在尝试连接代理...");
             var proxy = await client.AddProxyAsync(
                 new TdApi.Proxy
                 {
-                    Server = _proxyServer,
-                    Port = _proxyPort,
+                    Server = ProxyServer,
+                    Port = ProxyPort,
                     Type = new TdApi.ProxyType.ProxyTypeSocks5()
                 }, true);
             await client.EnableProxyAsync(proxy.Id);
@@ -137,6 +153,9 @@ public class TdlClientManager : IDisposable
 
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         _client?.Dispose();
         _ready.Dispose();
     }

@@ -4,27 +4,17 @@ using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
 
-public class TdlClearMessageService
+public partial class TdlService
 {
-    private readonly TdlClientManager _clientManager;
-    private readonly ILogger _logger;
-
-    public TdlClearMessageService(TdlClientManager clientManager, ILogger<TdlClearMessageService> logger)
+    public async Task ClearMessagesAsync(string? channelLink, string containsText, bool silent, int limit, CancellationToken ct = default)
     {
-        _clientManager = clientManager;
-        _logger = logger;
-    }
+        await EnsureReadyAsync();
 
-    public async Task ExecuteAsync(string? channelLink, string containsText, bool silent, int limit, CancellationToken ct = default)
-    {
-        await _clientManager.InitializeAsync();
-        await _clientManager.WaitReadyAsync();
-
-        var client = _clientManager.Client;
-        var currentUser = await _clientManager.GetCurrentUserAsync();
+        var client = Client;
+        var currentUser = await GetCurrentUserAsync();
         long myId = currentUser.Id;
 
-        long chatId = await ResolveChatIdAsync(client, channelLink);
+        long chatId = await ResolveChatIdAsync(channelLink);
         if (chatId == 0)
         {
             chatId = myId;
@@ -36,11 +26,11 @@ public class TdlClearMessageService
         _logger.LogInformation("匹配内容: \"{Text}\"", containsText);
         _logger.LogInformation("删除模式: {Mode}", silent ? "静默删除" : "交互确认");
 
-        int totalDeleted = await CleanMessages(client, chatId, containsText, silent, limit);
+        int totalDeleted = await CleanMessages(client, chatId, containsText, silent, limit, ct);
         _logger.LogInformation("清理完成，共删除 {Count} 条消息", totalDeleted);
     }
 
-    async Task<int> CleanMessages(TdClient client, long chatId, string containsText, bool silent, int limit)
+    async Task<int> CleanMessages(TdClient client, long chatId, string containsText, bool silent, int limit, CancellationToken ct)
     {
         int totalDeleted = 0;
         long fromMessageId = 0;
@@ -51,6 +41,7 @@ public class TdlClearMessageService
 
         while (hasMore)
         {
+            ct.ThrowIfCancellationRequested();
             try
             {
                 var history = await client.GetChatHistoryAsync(chatId, fromMessageId, 0, 100, false);
@@ -76,18 +67,18 @@ public class TdlClearMessageService
                 }
 
                 fromMessageId = history.Messages_.Last().Id;
-                await Task.Delay(300);
+                await Task.Delay(300, ct);
             }
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
                 _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
-                await Task.Delay(retryAfter * 1000);
+                await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "扫描消息时发生异常");
-                await Task.Delay(5000);
+                await Task.Delay(5000, ct);
             }
         }
 
@@ -102,19 +93,20 @@ public class TdlClearMessageService
         int batchSize = 100;
         for (int i = 0; i < matchedMessages.Count; i += batchSize)
         {
+            ct.ThrowIfCancellationRequested();
             var batch = matchedMessages.Skip(i).Take(batchSize).Select(m => m.MsgId).ToArray();
             try
             {
                 await client.DeleteMessagesAsync(chatId, batch, revoke: true);
                 totalDeleted += batch.Length;
                 _logger.LogInformation("已删除 {Deleted}/{Total} 条消息", totalDeleted, matchedMessages.Count);
-                await Task.Delay(500);
+                await Task.Delay(500, ct);
             }
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
                 _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
-                await Task.Delay(retryAfter * 1000);
+                await Task.Delay(retryAfter * 1000, ct);
                 i -= batchSize;
             }
             catch (Exception ex)
@@ -141,62 +133,5 @@ public class TdlClearMessageService
             TdApi.MessageContent.MessageUnsupported => "This channel can't be displayed",
             _ => null
         };
-    }
-
-    async Task<long> ResolveChatIdAsync(TdClient client, string? link)
-    {
-        if (string.IsNullOrWhiteSpace(link)) return 0;
-
-        try
-        {
-            var linkInfo = await client.GetMessageLinkInfoAsync(link);
-            if (linkInfo.Message != null) return linkInfo.Message.ChatId;
-        }
-        catch (TdException) { }
-
-        try
-        {
-            var username = ExtractUsername(link);
-            if (!string.IsNullOrEmpty(username))
-            {
-                var chat = await client.SearchPublicChatAsync(username);
-                if (chat != null) return chat.Id;
-            }
-        }
-        catch (TdException) { }
-
-        if (long.TryParse(link.Trim(), out long chatId)) return chatId;
-
-        return 0;
-    }
-
-    string? ExtractUsername(string input)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return null;
-        input = input.Trim();
-        if (input.StartsWith("@")) return input.Substring(1);
-        if (!input.Contains("/")) return null;
-
-        var match = Regex.Match(input,
-            @"(?:https?:\/\/)?(?:t\.me|telegram\.me)\/(?<name>[^\/\?\#]+)",
-            RegexOptions.IgnoreCase);
-
-        if (!match.Success) return null;
-        var name = match.Groups["name"].Value;
-        if (name.StartsWith("+")) return null;
-        return name;
-    }
-
-    int ParseRetryAfter(TdException ex)
-    {
-        if (ex.Error?.Message != null)
-        {
-            var match = Regex.Match(ex.Error.Message, @"(\d+)");
-            if (match.Success && int.TryParse(match.Groups[1].Value, out int seconds) && seconds > 0)
-            {
-                return Math.Min(seconds + 2, 300);
-            }
-        }
-        return 15;
     }
 }
