@@ -17,7 +17,7 @@ public partial class GroupMediaDownloadViewModel : TdlViewModelBase
         Parameters =
         [
             ScriptParameter.Text("link", "消息链接", "Telegram消息链接 (多个用逗号分隔)", required: true),
-            ScriptParameter.Text("output", "输出目录", "下载文件保存目录", required: false),
+            ScriptParameter.Path("output", "输出目录", "下载文件保存目录"),
             ScriptParameter.Switch("includeComments", "包含评论", "是否下载评论区媒体", true),
         ]
     };
