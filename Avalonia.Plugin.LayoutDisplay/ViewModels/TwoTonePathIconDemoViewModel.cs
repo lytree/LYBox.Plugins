@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyTwoTonePathIcon")]
-[Menu("TwoTonePathIcon", "KeyTwoTonePathIcon", "Layout & Display")]
+[Menu("NAV_TwoTonePathIcon", "KeyTwoTonePathIcon", "NAV_LayoutDisplay")]
 [ViewMap(typeof(TwoTonePathIconDemo))]
 public partial class TwoTonePathIconDemoViewModel:ObservableObject
 {

@@ -5,7 +5,7 @@ using Avalonia.Plugin.DialogFeedbacks.Pages;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyLoading")]
-[Menu("Loading", "KeyLoading", "Dialog & Feedbacks")]
+[Menu("NAV_Loading", "KeyLoading", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(LoadingDemo))]
 public partial class LoadingDemoViewModel: ViewModelBase
 {

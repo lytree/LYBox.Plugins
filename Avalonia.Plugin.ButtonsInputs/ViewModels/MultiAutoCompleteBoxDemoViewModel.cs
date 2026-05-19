@@ -8,7 +8,7 @@ using Avalonia.Plugin.Shared.Models;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("MultiAutoCompleteBox")]
-[Menu("Multi AutoCompleteBox", "MultiAutoCompleteBox", "ButtonsInputs")]
+[Menu("NAV_MultiAutoCompleteBox", "MultiAutoCompleteBox", "NAV_ButtonsInputs")]
 [ViewMap(typeof(MultiAutoCompleteBoxDemo))]
 public class MultiAutoCompleteBoxDemoViewModel : ObservableObject
 {

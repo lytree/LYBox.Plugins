@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("Rating")]
-[Menu("Rating", "Rating", "ButtonsInputs")]
+[Menu("NAV_Rating", "Rating", "NAV_ButtonsInputs")]
 [ViewMap(typeof(RatingDemo))]
 public partial class RatingDemoViewModel : ViewModelBase
 {

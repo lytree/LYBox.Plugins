@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("SelectionList")]
-[Menu("Selection List", "SelectionList", "ButtonsInputs")]
+[Menu("NAV_SelectionList", "SelectionList", "NAV_ButtonsInputs")]
 [ViewMap(typeof(SelectionListDemo))]
 public partial class SelectionListDemoViewModel: ObservableObject
 {

@@ -9,7 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
 [NavigationItem("Pagination")]
-[Menu("Pagination", "Pagination", "Navigation & Menus")]
+[Menu("NAV_Pagination", "Pagination", "NAV_NavigationMenus")]
 [ViewMap(typeof(PaginationDemo))]
 public partial class PaginationDemoViewModel : ViewModelBase
 {

@@ -1,5 +1,7 @@
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.Shared.Services;
+using Avalonia.Plugin.DialogFeedbacks.Resources;
 
 namespace Avalonia.Plugin.DialogFeedbacks;
 
@@ -15,5 +17,7 @@ public partial class DialogFeedbacksPlugin : IPluginMetadata
 
     public void Initialize()
     {
+        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+            loc.RegisterResourceManager(Strings.ResourceManager);
     }
 }

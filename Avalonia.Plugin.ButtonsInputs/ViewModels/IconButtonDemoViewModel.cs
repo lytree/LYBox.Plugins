@@ -6,7 +6,7 @@ using Ursa.Common;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("IconButton")]
-[Menu("Icon Button", "IconButton", "ButtonsInputs")]
+[Menu("NAV_IconButton", "IconButton", "NAV_ButtonsInputs")]
 [ViewMap(typeof(IconButtonDemo))]
 public partial class IconButtonDemoViewModel : ObservableObject
 {

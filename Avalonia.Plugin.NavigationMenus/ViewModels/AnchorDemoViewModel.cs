@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
 [NavigationItem("Anchor")]
-[Menu("Anchor", "Anchor", "Navigation & Menus")]
+[Menu("NAV_Anchor", "Anchor", "NAV_NavigationMenus")]
 [ViewMap(typeof(AnchorDemo))]
 public partial class AnchorDemoViewModel : ObservableObject
 {

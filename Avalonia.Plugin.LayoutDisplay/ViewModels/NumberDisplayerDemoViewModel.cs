@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyNumberDisplayer")]
-[Menu("Number Displayer", "KeyNumberDisplayer", "Layout & Display", Status = "Updated")]
+[Menu("NAV_NumberDisplayer", "KeyNumberDisplayer", "NAV_LayoutDisplay", Status = "Updated")]
 [ViewMap(typeof(NumberDisplayerDemo))]
 public partial class NumberDisplayerDemoViewModel: ObservableObject
 {

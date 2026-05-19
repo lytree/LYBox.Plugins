@@ -8,7 +8,7 @@ using Avalonia.Layout;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyElasticWrapPanel")]
-[Menu("ElasticWrapPanel", "KeyElasticWrapPanel", "Layout & Display")]
+[Menu("NAV_ElasticWrapPanel", "KeyElasticWrapPanel", "NAV_LayoutDisplay")]
 [ViewMap(typeof(ElasticWrapPanelDemo))]
 public partial class ElasticWrapPanelDemoViewModel : ObservableObject
 {

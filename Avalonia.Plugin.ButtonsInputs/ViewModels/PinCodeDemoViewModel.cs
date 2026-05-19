@@ -8,7 +8,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("PinCode")]
-[Menu("PinCode", "PinCode", "ButtonsInputs")]
+[Menu("NAV_PinCode", "PinCode", "NAV_ButtonsInputs")]
 [ViewMap(typeof(PinCodeDemo))]
 public partial class PinCodeDemoViewModel: ObservableObject
 {

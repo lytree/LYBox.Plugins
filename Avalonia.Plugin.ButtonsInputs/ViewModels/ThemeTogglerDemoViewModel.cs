@@ -4,7 +4,7 @@ using Avalonia.Plugin.ButtonsInputs.Pages;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("ThemeToggler")]
-[Menu("Theme Toggler", "ThemeToggler", "ButtonsInputs")]
+[Menu("NAV_ThemeToggler", "ThemeToggler", "NAV_ButtonsInputs")]
 [ViewMap(typeof(ThemeTogglerDemo))]
 public class ThemeTogglerDemoViewModel
 {

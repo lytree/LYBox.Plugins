@@ -10,7 +10,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyMessageBox")]
-[Menu("Message Box", "KeyMessageBox", "Dialog & Feedbacks")]
+[Menu("NAV_MessageBox", "KeyMessageBox", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(MessageBoxDemo))]
 public partial class MessageBoxDemoViewModel: ObservableObject
 {

@@ -5,7 +5,7 @@ using Avalonia.Plugin.DateTimeControls.Pages;
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
 [NavigationItem("KeyDateTimePicker")]
-[Menu("Date Time Picker", "KeyDateTimePicker", "Date & Time")]
+[Menu("NAV_DateTimePicker", "KeyDateTimePicker", "NAV_DateTime")]
 [ViewMap(typeof(DateTimePickerDemo))]
 public partial class DateTimePickerDemoViewModel : ViewModelBase
 {

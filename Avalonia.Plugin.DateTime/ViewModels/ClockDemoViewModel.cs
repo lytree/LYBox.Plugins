@@ -7,7 +7,7 @@ using System.Timers;
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
 [NavigationItem("KeyClock")]
-[Menu("Clock", "KeyClock", "Date & Time")]
+[Menu("NAV_Clock", "KeyClock", "NAV_DateTime")]
 [ViewMap(typeof(ClockDemo))]
 public partial class ClockDemoViewModel: ObservableObject, IDisposable
 {

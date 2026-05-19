@@ -7,7 +7,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyTimeline")]
-[Menu("Timeline", "KeyTimeline", "Layout & Display")]
+[Menu("NAV_Timeline", "KeyTimeline", "NAV_LayoutDisplay")]
 [ViewMap(typeof(TimelineDemo))]
 public partial class TimelineDemoViewModel: ViewModelBase
 {

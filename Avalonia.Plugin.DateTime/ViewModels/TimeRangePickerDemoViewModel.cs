@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
 [NavigationItem("KeyTimeRangePicker")]
-[Menu("Time Range Picker", "KeyTimeRangePicker", "Date & Time")]
+[Menu("NAV_TimeRangePicker", "KeyTimeRangePicker", "NAV_DateTime")]
 [ViewMap(typeof(TimeRangePickerDemo))]
 public partial class TimeRangePickerDemoViewModel: ObservableObject
 {

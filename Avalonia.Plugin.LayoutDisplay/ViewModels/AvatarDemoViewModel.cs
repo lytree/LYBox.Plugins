@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyAvatar")]
-[Menu("Avatar", "KeyAvatar", "Layout & Display", Status = "WIP")]
+[Menu("NAV_Avatar", "KeyAvatar", "NAV_LayoutDisplay", Status = "WIP")]
 [ViewMap(typeof(AvatarDemo))]
 public partial class AvatarDemoViewModel : ViewModelBase
 {

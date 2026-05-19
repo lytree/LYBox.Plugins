@@ -5,7 +5,7 @@ using Avalonia.Plugin.LayoutDisplay.Pages;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyDualBadge")]
-[Menu("DualBadge", "KeyDualBadge", "Layout & Display")]
+[Menu("NAV_DualBadge", "KeyDualBadge", "NAV_LayoutDisplay")]
 [ViewMap(typeof(DualBadgeDemo))]
 public partial class DualBadgeDemoViewModel : ViewModelBase
 {

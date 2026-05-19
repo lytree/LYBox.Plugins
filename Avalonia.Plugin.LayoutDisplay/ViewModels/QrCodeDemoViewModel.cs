@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyQrCode")]
-[Menu("Qr Code", "KeyQrCode", "Layout & Display", Status = "New")]
+[Menu("NAV_QrCode", "KeyQrCode", "NAV_LayoutDisplay", Status = "New")]
 [ViewMap(typeof(QrCodeDemo))]
 public partial class QrCodeDemoViewModel: ObservableObject
 {

@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.Template.ViewModels;
 
 [NavigationItem("TemplateDemo")]
-[Menu("Template Demo", "TemplateDemo", ParentKey = null, Status = "New", Order = 999)]
+[Menu("NAV_TemplateDemo", "TemplateDemo", ParentKey = null, Status = "New", Order = 999)]
 [ViewMap(typeof(Pages.TemplatePage))]
 public partial class TemplatePageViewModel : ViewModelBase
 {

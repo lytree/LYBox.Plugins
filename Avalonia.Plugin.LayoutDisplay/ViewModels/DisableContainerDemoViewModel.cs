@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyDisableContainer")]
-[Menu("Disable Container", "KeyDisableContainer", "Layout & Display")]
+[Menu("NAV_DisableContainer", "KeyDisableContainer", "NAV_LayoutDisplay")]
 [ViewMap(typeof(DisableContainerDemo))]
 public partial class DisableContainerDemoViewModel: ObservableObject
 {

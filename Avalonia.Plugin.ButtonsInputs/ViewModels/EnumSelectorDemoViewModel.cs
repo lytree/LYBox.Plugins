@@ -13,7 +13,7 @@ using Avalonia.Layout;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("EnumSelector")]
-[Menu("Enum Selector", "EnumSelector", "ButtonsInputs")]
+[Menu("NAV_EnumSelector", "EnumSelector", "NAV_ButtonsInputs")]
 [ViewMap(typeof(EnumSelectorDemo))]
 public partial class EnumSelectorDemoViewModel : ObservableObject
 {

@@ -1,5 +1,7 @@
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.Shared.Services;
+using Avalonia.Plugin.NavigationMenus.Resources;
 
 namespace Avalonia.Plugin.NavigationMenus;
 
@@ -15,5 +17,7 @@ public partial class NavigationMenusPlugin : IPluginMetadata
 
     public void Initialize()
     {
+        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+            loc.RegisterResourceManager(Strings.ResourceManager);
     }
 }

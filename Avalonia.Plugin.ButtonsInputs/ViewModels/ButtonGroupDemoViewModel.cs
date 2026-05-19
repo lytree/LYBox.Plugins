@@ -9,7 +9,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("ButtonGroup")]
-[Menu("Button Group", "ButtonGroup", "ButtonsInputs")]
+[Menu("NAV_ButtonGroup", "ButtonGroup", "NAV_ButtonsInputs")]
 [ViewMap(typeof(ButtonGroupDemo))]
 public class ButtonGroupDemoViewModel: ViewModelBase
 {

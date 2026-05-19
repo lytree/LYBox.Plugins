@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("Form")]
-[Menu("Form", "Form", "ButtonsInputs")]
+[Menu("NAV_Form", "Form", "NAV_ButtonsInputs")]
 [ViewMap(typeof(FormDemo))]
 public partial class FormDemoViewModel : ObservableObject
 {

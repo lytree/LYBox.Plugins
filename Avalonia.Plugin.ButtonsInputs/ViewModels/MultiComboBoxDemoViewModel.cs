@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("MultiComboBox")]
-[Menu("MultiComboBox", "MultiComboBox", "ButtonsInputs")]
+[Menu("NAV_MultiComboBox", "MultiComboBox", "NAV_ButtonsInputs")]
 [ViewMap(typeof(MultiComboBoxDemo))]
 public class MultiComboBoxDemoViewModel: ObservableObject
 {

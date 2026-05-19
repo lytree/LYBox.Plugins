@@ -1,5 +1,7 @@
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.Shared.Services;
+using Avalonia.Plugin.Template.Resources;
 
 namespace Avalonia.Plugin.Template;
 
@@ -15,5 +17,7 @@ public partial class TemplatePlugin : IPluginMetadata
 
     public void Initialize()
     {
+        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+            loc.RegisterResourceManager(Strings.ResourceManager);
     }
 }

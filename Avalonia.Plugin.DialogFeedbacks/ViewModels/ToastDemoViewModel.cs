@@ -9,7 +9,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyToast")]
-[Menu("Toast", "KeyToast", "Dialog & Feedbacks")]
+[Menu("NAV_Toast", "KeyToast", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(ToastDemo))]
 public partial class ToastDemoViewModel : ObservableObject
 {

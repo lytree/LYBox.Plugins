@@ -5,7 +5,7 @@ using Avalonia.Plugin.LayoutDisplay.Pages;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyAspectRatioLayout")]
-[Menu("AspectRatioLayout", "KeyAspectRatioLayout", "Layout & Display")]
+[Menu("NAV_AspectRatioLayout", "KeyAspectRatioLayout", "NAV_LayoutDisplay")]
 [ViewMap(typeof(AspectRatioLayoutDemo))]
 public partial class AspectRatioLayoutDemoViewModel : ViewModelBase
 {

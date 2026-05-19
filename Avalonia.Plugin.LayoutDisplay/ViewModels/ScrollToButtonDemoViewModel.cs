@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyScrollToButton")]
-[Menu("Scroll To", "KeyScrollToButton", "Layout & Display")]
+[Menu("NAV_ScrollToButton", "KeyScrollToButton", "NAV_LayoutDisplay")]
 [ViewMap(typeof(ScrollToButtonDemo))]
 public partial class ScrollToButtonDemoViewModel: ObservableObject
 {

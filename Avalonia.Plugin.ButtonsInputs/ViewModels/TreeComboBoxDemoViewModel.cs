@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("TreeComboBox")]
-[Menu("TreeComboBox", "TreeComboBox", "ButtonsInputs")]
+[Menu("NAV_TreeComboBox", "TreeComboBox", "NAV_ButtonsInputs")]
 [ViewMap(typeof(TreeComboBoxDemo))]
 public partial class TreeComboBoxDemoViewModel: ObservableObject
 {

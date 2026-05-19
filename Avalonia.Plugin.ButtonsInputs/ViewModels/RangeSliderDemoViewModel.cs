@@ -7,7 +7,7 @@ using Avalonia.Layout;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("RangeSlider")]
-[Menu("RangeSlider", "RangeSlider", "ButtonsInputs")]
+[Menu("NAV_RangeSlider", "RangeSlider", "NAV_ButtonsInputs")]
 [ViewMap(typeof(RangeSliderDemo))]
 public partial class RangeSliderDemoViewModel: ObservableObject
 {

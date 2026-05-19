@@ -10,7 +10,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
 [NavigationItem("Breadcrumb")]
-[Menu("Breadcrumb", "Breadcrumb", "Navigation & Menus")]
+[Menu("NAV_Breadcrumb", "Breadcrumb", "NAV_NavigationMenus")]
 [ViewMap(typeof(BreadcrumbDemo))]
 public partial class BreadcrumbDemoViewModel: ObservableObject
 {

@@ -10,7 +10,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
 [NavigationItem("ToolBar")]
-[Menu("ToolBar", "ToolBar", "Navigation & Menus")]
+[Menu("NAV_ToolBar", "ToolBar", "NAV_NavigationMenus")]
 [ViewMap(typeof(ToolBarDemo))]
 public partial class ToolBarDemoViewModel : ObservableObject
 {

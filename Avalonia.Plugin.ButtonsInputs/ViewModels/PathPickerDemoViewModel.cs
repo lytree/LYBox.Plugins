@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("PathPicker")]
-[Menu("PathPicker", "PathPicker", "ButtonsInputs")]
+[Menu("NAV_PathPicker", "PathPicker", "NAV_ButtonsInputs")]
 [ViewMap(typeof(PathPickerDemo))]
 public partial class PathPickerDemoViewModel : ViewModelBase
 {

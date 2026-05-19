@@ -10,7 +10,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyPopConfirm")]
-[Menu("PopConfirm", "KeyPopConfirm", "Dialog & Feedbacks")]
+[Menu("NAV_PopConfirm", "KeyPopConfirm", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(PopConfirmDemo))]
 public partial class PopConfirmDemoViewModel : ObservableObject
 {

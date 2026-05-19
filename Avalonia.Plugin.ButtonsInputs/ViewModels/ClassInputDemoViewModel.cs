@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("ClassInput")]
-[Menu("Class Input", "ClassInput", "ButtonsInputs")]
+[Menu("NAV_ClassInput", "ClassInput", "NAV_ButtonsInputs")]
 [ViewMap(typeof(ClassInputDemo))]
 public class ClassInputDemoViewModel: ObservableObject
 {

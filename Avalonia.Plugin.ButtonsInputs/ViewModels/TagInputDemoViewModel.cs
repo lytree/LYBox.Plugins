@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("TagInput")]
-[Menu("TagInput", "TagInput", "ButtonsInputs")]
+[Menu("NAV_TagInput", "TagInput", "NAV_ButtonsInputs")]
 [ViewMap(typeof(TagInputDemo))]
 public class TagInputDemoViewModel: ViewModelBase
 {

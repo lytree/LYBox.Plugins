@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("AutoCompleteBox")]
-[Menu("AutoCompleteBox", "AutoCompleteBox", "ButtonsInputs")]
+[Menu("NAV_AutoCompleteBox", "AutoCompleteBox", "NAV_ButtonsInputs")]
 [ViewMap(typeof(AutoCompleteBoxDemo))]
 public class AutoCompleteBoxDemoViewModel : ObservableObject
 {

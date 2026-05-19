@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyBadge")]
-[Menu("Badge", "KeyBadge", "Layout & Display")]
+[Menu("NAV_Badge", "KeyBadge", "NAV_LayoutDisplay")]
 [ViewMap(typeof(BadgeDemo))]
 public partial class BadgeDemoViewModel: ViewModelBase
 {

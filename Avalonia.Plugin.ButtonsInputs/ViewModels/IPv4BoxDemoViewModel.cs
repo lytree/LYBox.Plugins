@@ -6,7 +6,7 @@ using System.Net;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("IpBox")]
-[Menu("IPv4Box", "IpBox", "ButtonsInputs")]
+[Menu("NAV_IPv4Box", "IpBox", "NAV_ButtonsInputs")]
 [ViewMap(typeof(IPv4BoxDemo))]
 public partial class IPv4BoxDemoViewModel: ObservableObject
 {

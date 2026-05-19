@@ -5,7 +5,7 @@ using Avalonia.Plugin.TDLSharp.Services;
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
 
 [NavigationItem("TDL_MessageExport")]
-[Menu("消息导出", "TDL_MessageExport", ParentKey = "TDL", Order = 5)]
+[Menu("NAV_TDL_MessageExport", "TDL_MessageExport", ParentKey = "NAV_TDL", Order = 5)]
 [ViewMap(typeof(Pages.TdlScriptPage))]
 public partial class MessageExportViewModel : TdlViewModelBase
 {

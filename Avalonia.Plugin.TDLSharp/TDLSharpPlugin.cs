@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Models;
 using Avalonia.Plugin.Shared.Services;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +20,8 @@ public partial class TDLSharpPlugin : IPluginMetadata
 
     public void Initialize()
     {
+        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+            loc.RegisterResourceManager(Strings.ResourceManager);
         RegisterSettings();
         RegisterServices();
     }

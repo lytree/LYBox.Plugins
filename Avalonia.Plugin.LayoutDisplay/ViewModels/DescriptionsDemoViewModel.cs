@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyDescriptions")]
-[Menu("Descriptions", "KeyDescriptions", "Layout & Display", Status = "New")]
+[Menu("NAV_Descriptions", "KeyDescriptions", "NAV_LayoutDisplay", Status = "New")]
 [ViewMap(typeof(DescriptionsDemo))]
 public partial class DescriptionsDemoViewModel : ObservableObject
 {

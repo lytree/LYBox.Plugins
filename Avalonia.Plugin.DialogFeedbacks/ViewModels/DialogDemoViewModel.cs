@@ -12,7 +12,7 @@ using Avalonia.Plugin.Shared.Dialogs;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyDialog")]
-[Menu("Dialog", "KeyDialog", "Dialog & Feedbacks")]
+[Menu("NAV_Dialog", "KeyDialog", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(DialogDemo))]
 public partial class DialogDemoViewModel: ObservableObject
 {

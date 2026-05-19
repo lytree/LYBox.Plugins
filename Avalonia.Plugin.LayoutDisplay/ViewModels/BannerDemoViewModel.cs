@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyBanner")]
-[Menu("Banner", "KeyBanner", "Layout & Display")]
+[Menu("NAV_Banner", "KeyBanner", "NAV_LayoutDisplay")]
 [ViewMap(typeof(BannerDemo))]
 public partial class BannerDemoViewModel : ViewModelBase
 {

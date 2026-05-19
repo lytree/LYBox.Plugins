@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("NumericUpDown")]
-[Menu("Numeric UpDown", "NumericUpDown", "ButtonsInputs")]
+[Menu("NAV_NumericUpDown", "NumericUpDown", "NAV_ButtonsInputs")]
 [ViewMap(typeof(NumericUpDownDemo))]
 public partial class NumericUpDownDemoViewModel : ObservableObject
 {

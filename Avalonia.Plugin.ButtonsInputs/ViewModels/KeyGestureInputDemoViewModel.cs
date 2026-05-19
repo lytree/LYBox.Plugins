@@ -6,7 +6,7 @@ using Avalonia.Input;
 namespace Avalonia.Plugin.ButtonsInputs.ViewModels;
 
 [NavigationItem("KeyGestureInput")]
-[Menu("KeyGestureInput", "KeyGestureInput", "ButtonsInputs")]
+[Menu("NAV_KeyGestureInput", "KeyGestureInput", "NAV_ButtonsInputs")]
 [ViewMap(typeof(KeyGestureInputDemo))]
 public class KeyGestureInputDemoViewModel: ObservableObject
 {

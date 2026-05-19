@@ -1,5 +1,7 @@
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.Shared.Services;
+using Avalonia.Plugin.ButtonsInputs.Resources;
 
 namespace Avalonia.Plugin.ButtonsInputs;
 
@@ -19,7 +21,8 @@ public partial class ButtonsInputsPlugin : IPluginMetadata
 
     public void Initialize()
     {
-        // 插件初始化逻辑
+        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+            loc.RegisterResourceManager(Strings.ResourceManager);
     }
 
     // public Dictionary<string, ViewModelFactory> GetNavigationItems()

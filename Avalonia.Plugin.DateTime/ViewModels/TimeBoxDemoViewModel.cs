@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Avalonia.Plugin.DateTimeControls.ViewModels;
 
 [NavigationItem("KeyTimeBox")]
-[Menu("Time Box", "KeyTimeBox", "Date & Time")]
+[Menu("NAV_TimeBox", "KeyTimeBox", "NAV_DateTime")]
 [ViewMap(typeof(TimeBoxDemo))]
 public partial class TimeBoxDemoViewModel : ObservableObject
 {

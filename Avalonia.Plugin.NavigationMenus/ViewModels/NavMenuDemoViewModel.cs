@@ -10,7 +10,7 @@ using Ursa.Controls;
 namespace Avalonia.Plugin.NavigationMenus.ViewModels;
 
 [NavigationItem("NavMenu")]
-[Menu("Nav Menu", "NavMenu", "Navigation & Menus", Status = "Updated")]
+[Menu("NAV_NavMenu", "NavMenu", "NAV_NavigationMenus", Status = "Updated")]
 [ViewMap(typeof(NavMenuDemo))]
 public partial class NavMenuDemoViewModel: ObservableObject
 {

@@ -13,7 +13,7 @@ using Avalonia.Plugin.Shared.Dialogs;
 namespace Avalonia.Plugin.DialogFeedbacks.ViewModels;
 
 [NavigationItem("KeyDrawer")]
-[Menu("Drawer", "KeyDrawer", "Dialog & Feedbacks")]
+[Menu("NAV_Drawer", "KeyDrawer", "NAV_DialogFeedbacks")]
 [ViewMap(typeof(DrawerDemo))]
 public partial class DrawerDemoViewModel : ObservableObject
 {

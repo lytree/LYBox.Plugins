@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Avalonia.Plugin.LayoutDisplay.ViewModels;
 
 [NavigationItem("KeyImageViewer")]
-[Menu("ImageViewer", "KeyImageViewer", "Layout & Display")]
+[Menu("NAV_ImageViewer", "KeyImageViewer", "NAV_LayoutDisplay")]
 [ViewMap(typeof(ImageViewerDemo))]
 public partial class ImageViewerDemoViewModel: ObservableObject
 {
