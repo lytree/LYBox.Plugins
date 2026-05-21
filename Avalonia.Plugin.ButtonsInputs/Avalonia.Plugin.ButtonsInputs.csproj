@@ -5,8 +5,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<OutputType>Library</OutputType>
+		<PluginId>0F2F7DB6-0E9B-D872-442F-2CBC3DAC1F56</PluginId>
+		<PluginName>Buttons &amp; Inputs Plugin</PluginName>
+		<PluginAuthor>AvaloniaPlugin</PluginAuthor>
+		<PluginDescription>UI component library for buttons and input controls</PluginDescription>
 	</PropertyGroup>
-
 	<ItemGroup>
 		<Compile Update="Resources\Strings.Designer.cs">
 			<DesignTime>True</DesignTime>
@@ -19,5 +22,4 @@
 		<ProjectReference Include="..\..\src\Avalonia.Plugin.Generators\Avalonia.Plugin.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\..\src\Avalonia.Plugin.Shared\Avalonia.Plugin.Shared.csproj" PrivateAssets="all"  />
 	</ItemGroup>
-
 </Project>

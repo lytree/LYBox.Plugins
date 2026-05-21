@@ -6,6 +6,7 @@
         <NullabilityInfoContextSupport>True</NullabilityInfoContextSupport>
         <ErrorOnDuplicatePublishOutputFiles>False</ErrorOnDuplicatePublishOutputFiles>
         <CheckEolWorkloads>false</CheckEolWorkloads>
+        <IsPluginProject>true</IsPluginProject>
     </PropertyGroup>
 
     <Import Project="..\src\Avalonia.Plugin.Shared\buildTransitive\Avalonia.Plugin.Shared.props"
