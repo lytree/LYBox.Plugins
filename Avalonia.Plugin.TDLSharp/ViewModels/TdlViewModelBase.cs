@@ -20,6 +20,20 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private string _statusText = "就绪";
 
+    public string LogText
+    {
+        get
+        {
+            if (LogEntries.Count == 0) return string.Empty;
+            return string.Join(Environment.NewLine, LogEntries.Select(e => $"{e.Timestamp:HH:mm:ss} {e.LevelIcon} {e.Message}"));
+        }
+    }
+
+    partial void OnLogEntriesChanged(ObservableCollection<LogEntry> value)
+    {
+        value.CollectionChanged += (_, _) => OnPropertyChanged(nameof(LogText));
+    }
+
     private CancellationTokenSource? _cts;
 
     protected TdlViewModelBase()
@@ -41,6 +55,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     private void ClearLog()
     {
         LogEntries.Clear();
+        OnPropertyChanged(nameof(LogText));
     }
 
     [RelayCommand]
