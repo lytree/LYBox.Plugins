@@ -31,6 +31,8 @@ public class TdlClientManager : IDisposable
     public event Func<string, Task>? PasswordRequested;
     public event Func<TdApi.File, Task>? FileUpdated;
 
+    public DirectUiLogger? FileUpdateLogger { get; set; }
+
     public TdlClientManager(ILogger<TdlClientManager> logger, string apiId, string apiHash,
         string proxyServer = "127.0.0.1", int proxyPort = 7897, bool enableProxy = true)
     {
@@ -145,8 +147,13 @@ public class TdlClientManager : IDisposable
     {
         if (file.Local.IsDownloadingCompleted)
         {
-            cbLogger.LogInformation("文件下载完成！本地路径: {Path}", file.Local.Path);
+            FileUpdateLogger?.Log($"文件下载完成！本地路径: {file.Local.Path}");
             FileUpdated?.Invoke(file);
+        }
+        else
+        {
+            double percent = (double)file.Local.DownloadedSize / file.ExpectedSize * 100;
+            FileUpdateLogger?.Log($"文件下载中, File {file.Id}  进度: {percent:F1}%");
         }
         return Task.CompletedTask;
     }

@@ -1,5 +1,4 @@
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
@@ -18,16 +17,16 @@ public partial class TdlService
         if (chatId == 0)
         {
             chatId = myId;
-            _logger.LogInformation("未指定频道，默认使用收藏夹 (ChatId={ChatId})", myId);
+            _logger.Log($"未指定频道，默认使用收藏夹 (ChatId={myId})");
         }
 
         var chat = await client.GetChatAsync(chatId);
-        _logger.LogInformation("目标: [{Title}] ChatId={ChatId}", chat.Title, chatId);
-        _logger.LogInformation("匹配内容: \"{Text}\"", containsText);
-        _logger.LogInformation("删除模式: {Mode}", silent ? "静默删除" : "交互确认");
+        _logger.Log($"目标: [{chat.Title}] ChatId={chatId}");
+        _logger.Log($"匹配内容: \"{containsText}\"");
+        _logger.Log($"删除模式: {(silent ? "静默删除" : "交互确认")}");
 
         int totalDeleted = await CleanMessages(client, chatId, containsText, silent, limit, ct);
-        _logger.LogInformation("清理完成，共删除 {Count} 条消息", totalDeleted);
+        _logger.Log($"清理完成，共删除 {totalDeleted} 条消息");
     }
 
     async Task<int> CleanMessages(TdClient client, long chatId, string containsText, bool silent, int limit, CancellationToken ct)
@@ -37,7 +36,7 @@ public partial class TdlService
         bool hasMore = true;
         var matchedMessages = new List<(long MsgId, string Text)>();
 
-        _logger.LogInformation("开始扫描消息...");
+        _logger.Log("开始扫描消息...");
 
         while (hasMore)
         {
@@ -72,23 +71,23 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "扫描消息时发生异常");
+                _logger.Log($"扫描消息时发生异常: {ex.Message}");
                 await Task.Delay(5000, ct);
             }
         }
 
         if (matchedMessages.Count == 0)
         {
-            _logger.LogInformation("未找到包含 \"{Text}\" 的消息", containsText);
+            _logger.Log($"未找到包含 \"{containsText}\" 的消息");
             return 0;
         }
 
-        _logger.LogInformation("共找到 {Count} 条匹配消息", matchedMessages.Count);
+        _logger.Log($"共找到 {matchedMessages.Count} 条匹配消息");
 
         int batchSize = 100;
         for (int i = 0; i < matchedMessages.Count; i += batchSize)
@@ -99,19 +98,19 @@ public partial class TdlService
             {
                 await client.DeleteMessagesAsync(chatId, batch, revoke: true);
                 totalDeleted += batch.Length;
-                _logger.LogInformation("已删除 {Deleted}/{Total} 条消息", totalDeleted, matchedMessages.Count);
+                _logger.Log($"已删除 {totalDeleted}/{matchedMessages.Count} 条消息");
                 await Task.Delay(500, ct);
             }
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
                 i -= batchSize;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "批量删除消息时发生异常");
+                _logger.Log($"批量删除消息时发生异常: {ex.Message}");
             }
         }
 

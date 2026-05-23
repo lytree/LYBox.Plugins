@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using TdLib;
 using static TdLib.TdApi;
@@ -20,15 +19,15 @@ public partial class TdlService
         if (sourceChatId == 0)
         {
             sourceChatId = myId;
-            _logger.LogInformation("未指定源频道，默认使用收藏夹 (ChatId={ChatId})", myId);
+            _logger.Log($"未指定源频道，默认使用收藏夹 (ChatId={myId})");
         }
 
         var sourceChat = await client.GetChatAsync(sourceChatId);
-        _logger.LogInformation("源: [{Title}] ChatId={ChatId}", sourceChat.Title, sourceChatId);
+        _logger.Log($"源: [{sourceChat.Title}] ChatId={sourceChatId}");
 
         using var db = CreateForwardDbContext(sourceChatId);
         await db.Database.EnsureCreatedAsync();
-        _logger.LogInformation("数据库已就绪: forward-{ChatId}.db", sourceChatId);
+        _logger.Log($"数据库已就绪: forward-{sourceChatId}.db");
 
         int totalForwarded = 0;
         int totalSkipped = 0;
@@ -36,7 +35,7 @@ public partial class TdlService
         List<TdApi.Message>? pendingGroup = null;
         bool hasMore = true;
 
-        _logger.LogInformation("开始扫描浅转发消息，转换为深度Copy...");
+        _logger.Log("开始扫描浅转发消息，转换为深度Copy...");
 
         while (hasMore)
         {
@@ -61,7 +60,7 @@ public partial class TdlService
                     var remainingHasShallow = await CheckRemainingShallowForwards(client, sourceChatId, history.Messages_.Last().Id, ct);
                     if (!remainingHasShallow)
                     {
-                        _logger.LogInformation("后续消息中不再存在浅转发消息，停止扫描");
+                        _logger.Log("后续消息中不再存在浅转发消息，停止扫描");
                         hasMore = false;
                         break;
                     }
@@ -86,7 +85,7 @@ public partial class TdlService
 
                 if (limit > 0 && totalForwarded >= limit)
                 {
-                    _logger.LogInformation($"已达到转发限制 {limit}");
+                    _logger.Log($"已达到转发限制 {limit}");
                     break;
                 }
 
@@ -96,18 +95,18 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning($"触发频率限制，等待 {retryAfter} 秒后继续...");
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"转发过程中发生异常");
+                _logger.Log($"转发过程中发生异常: {ex.Message}");
                 await Task.Delay(5000);
             }
 
         }
 
-        _logger.LogInformation("全部完成: 处理 {totalForwarded} 条,  跳过 {Skipped} 条", totalForwarded, totalSkipped);
+        _logger.Log($"全部完成: 处理 {totalForwarded} 条,  跳过 {totalSkipped} 条");
     }
     async Task<bool> CheckRemainingShallowForwards(TdClient client, long chatId, long fromMessageId, CancellationToken ct)
     {
@@ -155,11 +154,11 @@ public partial class TdlService
 
         if (successRecordIds.Count == 0)
         {
-            _logger.LogInformation("数据库中没有已成功深Copy的记录");
+            _logger.Log("数据库中没有已成功深Copy的记录");
             return 0;
         }
 
-        _logger.LogInformation("数据库中有 {Count} 条已深Copy记录，开始扫描频道消息...", successRecordIds.Count);
+        _logger.Log($"数据库中有 {successRecordIds.Count} 条已深Copy记录，开始扫描频道消息...");
 
         int totalDeleted = 0;
         int totalScanned = 0;
@@ -201,7 +200,7 @@ public partial class TdlService
                         );
 
                         totalDeleted += toDelete.Length;
-                        _logger.LogInformation("删除 {Count} 条浅转发消息 (累计: {Total})", toDelete.Length, totalDeleted);
+                        _logger.Log($"删除 {toDelete.Length} 条浅转发消息 (累计: {totalDeleted})");
                         await Task.Delay(1000, ct);
                     }
                 }
@@ -212,17 +211,17 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒...");
                 await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "扫描消息时发生异常");
+                _logger.Log($"扫描消息时发生异常: {ex.Message}");
                 await Task.Delay(3000, ct);
             }
         }
 
-        _logger.LogInformation("删除完成: 扫描 {Scanned} 条消息, 删除 {Deleted} 条浅转发消息", totalScanned, totalDeleted);
+        _logger.Log($"删除完成: 扫描 {totalScanned} 条消息, 删除 {totalDeleted} 条浅转发消息");
         return totalDeleted;
     }
 }

@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
@@ -25,14 +24,14 @@ public partial class TdlService
         foreach (var link in links)
         {
             ct.ThrowIfCancellationRequested();
-            _logger.LogInformation("开始处理链接: {Link}", link);
+            _logger.Log($"开始处理链接: {link}");
             await DownloadMediaFromLink(client, link, includeComments, outputPath, ct);
         }
 
-        _logger.LogInformation("等待所有下载完成...");
+        _logger.Log("等待所有下载完成...");
         await Task.Delay(10000, ct);
 
-        _logger.LogInformation("全部下载完毕！已下载文件数: {Count}", _downloadedFileIds.Count);
+        _logger.Log($"全部下载完毕！已下载文件数: {_downloadedFileIds.Count}");
     }
 
     async Task DownloadMediaFromLink(TdClient client, string link, bool includeComments, string outputPath, CancellationToken ct)
@@ -42,7 +41,7 @@ public partial class TdlService
             var linkInfo = await client.GetMessageLinkInfoAsync(link);
             if (linkInfo.Message == null)
             {
-                _logger.LogError("无法从链接获取消息: {Link}", link);
+                _logger.Log($"无法从链接获取消息: {link}");
                 return;
             }
 
@@ -51,14 +50,14 @@ public partial class TdlService
             var message = linkInfo.Message;
 
             var chat = await client.GetChatAsync(chatId);
-            _logger.LogInformation("开始下载 {Title} 的媒体组...", chat.Title);
-            _logger.LogInformation("包含评论: {IncludeComments}", includeComments);
+            _logger.Log($"开始下载 {chat.Title} 的媒体组...");
+            _logger.Log($"包含评论: {includeComments}");
 
             int totalDownloaded = 0;
 
             if (message.MediaAlbumId != 0)
             {
-                _logger.LogInformation("发现媒体组: {AlbumId}", message.MediaAlbumId);
+                _logger.Log($"发现媒体组: {message.MediaAlbumId}");
                 totalDownloaded += await DownloadMediaGroupByAlbumId(client, chatId, message.MediaAlbumId, messageId, outputPath, messageId, ct);
             }
             else
@@ -68,9 +67,9 @@ public partial class TdlService
 
             if (includeComments)
             {
-                _logger.LogInformation("开始下载评论区媒体...");
+                _logger.Log("开始下载评论区媒体...");
                 var comments = await GetMessageCommentsAsync(client, chatId, messageId);
-                _logger.LogInformation("找到 {Count} 条评论", comments.Length);
+                _logger.Log($"找到 {comments.Length} 条评论");
 
                 int commentsDownloaded = 0;
                 int commentsSkipped = 0;
@@ -91,15 +90,15 @@ public partial class TdlService
                     }
                 }
 
-                _logger.LogInformation("评论区下载完成，共 {Downloaded} 个新文件，{Skipped} 个已跳过", commentsDownloaded, commentsSkipped);
+                _logger.Log($"评论区下载完成，共 {commentsDownloaded} 个新文件，{commentsSkipped} 个已跳过");
                 totalDownloaded += commentsDownloaded;
             }
 
-            _logger.LogInformation("下载完成！共下载 {Count} 个媒体文件", totalDownloaded);
+            _logger.Log($"下载完成！共下载 {totalDownloaded} 个媒体文件");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "下载过程中发生错误");
+            _logger.Log($"下载过程中发生错误: {ex.Message}");
         }
     }
 
@@ -109,7 +108,7 @@ public partial class TdlService
 
         try
         {
-            _logger.LogInformation("开始下载媒体组 {AlbumId}", mediaAlbumId);
+            _logger.Log($"开始下载媒体组 {mediaAlbumId}");
 
             var foundMessages = new List<TdApi.Message>();
 
@@ -123,7 +122,7 @@ public partial class TdlService
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "获取初始消息失败");
+                _logger.Log($"获取初始消息失败: {ex.Message}");
             }
 
             long searchBackwardId = startMessageId;
@@ -154,7 +153,7 @@ public partial class TdlService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "搜索媒体组消息失败");
+                    _logger.Log($"搜索媒体组消息失败: {ex.Message}");
                     break;
                 }
             }
@@ -175,10 +174,10 @@ public partial class TdlService
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("搜索后续媒体组消息失败: {Message}", ex.Message);
+                _logger.Log($"搜索后续媒体组消息失败: {ex.Message}");
             }
 
-            _logger.LogInformation("媒体组搜索完成，共找到 {Count} 条消息", foundMessages.Count);
+            _logger.Log($"媒体组搜索完成，共找到 {foundMessages.Count} 条消息");
 
             foreach (var msg in foundMessages.OrderBy(m => m.Id))
             {
@@ -187,11 +186,11 @@ public partial class TdlService
                 totalDownloaded += count;
             }
 
-            _logger.LogInformation("媒体组 {AlbumId} 下载完成，共 {Count} 个文件", mediaAlbumId, totalDownloaded);
+            _logger.Log($"媒体组 {mediaAlbumId} 下载完成，共 {totalDownloaded} 个文件");
         }
         catch (TdException ex)
         {
-            _logger.LogWarning(ex, "下载媒体组失败");
+            _logger.Log($"下载媒体组失败: {ex.Message}");
         }
 
         return totalDownloaded;
@@ -208,8 +207,7 @@ public partial class TdlService
             _fileIdToAlbumId[fileId] = messageId;
             await client.DownloadFileAsync(fileId, 32, 0, 0, true);
             downloadedCount++;
-            _logger.LogInformation("队列下载: FileId: {FileId}, LinkId: {LinkId}, MediaAlbumId: {AlbumId}",
-                fileId, messageId, message.MediaAlbumId);
+            _logger.Log($"队列下载: FileId: {fileId}, LinkId: {messageId}, MediaAlbumId: {message.MediaAlbumId}");
         }
 
         return downloadedCount;
@@ -245,7 +243,7 @@ public partial class TdlService
         }
         catch (TdException ex)
         {
-            _logger.LogWarning("获取评论失败: {Message}", ex.Error.Message);
+            _logger.Log($"获取评论失败: {ex.Error.Message}");
             return [];
         }
     }

@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
@@ -8,12 +7,12 @@ namespace Avalonia.Plugin.TDLSharp.Services;
 public partial class TdlService
 {
     readonly TdlClientManager _clientManager;
-    readonly ILogger _logger;
+    readonly DirectUiLogger _logger;
 
     readonly Dictionary<long, TaskCompletionSource<TdApi.Error?>> _pendingSends = new();
     readonly object _pendingLock = new();
 
-    public TdlService(TdlClientManager clientManager, ILogger<TdlService> logger)
+    public TdlService(TdlClientManager clientManager, DirectUiLogger logger)
     {
         _clientManager = clientManager;
         _logger = logger;
@@ -42,11 +41,11 @@ public partial class TdlService
             {
                 return (linkInfo.Message.ChatId, linkInfo.Message.Id);
             }
-            _logger.LogWarning("源链接未关联到消息: {Link}", link);
+            _logger.Log($"源链接未关联到消息: {link}");
         }
         catch (TdException ex)
         {
-            _logger.LogError(ex, "无法解析源链接: {Link}", link);
+            _logger.Log($"无法解析源链接: {link} - {ex.Message}");
         }
         return (0, 0);
     }
@@ -71,16 +70,16 @@ public partial class TdlService
                 var inviteInfo = await client.CheckChatInviteLinkAsync(link);
                 if (inviteInfo.ChatId != 0)
                 {
-                    _logger.LogInformation("邀请链接已关联到 ChatId: {ChatId}", inviteInfo.ChatId);
+                    _logger.Log($"邀请链接已关联到 ChatId: {inviteInfo.ChatId}");
                     return inviteInfo.ChatId;
                 }
-                _logger.LogWarning("邀请链接有效但未关联到已有聊天: {Link}", link);
+                _logger.Log($"邀请链接有效但未关联到已有聊天: {link}");
                 return 0;
             }
         }
         catch (TdException ex)
         {
-            _logger.LogError(ex, "无法解析邀请链接: {Link}", link);
+            _logger.Log($"无法解析邀请链接: {link} - {ex.Message}");
             return 0;
         }
 
@@ -113,7 +112,7 @@ public partial class TdlService
         }
         catch (TdException) { }
 
-        _logger.LogWarning("目标链接未关联到聊天: {Link}", link);
+        _logger.Log($"目标链接未关联到聊天: {link}");
         return 0;
     }
 
@@ -139,7 +138,7 @@ public partial class TdlService
                 var inviteInfo = await client.CheckChatInviteLinkAsync(link);
                 if (inviteInfo.ChatId != 0)
                 {
-                    _logger.LogInformation("邀请链接已关联到 ChatId: {ChatId}", inviteInfo.ChatId);
+                    _logger.Log($"邀请链接已关联到 ChatId: {inviteInfo.ChatId}");
                     return inviteInfo.ChatId;
                 }
                 return 0;
@@ -178,7 +177,7 @@ public partial class TdlService
                         var chat = await client.GetChatAsync(id);
                         if (chat.Title.Contains(link, StringComparison.OrdinalIgnoreCase))
                         {
-                            _logger.LogInformation("找到匹配聊天: [{Title}] ChatId={ChatId}", chat.Title, chat.Id);
+                            _logger.Log($"找到匹配聊天: [{chat.Title}] ChatId={chat.Id}");
                             return chat.Id;
                         }
                     }
@@ -193,7 +192,7 @@ public partial class TdlService
 
     async Task<long> SearchChatByTitleAsync(string keyword)
     {
-        _logger.LogInformation("在聊天列表中搜索: {Keyword}", keyword);
+        _logger.Log($"在聊天列表中搜索: {keyword}");
         var client = Client;
         var chatIds = await client.GetChatsAsync(limit: 200);
         if (chatIds?.ChatIds == null) return 0;
@@ -205,7 +204,7 @@ public partial class TdlService
                 var chat = await client.GetChatAsync(id);
                 if (chat.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogInformation("找到匹配聊天: [{Title}] ChatId={ChatId}", chat.Title, chat.Id);
+                    _logger.Log($"找到匹配聊天: [{chat.Title}] ChatId={chat.Id}");
                     return chat.Id;
                 }
             }

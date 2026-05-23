@@ -2,7 +2,6 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
@@ -18,12 +17,12 @@ public partial class TdlService
         long chatId = await ResolveChatIdAsync(channelLink);
         if (chatId == 0)
         {
-            _logger.LogError("无法解析频道: {Link}", channelLink);
+            _logger.Log($"无法解析频道: {channelLink}");
             return;
         }
 
         var chat = await client.GetChatAsync(chatId);
-        _logger.LogInformation("目标: [{Title}] ChatId={ChatId}", chat.Title, chatId);
+        _logger.Log($"目标: [{chat.Title}] ChatId={chatId}");
 
         if (string.IsNullOrWhiteSpace(outputPath))
         {
@@ -48,8 +47,8 @@ public partial class TdlService
         }
 
         await File.WriteAllTextAsync(outputPath, json);
-        _logger.LogInformation("导出完成，共 {Total} 条消息，{Groups} 个分组", exportResult.TotalMessages, exportResult.Groups.Count);
-        _logger.LogInformation("文件已保存到: {Path}", outputPath);
+        _logger.Log($"导出完成，共 {exportResult.TotalMessages} 条消息，{exportResult.Groups.Count} 个分组");
+        _logger.Log($"文件已保存到: {outputPath}");
     }
 
     async Task<ChannelExport> ExportChannelMessages(TdClient client, long chatId, bool exportComments, int limit, CancellationToken ct)
@@ -59,7 +58,7 @@ public partial class TdlService
         var allMessages = new List<TdApi.Message>();
         int totalCount = 0;
 
-        _logger.LogInformation("开始导出频道消息...");
+        _logger.Log("开始导出频道消息...");
 
         while (hasMore)
         {
@@ -77,7 +76,7 @@ public partial class TdlService
                 totalCount += history.Messages_.Length;
 
                 fromMessageId = history.Messages_.Last().Id;
-                _logger.LogInformation("已拉取 {Count} 条消息，当前进度 ID: {MsgId}", totalCount, fromMessageId);
+                _logger.Log($"已拉取 {totalCount} 条消息，当前进度 ID: {fromMessageId}");
 
                 if (limit > 0 && totalCount >= limit)
                 {
@@ -89,12 +88,12 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "拉取消息时发生异常");
+                _logger.Log($"拉取消息时发生异常: {ex.Message}");
                 await Task.Delay(5000, ct);
             }
         }
@@ -147,7 +146,7 @@ public partial class TdlService
                     }
                     catch (TdException ex)
                     {
-                        _logger.LogWarning("获取评论失败: MsgId={MsgId}, 错误: {Error}", msg.Id, ex.Error.Message);
+                        _logger.Log($"获取评论失败: MsgId={msg.Id}, 错误: {ex.Error.Message}");
                     }
 
                     await Task.Delay(200, ct);
@@ -157,7 +156,7 @@ public partial class TdlService
             }
 
             export.Groups.Add(exportGroup);
-            _logger.LogInformation("已处理分组 {Current}/{Total} (消息数: {Count})", export.Groups.Count, groups.Count, group.Count);
+            _logger.Log($"已处理分组 {export.Groups.Count}/{groups.Count} (消息数: {group.Count})");
         }
 
         return export;

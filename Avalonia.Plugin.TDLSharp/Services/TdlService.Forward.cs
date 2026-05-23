@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
@@ -14,7 +13,7 @@ public partial class TdlService
         var (sourceChatId, startMessageId) = await ResolveSourceLinkAsync(sourceLink);
         if (sourceChatId == 0)
         {
-            _logger.LogError("无法解析源链接: {Link}", sourceLink);
+            _logger.Log($"无法解析源链接: {sourceLink}");
             return;
         }
 
@@ -26,23 +25,20 @@ public partial class TdlService
         var targetChatId = await ResolveTargetLinkAsync(targetLink);
         if (targetChatId == 0)
         {
-            _logger.LogError("无法解析目标链接: {Link}", targetLink);
+            _logger.Log($"无法解析目标链接: {targetLink}");
             return;
         }
 
         var client = Client;
         var sourceChat = await client.GetChatAsync(sourceChatId);
         var targetChat = await client.GetChatAsync(targetChatId);
-        _logger.LogInformation("源: [{Title}] ChatId={ChatId}, StartMsgId={MsgId}", sourceChat.Title, sourceChatId, startMessageId);
-        _logger.LogInformation("目标: [{Title}] ChatId={ChatId}", targetChat.Title, targetChatId);
-        _logger.LogInformation("方向: {Direction}, 限制: {Limit}, 评论: {Comments}",
-            older ? "向旧消息" : "向新消息",
-            limit > 0 ? limit.ToString() : "无限制",
-            forwardComments ? "是" : "否");
+        _logger.Log($"源: [{sourceChat.Title}] ChatId={sourceChatId}, StartMsgId={startMessageId}");
+        _logger.Log($"目标: [{targetChat.Title}] ChatId={targetChatId}");
+        _logger.Log($"方向: {(older ? "向旧消息" : "向新消息")}, 限制: {(limit > 0 ? limit.ToString() : "无限制")}, 评论: {(forwardComments ? "是" : "否")}");
 
         using var db = CreateForwardDbContext(sourceChatId);
         await db.Database.EnsureCreatedAsync();
-        _logger.LogInformation("数据库已就绪: forward-{ChatId}.db", sourceChatId);
+        _logger.Log($"数据库已就绪: forward-{sourceChatId}.db");
 
         int totalForwarded;
         if (older)
@@ -54,7 +50,7 @@ public partial class TdlService
             totalForwarded = await ForwardNewerDirection(db, sourceChatId, startMessageId, targetChatId, limit, forwardComments, ct);
         }
 
-        _logger.LogInformation("全部转发完成，共转发 {Count} 条消息", totalForwarded);
+        _logger.Log($"全部转发完成，共转发 {totalForwarded} 条消息");
     }
 
     public async Task<int> DeepCopyForward(ForwardDbContext db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default)
@@ -65,7 +61,7 @@ public partial class TdlService
         List<TdApi.Message>? pendingGroup = null;
         bool hasMore = true;
 
-        _logger.LogInformation("开始向旧消息方向转发...");
+        _logger.Log("开始向旧消息方向转发...");
 
         while (hasMore)
         {
@@ -108,7 +104,7 @@ public partial class TdlService
 
                 if (limit > 0 && totalForwarded >= limit)
                 {
-                    _logger.LogInformation("已达到转发限制 {Limit}", limit);
+                    _logger.Log($"已达到转发限制 {limit}");
                     break;
                 }
 
@@ -118,12 +114,12 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "转发过程中发生异常");
+                _logger.Log($"转发过程中发生异常: {ex.Message}");
                 await Task.Delay(5000, ct);
             }
         }
@@ -137,7 +133,7 @@ public partial class TdlService
 
         if (totalSkipped > 0)
         {
-            _logger.LogInformation("跳过已转发消息 {Count} 条", totalSkipped);
+            _logger.Log($"跳过已转发消息 {totalSkipped} 条");
         }
 
         return totalForwarded;
@@ -151,7 +147,7 @@ public partial class TdlService
         List<TdApi.Message>? pendingGroup = null;
         bool hasMore = true;
 
-        _logger.LogInformation("开始向旧消息方向转发...");
+        _logger.Log("开始向旧消息方向转发...");
 
         while (hasMore)
         {
@@ -194,7 +190,7 @@ public partial class TdlService
 
                 if (limit > 0 && totalForwarded >= limit)
                 {
-                    _logger.LogInformation("已达到转发限制 {Limit}", limit);
+                    _logger.Log($"已达到转发限制 {limit}");
                     break;
                 }
 
@@ -204,12 +200,12 @@ public partial class TdlService
             catch (TdException ex) when (ex.Error.Code == 429)
             {
                 int retryAfter = ParseRetryAfter(ex);
-                _logger.LogWarning("触发频率限制，等待 {Seconds} 秒后继续...", retryAfter);
+                _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "转发过程中发生异常");
+                _logger.Log($"转发过程中发生异常: {ex.Message}");
                 await Task.Delay(5000, ct);
             }
         }
@@ -223,7 +219,7 @@ public partial class TdlService
 
         if (totalSkipped > 0)
         {
-            _logger.LogInformation("跳过已转发消息 {Count} 条", totalSkipped);
+            _logger.Log($"跳过已转发消息 {totalSkipped} 条");
         }
 
         return totalForwarded;
@@ -235,7 +231,7 @@ public partial class TdlService
         long fromMessageId = 0;
         bool foundStart = false;
 
-        _logger.LogInformation("开始向新消息方向转发（从最新消息往回搜索）...");
+        _logger.Log("开始向新消息方向转发（从最新消息往回搜索）...");
 
         while (!foundStart)
         {
@@ -271,19 +267,19 @@ public partial class TdlService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "搜索新消息时发生异常");
+                _logger.Log($"搜索新消息时发生异常: {ex.Message}");
                 break;
             }
         }
 
         newerMessages = newerMessages.OrderBy(m => m.Id).ToList();
-        _logger.LogInformation("找到 {Count} 条消息，开始转发...", newerMessages.Count);
+        _logger.Log($"找到 {newerMessages.Count} 条消息，开始转发...");
 
         var (totalForwarded, totalSkipped) = await ForwardGroupedMessages(db, newerMessages, sourceChatId, targetChatId, forwardComments, ct);
 
         if (totalSkipped > 0)
         {
-            _logger.LogInformation("跳过已转发消息 {Count} 条", totalSkipped);
+            _logger.Log($"跳过已转发消息 {totalSkipped} 条");
         }
 
         return totalForwarded;
@@ -344,14 +340,14 @@ public partial class TdlService
                         {
                             int retryAfter = ParseRetryAfterFromError(sendError);
                             retryCount++;
-                            _logger.LogWarning("异步发送触发频率限制 (第{Retry}次)，等待 {Seconds} 秒后重试...", retryCount, retryAfter);
+                            _logger.Log($"异步发送触发频率限制 (第{retryCount}次)，等待 {retryAfter} 秒后重试...");
                             await Task.Delay(retryAfter * 1000, ct);
                             continue;
                         }
 
                         lastError = $"{sendError.Code}: {sendError.Message}";
                         retryCount++;
-                        _logger.LogError("消息异步发送失败 (第{Retry}次重试): {Error}", retryCount, lastError);
+                        _logger.Log($"消息异步发送失败 (第{retryCount}次重试): {lastError}");
                         await Task.Delay(5000, ct);
                         continue;
                     }
@@ -361,7 +357,7 @@ public partial class TdlService
 
                     totalForwarded += ids.Length;
                     var albumLabel = group.First().MediaAlbumId != 0 ? $"分组:{group.First().MediaAlbumId}" : $"独立消息 {group.First().Id}";
-                    _logger.LogInformation("已转发  ({Label}, 数量: {Count})", albumLabel, ids.Length);
+                    _logger.Log($"已转发  ({albumLabel}, 数量: {ids.Length})");
 
                     if (forwardComments && result.Messages_ != null)
                     {
@@ -375,14 +371,14 @@ public partial class TdlService
                 {
                     int retryAfter = ParseRetryAfter(ex);
                     retryCount++;
-                    _logger.LogWarning("触发频率限制 (第{Retry}次)，等待 {Seconds} 秒后重试...", retryCount, retryAfter);
+                    _logger.Log($"触发频率限制 (第{retryCount}次)，等待 {retryAfter} 秒后重试...");
                     await Task.Delay(retryAfter * 1000, ct);
                 }
                 catch (Exception ex)
                 {
                     lastError = ex.Message;
                     retryCount++;
-                    _logger.LogError(ex, "转发消息组时出错 (第{Retry}次重试)", retryCount);
+                    _logger.Log($"转发消息组时出错 (第{retryCount}次重试): {ex.Message}");
                     await Task.Delay(5000, ct);
                 }
             }
@@ -391,7 +387,7 @@ public partial class TdlService
             {
                 var failedMessages = group.Where(m => idsToForward.Contains(m.Id)).ToList();
                 await RecordForwardedMessages(db, sourceChatId, targetChatId, failedMessages, isSuccess: false, error: lastError);
-                _logger.LogError("消息组转发失败，已跳过 (MediaAlbumId: {AlbumId})", group.First().MediaAlbumId);
+                _logger.Log($"消息组转发失败，已跳过 (MediaAlbumId: {group.First().MediaAlbumId})");
             }
         }
 
@@ -449,7 +445,7 @@ public partial class TdlService
 
                 var commentList = allComments.OrderBy(m => m.Id).ToList();
                 var groups = GroupMessagesByAlbum(commentList);
-                _logger.LogInformation("转发评论: MsgId={MsgId}, 评论数={Count}, 分组数={GroupCount}", sourceMsg.Id, commentList.Count, groups.Count);
+                _logger.Log($"转发评论: MsgId={sourceMsg.Id}, 评论数={commentList.Count}, 分组数={groups.Count}");
 
                 foreach (var group in groups)
                 {
@@ -484,95 +480,78 @@ public partial class TdlService
                         if (sendError.Code == 429 || (sendError.Message?.Contains("Too Many Requests") ?? false))
                         {
                             int retryAfter = ParseRetryAfterFromError(sendError);
-                            _logger.LogWarning("异步发送触发频率限制，等待 {Seconds} 秒后重试...", retryAfter);
+                            _logger.Log($"异步发送触发频率限制，等待 {retryAfter} 秒后重试...");
                             await Task.Delay(retryAfter * 1000, ct);
                             continue;
                         }
 
-                        _logger.LogError("消息异步发送失败: {Code}: {Message}", sendError.Code, sendError.Message);
+                        _logger.Log($"消息异步发送失败: {sendError.Code}: {sendError.Message}");
                         await Task.Delay(5000, ct);
                         continue;
                     }
                     await Task.Delay(1000, ct);
                     var forwardedCommentsMessages = group.Where(m => groupIds.Contains(m.Id)).ToList();
                     await RecordForwardedMessages(db, sourceChatId, targetChatId, forwardedCommentsMessages, isSuccess: true);
-                    _logger.LogInformation("已转发评论 {Label}, 数量: {Count}", albumLabel, groupIds.Length);
+                    _logger.Log($"已转发评论 {albumLabel}, 数量: {groupIds.Length}");
                     await Task.Delay(5000, ct);
                 }
             }
             catch (TdException ex)
             {
-                _logger.LogWarning("转发评论失败: MsgId={MsgId}, 错误: {Error}", sourceMsg.Id, ex.Error.Message);
+                _logger.Log($"转发评论失败: MsgId={sourceMsg.Id}, 错误: {ex.Error.Message}");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"转发评论异常: MsgId={sourceMsg.Id}, 错误: {ex.Message}");
             }
         }
     }
 
-    async Task<(List<long> toForward, List<long> skipped)> FilterAlreadyForwarded(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> group)
+    async Task<(List<long> idsToForward, List<long> skippedIds)> FilterAlreadyForwarded(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> messages)
     {
-        var allIds = group.Select(m => m.Id).ToList();
-        var existingRecords = await db.ForwardRecords
-            .Where(r => r.SourceChatId == sourceChatId && r.TargetChatId == targetChatId && allIds.Contains(r.MessageId))
+        var messageIds = messages.Select(m => m.Id).ToHashSet();
+
+        var alreadyForwarded = await db.ForwardRecords
+            .Where(r => r.SourceChatId == sourceChatId && r.TargetChatId == targetChatId && messageIds.Contains(r.MessageId))
             .Select(r => r.MessageId)
-            .ToListAsync();
+            .ToHashSetAsync();
 
-        var skipped = existingRecords;
-        var toForward = allIds.Where(id => !existingRecords.Contains(id)).ToList();
-
-        if (skipped.Count > 0)
-        {
-            var albumLabel = group.First().MediaAlbumId != 0 ? $"分组:{group.First().MediaAlbumId}" : $"MsgId:{group.First().Id}";
-            _logger.LogInformation("跳过已转发 {Count} 条消息 ({Label}), 待转发 {ForwardCount} 条", skipped.Count, albumLabel, toForward.Count);
-        }
-
-        return (toForward, skipped);
+        var idsToForward = messageIds.Except(alreadyForwarded).ToList();
+        return (idsToForward, alreadyForwarded.ToList());
     }
 
     async Task RecordForwardedMessages(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> messages, bool isSuccess, TdApi.Message[]? forwardedMessages = null, string? error = null)
     {
-        for (int i = 0; i < messages.Count; i++)
+        foreach (var msg in messages)
         {
-            var msg = messages[i];
-            long newMessageId = 0;
-            string? sourceUrl = null;
-            string? targetUrl = null;
-            if (forwardedMessages != null && i < forwardedMessages.Length)
+            var record = new ForwardRecord
             {
-                newMessageId = forwardedMessages[i].Id;
-            }
+                SourceChatId = sourceChatId,
+                TargetChatId = targetChatId,
+                MessageId = msg.Id,
+                MediaAlbumId = msg.MediaAlbumId,
+                IsSuccess = isSuccess,
+                ForwardedAt = DateTime.UtcNow
+            };
 
-            if (msg.ForwardInfo != null)
+            if (isSuccess && forwardedMessages != null)
             {
-                sourceUrl = BuildSourceMessageUrl(msg);
-            }
-
-            var existing = await db.ForwardRecords.FindAsync(msg.ChatId,msg.Id);
-            if (existing != null)
-            {
-                existing.IsSuccess = isSuccess;
-                existing.NewMessageId = newMessageId;
-                if (sourceUrl != null) existing.SourceUrl = sourceUrl;
-                existing.TargetUrl = BuildTargetMessageUrl(msg);
-                existing.ExtraData = ForwardRecord.BuildExtraData(msg, error);
-                existing.ForwardedAt = DateTime.UtcNow;
-            }
-            else
-            {
-                db.ForwardRecords.Add(new ForwardRecord
+                var fwdMsg = forwardedMessages.FirstOrDefault(m => m.Id > 0);
+                if (fwdMsg != null)
                 {
-                    MessageId = msg.Id,
-                    NewMessageId = newMessageId,
-                    SourceChatId = sourceChatId,
-                    TargetChatId = targetChatId,
-                    MediaAlbumId = msg.MediaAlbumId,
-                    SourceUrl = sourceUrl,
-                    TargetUrl = BuildTargetMessageUrl(msg),
-                    IsSuccess = isSuccess,
-                    ForwardedAt = DateTime.UtcNow,
-                    ExtraData = ForwardRecord.BuildExtraData(msg, error)
-                });
+                    record.NewMessageId = fwdMsg.Id;
+                }
             }
+
+            db.ForwardRecords.Add(record);
         }
 
-        await db.SaveChangesAsync();
+        try
+        {
+            await db.SaveChangesAsync();
+        }
+        catch
+        {
+        }
     }
 }
