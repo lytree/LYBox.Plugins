@@ -5,92 +5,155 @@
 			 xmlns:vm="clr-namespace:Avalonia.Plugin.Downloader.ViewModels"
 			 xmlns:models="clr-namespace:Avalonia.Plugin.Downloader.Models"
 			 x:Class="Avalonia.Plugin.Downloader.Pages.M3u8DownloaderPage"
-			 x:DataType="vm:DownloaderViewModelBase"
+			 x:DataType="vm:M3u8DownloaderViewModel"
 			 mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700">
-	<Grid Margin="16" RowDefinitions="Auto,Auto,*">
+	<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+		<StackPanel Margin="16" Spacing="12">
 
-		<StackPanel Grid.Row="0" Spacing="4" Margin="0 0 0 16">
-			<TextBlock Text="{Binding Script.Name}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
-			<TextBlock Text="{Binding Script.Description}" Classes="Secondary" />
-		</StackPanel>
-
-		<Border Grid.Row="1" Theme="{DynamicResource CardBorder}" Padding="16" Margin="0 0 0 12">
-			<StackPanel Spacing="12">
-				<TextBlock Text="参数配置" Classes="SectionTitle" />
-				<ItemsControl ItemsSource="{Binding Parameters}">
-					<ItemsControl.DataTemplates>
-						<DataTemplate x:DataType="models:TextScriptParameter">
-							<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
-								<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
-								<TextBox Grid.Column="1" Text="{Binding DefaultValue}" PlaceholderText="{Binding Description}" HorizontalAlignment="Stretch" />
-							</Grid>
-						</DataTemplate>
-						<DataTemplate x:DataType="models:BoolScriptParameter">
-							<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
-								<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
-								<ToggleSwitch Grid.Column="1" IsChecked="{Binding DefaultBoolValue}" OnContent="是" OffContent="否" />
-							</Grid>
-						</DataTemplate>
-						<DataTemplate x:DataType="models:NumberScriptParameter">
-							<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
-								<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
-								<NumericUpDown Grid.Column="1" Value="{Binding DefaultIntValue}" Minimum="0" HorizontalAlignment="Stretch" />
-							</Grid>
-						</DataTemplate>
-						<DataTemplate x:DataType="models:PathScriptParameter">
-							<Grid ColumnDefinitions="160,*,160" Margin="0 4" MinHeight="32">
-								<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
-								<TextBox Grid.Column="1"
-										 Text="{Binding DefaultValue}"
-										 PlaceholderText="{Binding Description}"
-										 HorizontalAlignment="Stretch"
-										 IsReadOnly="True" />
-								<Button Grid.Column="2"
-										Content="浏览" Command="{Binding BrowseCommand}"
-										VerticalAlignment="Center" Margin="8,0,0,0" />
-							</Grid>
-						</DataTemplate>
-					</ItemsControl.DataTemplates>
-				</ItemsControl>
-
-				<StackPanel Orientation="Horizontal" Spacing="12" Margin="0 8 0 0">
-					<Button Content="执行" Command="{Binding ExecuteScriptCommand}" Classes="Primary" MinWidth="100" IsEnabled="{Binding !IsRunning}" />
-					<Button Content="取消" Command="{Binding CancelExecutionCommand}" MinWidth="80" IsVisible="{Binding IsRunning}" />
-					<TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Classes="Tertiary" Margin="12 0 0 0" />
-				</StackPanel>
+			<StackPanel Spacing="4" Margin="0 0 0 4">
+				<TextBlock Text="{Binding Script.Name}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
+				<TextBlock Text="{Binding Script.Description}" Classes="Secondary" />
 			</StackPanel>
-		</Border>
 
-		<Border Grid.Row="2" Theme="{DynamicResource CardBorder}" Padding="12" MaxHeight="400">
-			<Grid RowDefinitions="Auto,*">
-				<Grid ColumnDefinitions="*,Auto" Margin="0 0 0 8">
-					<TextBlock Grid.Column="0" Text="日志输出" Classes="SectionTitle" VerticalAlignment="Center" />
-					<Button Grid.Column="1" Content="清除" Command="{Binding ClearLogCommand}" FontSize="12" Padding="8 4" />
+			<Border Theme="{DynamicResource CardBorder}" Padding="16">
+				<StackPanel Spacing="12">
+					<TextBlock Text="下载链接" Classes="SectionTitle" />
+
+					<Grid ColumnDefinitions="*,160" Margin="0 0 0 4">
+						<TextBlock Grid.Column="0" Text="M3U8 链接列表" Classes="Body" VerticalAlignment="Center" />
+						<Button Grid.Column="1" Content="添加链接" Command="{Binding AddUrlEntryCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+					</Grid>
+
+					<ItemsControl ItemsSource="{Binding UrlEntries}">
+						<ItemsControl.DataTemplates>
+							<DataTemplate x:DataType="models:M3u8UrlEntry">
+								<Grid ColumnDefinitions="*,200,32" Margin="0 4" MinHeight="32">
+									<TextBox Grid.Column="0"
+											 Text="{Binding Url}"
+											 PlaceholderText="输入 M3U8 视频 URL"
+											 HorizontalAlignment="Stretch"
+											 Margin="0 0 8 0" />
+									<TextBox Grid.Column="1"
+											 Text="{Binding FileName}"
+											 PlaceholderText="文件名 (可选)"
+											 HorizontalAlignment="Stretch"
+											 Margin="0 0 8 0" />
+									<Button Grid.Column="2"
+											Content="✕"
+											Command="{Binding $parent[ItemsControl].((vm:M3u8DownloaderViewModel)DataContext).RemoveUrlEntryCommand}"
+											CommandParameter="{Binding}"
+											VerticalAlignment="Center"
+											HorizontalAlignment="Center"
+											Padding="4"
+											FontSize="14" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.DataTemplates>
+					</ItemsControl>
+				</StackPanel>
+			</Border>
+
+			<Border Theme="{DynamicResource CardBorder}" Padding="16">
+				<StackPanel Spacing="12">
+					<TextBlock Text="保存设置" Classes="SectionTitle" />
+
+					<Grid ColumnDefinitions="160,*,160" Margin="0 4" MinHeight="32">
+						<TextBlock Grid.Column="0" Text="保存路径" VerticalAlignment="Center" Classes="Body" />
+						<TextBox Grid.Column="1"
+								 Text="{Binding SavePath}"
+								 PlaceholderText="选择保存文件夹 (默认当前目录)"
+								 HorizontalAlignment="Stretch"
+								 IsReadOnly="True"
+								 Margin="0 0 8 0" />
+						<Button Grid.Column="2"
+								Content="浏览"
+								Command="{Binding BrowseSavePathCommand}"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Center" />
+					</Grid>
+				</StackPanel>
+			</Border>
+
+			<Border Theme="{DynamicResource CardBorder}" Padding="16">
+				<StackPanel Spacing="12">
+					<TextBlock Text="参数配置" Classes="SectionTitle" />
+					<ItemsControl ItemsSource="{Binding Parameters}">
+						<ItemsControl.DataTemplates>
+							<DataTemplate x:DataType="models:TextScriptParameter">
+								<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
+									<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
+									<TextBox Grid.Column="1" Text="{Binding DefaultValue}" PlaceholderText="{Binding Description}" HorizontalAlignment="Stretch" />
+								</Grid>
+							</DataTemplate>
+							<DataTemplate x:DataType="models:BoolScriptParameter">
+								<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
+									<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
+									<ToggleSwitch Grid.Column="1" IsChecked="{Binding DefaultBoolValue}" OnContent="是" OffContent="否" />
+								</Grid>
+							</DataTemplate>
+							<DataTemplate x:DataType="models:NumberScriptParameter">
+								<Grid ColumnDefinitions="160,*" Margin="0 4" MinHeight="32">
+									<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
+									<NumericUpDown Grid.Column="1" Value="{Binding DefaultIntValue}" Minimum="0" HorizontalAlignment="Stretch" />
+								</Grid>
+							</DataTemplate>
+							<DataTemplate x:DataType="models:PathScriptParameter">
+								<Grid ColumnDefinitions="160,*,160" Margin="0 4" MinHeight="32">
+									<TextBlock Grid.Column="0" Text="{Binding DisplayName}" VerticalAlignment="Center" Classes="Body" />
+									<TextBox Grid.Column="1"
+											 Text="{Binding DefaultValue}"
+											 PlaceholderText="{Binding Description}"
+											 HorizontalAlignment="Stretch"
+											 IsReadOnly="True" />
+									<Button Grid.Column="2"
+											Content="浏览" Command="{Binding BrowseCommand}"
+											VerticalAlignment="Center" Margin="8,0,0,0" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.DataTemplates>
+					</ItemsControl>
+
+					<StackPanel Orientation="Horizontal" Spacing="12" Margin="0 8 0 0">
+						<Button Content="执行" Command="{Binding ExecuteScriptCommand}" Classes="Primary" MinWidth="100" IsEnabled="{Binding !IsRunning}" />
+						<Button Content="取消" Command="{Binding CancelExecutionCommand}" MinWidth="80" IsVisible="{Binding IsRunning}" />
+						<TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Classes="Tertiary" Margin="12 0 0 0" />
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<Border Theme="{DynamicResource CardBorder}" Padding="12" MaxHeight="{Binding LogMaxHeight}">
+				<Grid RowDefinitions="Auto,*">
+					<Grid ColumnDefinitions="*,Auto" Margin="0 0 0 8">
+						<TextBlock Grid.Column="0" Text="日志输出" Classes="SectionTitle" VerticalAlignment="Center" />
+						<Button Grid.Column="1" Content="清除" Command="{Binding ClearLogCommand}" FontSize="12" Padding="8 4" />
+					</Grid>
+					<ListBox x:Name="LogListBox" Grid.Row="1"
+							 ItemsSource="{Binding LogEntries}"
+							 SelectionMode="Toggle"
+							 ScrollViewer.VerticalScrollBarVisibility="Auto"
+							 ScrollViewer.HorizontalScrollBarVisibility="Auto">
+						<ListBox.Styles>
+							<Style Selector="ListBoxItem">
+								<Setter Property="Padding" Value="2 1" />
+								<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+							</Style>
+						</ListBox.Styles>
+						<ListBox.ItemTemplate>
+							<DataTemplate x:DataType="models:LogEntry">
+								<SelectableTextBlock Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap">
+									<SelectableTextBlock.ContextMenu>
+										<ContextMenu x:CompileBindings="False">
+											<MenuItem Header="复制" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
+										</ContextMenu>
+									</SelectableTextBlock.ContextMenu>
+								</SelectableTextBlock>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
 				</Grid>
-				<ListBox x:Name="LogListBox" Grid.Row="1"
-						 ItemsSource="{Binding LogEntries}"
-						 SelectionMode="Toggle"
-						 ScrollViewer.VerticalScrollBarVisibility="Auto"
-						 ScrollViewer.HorizontalScrollBarVisibility="Auto">
-					<ListBox.Styles>
-						<Style Selector="ListBoxItem">
-							<Setter Property="Padding" Value="2 1" />
-							<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-						</Style>
-					</ListBox.Styles>
-					<ListBox.ItemTemplate>
-						<DataTemplate x:DataType="models:LogEntry">
-							<SelectableTextBlock Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap">
-								<SelectableTextBlock.ContextMenu>
-									<ContextMenu x:CompileBindings="False">
-										<MenuItem Header="复制" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
-									</ContextMenu>
-								</SelectableTextBlock.ContextMenu>
-							</SelectableTextBlock>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
-			</Grid>
-		</Border>
-	</Grid>
+			</Border>
+
+		</StackPanel>
+	</ScrollViewer>
 </UserControl>

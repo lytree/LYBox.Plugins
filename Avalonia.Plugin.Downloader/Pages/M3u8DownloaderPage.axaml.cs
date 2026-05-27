@@ -6,7 +6,7 @@ namespace Avalonia.Plugin.Downloader.Pages;
 
 public partial class M3u8DownloaderPage : UserControl
 {
-    private DownloaderViewModelBase? _currentVm;
+    private M3u8DownloaderViewModel? _currentVm;
 
     public M3u8DownloaderPage()
     {
@@ -21,7 +21,7 @@ public partial class M3u8DownloaderPage : UserControl
             _currentVm.LogEntries.CollectionChanged -= OnLogEntriesCollectionChanged;
         }
 
-        _currentVm = DataContext as DownloaderViewModelBase;
+        _currentVm = DataContext as M3u8DownloaderViewModel;
 
         if (_currentVm is not null)
         {

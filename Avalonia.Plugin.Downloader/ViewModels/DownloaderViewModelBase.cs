@@ -3,9 +3,11 @@ using Avalonia.Input.Platform;
 using Avalonia.Plugin.Downloader.Models;
 using Avalonia.Plugin.Downloader.Services;
 using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Services;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Avalonia.Plugin.Downloader.ViewModels;
 
@@ -17,6 +19,7 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
     [ObservableProperty] private ObservableCollection<LogEntry> _logEntries = [];
     [ObservableProperty] private bool _isRunning;
     [ObservableProperty] private string _statusText = "就绪";
+    [ObservableProperty] private double _logMaxHeight = 400;
 
     private CancellationTokenSource? _cts;
 
@@ -26,6 +29,13 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
         {
             Parameters.Add(param);
         }
+
+        WeakReferenceMessenger.Default.Register<DownloaderViewModelBase, WindowSizeChangedMessage>(this, OnWindowSizeChanged);
+    }
+
+    private void OnWindowSizeChanged(object recipient, WindowSizeChangedMessage message)
+    {
+        LogMaxHeight = Math.Max(200, message.Value.Height * 0.5);
     }
 
     [RelayCommand]
