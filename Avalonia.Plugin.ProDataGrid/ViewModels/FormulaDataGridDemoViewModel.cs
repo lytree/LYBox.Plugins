@@ -69,6 +69,7 @@ public partial class FormulaDataGridDemoViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        ExportHelper.ExportToJson(Products, "products_export.json");
         UpdateSummary();
     }
 
@@ -81,7 +82,7 @@ public partial class FormulaDataGridDemoViewModel : ObservableObject
 
     private List<Product> GenerateProducts(int count)
     {
-        var list = new List<Product>();
+        var list = new List<Product>(count);
         for (int i = 0; i < count; i++)
             list.Add(CreateRandomProduct());
         return list;

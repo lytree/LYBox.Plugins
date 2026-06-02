@@ -16,10 +16,11 @@
             <Button Content="添加行" Command="{Binding AddRowCommand}" />
             <Button Content="删除选中" Command="{Binding RemoveSelectedCommand}" />
             <Button Content="重置数据" Command="{Binding ResetDataCommand}" />
+            <Button Content="导出" Command="{Binding SaveCommand}" />
             <Button Content="清除日志" Command="{Binding ClearLogCommand}" />
             <Separator Margin="4,0" />
-            <Button Content="撤销" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}" />
-            <Button Content="重做" Command="{Binding RedoCommand}" IsEnabled="{Binding CanRedo}" />
+            <Button Content="撤销 (Ctrl+Z)" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}" />
+            <Button Content="重做 (Ctrl+Y)" Command="{Binding RedoCommand}" IsEnabled="{Binding CanRedo}" />
             <Button Content="提交修改" Command="{Binding CommitDirtyCommand}" />
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" Margin="0,0,0,8">

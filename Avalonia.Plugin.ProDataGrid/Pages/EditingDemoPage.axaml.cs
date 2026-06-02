@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Plugin.ProDataGrid.Models;
 using Avalonia.Plugin.ProDataGrid.ViewModels;
 
@@ -24,9 +26,46 @@ public partial class EditingDemoPage : UserControl
     public EditingDemoPage()
     {
         InitializeComponent();
+        AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
     }
 
     private EditingDemoViewModel? Vm => DataContext as EditingDemoViewModel;
+
+    /// <summary>
+    /// 键盘快捷键：Ctrl+Z 撤销, Ctrl+Y / Ctrl+Shift+Z 重做。
+    /// </summary>
+    private void OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (Vm is null) return;
+
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Control))
+        {
+            if (e.Key == Key.Z && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+            {
+                // Ctrl+Shift+Z = Redo
+                if (Vm.CanRedo) Vm.RedoCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Z)
+            {
+                // Ctrl+Z = Undo
+                if (Vm.CanUndo) Vm.UndoCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Y)
+            {
+                // Ctrl+Y = Redo
+                if (Vm.CanRedo) Vm.RedoCommand.Execute(null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.S)
+            {
+                // Ctrl+S = Save/Export
+                Vm.SaveCommand.Execute(null);
+                e.Handled = true;
+            }
+        }
+    }
 
     private void OnBeginningEdit(object? sender, DataGridBeginningEditEventArgs e)
     {

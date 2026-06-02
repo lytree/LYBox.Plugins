@@ -7,7 +7,6 @@ public partial class Product : ObservableObject
     [ObservableProperty] private string _name = string.Empty;
     [ObservableProperty] private double _price;
     [ObservableProperty] private int _quantity;
-    [ObservableProperty] private double _total;
 
     public Product() { }
 
@@ -16,16 +15,20 @@ public partial class Product : ObservableObject
         Name = name;
         Price = price;
         Quantity = quantity;
-        Total = price * quantity;
     }
+
+    /// <summary>
+    /// 总价 = 单价 × 数量（计算属性，无冗余状态）。
+    /// </summary>
+    public double Total => Price * Quantity;
 
     partial void OnPriceChanged(double value)
     {
-        Total = value * Quantity;
+        OnPropertyChanged(nameof(Total));
     }
 
     partial void OnQuantityChanged(int value)
     {
-        Total = Price * value;
+        OnPropertyChanged(nameof(Total));
     }
 }

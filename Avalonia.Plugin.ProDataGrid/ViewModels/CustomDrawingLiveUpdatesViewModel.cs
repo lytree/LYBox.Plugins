@@ -115,7 +115,12 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
     }
 
     public void OnAttached() => Start();
-    public void OnDetached() => Stop();
+
+    public void OnDetached()
+    {
+        Stop();
+        _factory = null; // 释放工厂引用，避免内存泄漏
+    }
 
     private void Start()
     {

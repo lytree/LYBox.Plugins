@@ -40,8 +40,11 @@ public partial class EditingDemoViewModel : ObservableObject
     private static readonly Random _random = new();
     private int _nextId = 1;
 
-    private readonly Stack<EditAction> _undoStack = new();
-    private readonly Stack<EditAction> _redoStack = new();
+    // 使用 List 作为 undo/redo 栈，支持 O(1) 修剪
+    private readonly List<EditAction> _undoList = [];
+    private readonly List<EditAction> _redoList = [];
+    private int _undoTop; // 指向下一个可用位置
+    private int _redoTop;
     private const int MaxUndoSteps = 50;
     private const int MaxLogEntries = 200;
 
@@ -87,18 +90,31 @@ public partial class EditingDemoViewModel : ObservableObject
             foreach (EditingDemoRow row in e.OldItems)
                 row.PropertyChanged -= OnRowPropertyChanged;
         }
-        UpdateDirtyCount();
+        // 增量更新脏计数
+        RecalculateDirtyCount();
     }
 
     private void OnRowPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(EditingDemoRow.IsDirty))
-            UpdateDirtyCount();
+        {
+            // 增量更新：根据变更方向调整计数
+            if (sender is EditingDemoRow row)
+            {
+                DirtyCount += row.IsDirty ? 1 : -1;
+                DirtyCount = Math.Max(0, Math.Min(DirtyCount, Rows.Count));
+            }
+        }
     }
 
-    private void UpdateDirtyCount()
+    private void RecalculateDirtyCount()
     {
-        DirtyCount = Rows.Count(r => r.IsDirty);
+        int count = 0;
+        foreach (var row in Rows)
+        {
+            if (row.IsDirty) count++;
+        }
+        DirtyCount = count;
     }
 
     partial void OnEditingModeIndexChanged(int value)
@@ -135,8 +151,10 @@ public partial class EditingDemoViewModel : ObservableObject
     [RelayCommand]
     private void ResetData()
     {
-        _undoStack.Clear();
-        _redoStack.Clear();
+        _undoList.Clear();
+        _undoTop = 0;
+        _redoList.Clear();
+        _redoTop = 0;
         UpdateUndoRedoState();
 
         foreach (var row in Rows)
@@ -162,9 +180,10 @@ public partial class EditingDemoViewModel : ObservableObject
     [RelayCommand]
     private void Undo()
     {
-        if (_undoStack.Count == 0) return;
-        var action = _undoStack.Pop();
-        _redoStack.Push(action);
+        if (_undoTop == 0) return;
+        var action = _undoList[--_undoTop];
+        EnsureCapacity(_redoList, ref _redoTop);
+        _redoList[_redoTop++] = action;
         ApplyUndo(action);
         UpdateUndoRedoState();
         EditStatus = $"已撤销: {action.Type}";
@@ -173,9 +192,10 @@ public partial class EditingDemoViewModel : ObservableObject
     [RelayCommand]
     private void Redo()
     {
-        if (_redoStack.Count == 0) return;
-        var action = _redoStack.Pop();
-        _undoStack.Push(action);
+        if (_redoTop == 0) return;
+        var action = _redoList[--_redoTop];
+        EnsureCapacity(_undoList, ref _undoTop);
+        _undoList[_undoTop++] = action;
         ApplyRedo(action);
         UpdateUndoRedoState();
         EditStatus = $"已重做: {action.Type}";
@@ -186,10 +206,19 @@ public partial class EditingDemoViewModel : ObservableObject
     {
         foreach (var row in Rows.Where(r => r.IsDirty))
             row.IsDirty = false;
-        _undoStack.Clear();
-        _redoStack.Clear();
+        _undoList.Clear();
+        _undoTop = 0;
+        _redoList.Clear();
+        _redoTop = 0;
         UpdateUndoRedoState();
         EditStatus = "所有修改已提交";
+    }
+
+    [RelayCommand]
+    private void Save()
+    {
+        ExportHelper.ExportToJson(Rows, "editing_data_export.json");
+        EditStatus = "数据已导出";
     }
 
     [RelayCommand]
@@ -256,18 +285,28 @@ public partial class EditingDemoViewModel : ObservableObject
 
     private void PushUndo(EditAction action)
     {
-        _undoStack.Push(action);
-        if (_undoStack.Count > MaxUndoSteps)
+        EnsureCapacity(_undoList, ref _undoTop);
+        _undoList[_undoTop++] = action;
+
+        // 修剪：超出上限时，移除最早的一半
+        if (_undoTop > MaxUndoSteps)
         {
-            var stack = new Stack<EditAction>();
-            for (int i = 0; i < MaxUndoSteps - 1; i++)
-                stack.Push(_undoStack.Pop());
-            _undoStack.Clear();
-            while (stack.Count > 0)
-                _undoStack.Push(stack.Pop());
+            int keep = MaxUndoSteps / 2;
+            int remove = _undoTop - keep;
+            _undoList.RemoveRange(0, remove);
+            _undoTop -= remove;
         }
-        _redoStack.Clear();
+
+        // 新操作清空 redo
+        _redoList.Clear();
+        _redoTop = 0;
         UpdateUndoRedoState();
+    }
+
+    private static void EnsureCapacity(List<EditAction> list, ref int top)
+    {
+        if (top >= list.Count)
+            list.Add(default);
     }
 
     private void ApplyUndo(EditAction action)
@@ -332,8 +371,8 @@ public partial class EditingDemoViewModel : ObservableObject
 
     private void UpdateUndoRedoState()
     {
-        CanUndo = _undoStack.Count > 0;
-        CanRedo = _redoStack.Count > 0;
+        CanUndo = _undoTop > 0;
+        CanRedo = _redoTop > 0;
     }
 
     private void UpdateEditingMode(int index)
@@ -374,7 +413,7 @@ public partial class EditingDemoViewModel : ObservableObject
 
     private List<EditingDemoRow> GenerateRows(int count)
     {
-        var list = new List<EditingDemoRow>();
+        var list = new List<EditingDemoRow>(count);
         for (int i = 0; i < count; i++)
             list.Add(CreateRandomRow());
         return list;
@@ -391,15 +430,8 @@ public partial class EditingDemoViewModel : ObservableObject
         var note = Notes[_random.Next(Notes.Length)];
 
         return new EditingDemoRow(
-            _nextId++,
-            product,
-            category,
-            price,
-            quantity,
-            inStock,
-            DateTime.Now.AddDays(-_random.Next(0, 365)),
-            supplier,
-            note
+            _nextId++, product, category, price, quantity, inStock,
+            DateTime.Now.AddDays(-_random.Next(0, 365)), supplier, note
         );
     }
 

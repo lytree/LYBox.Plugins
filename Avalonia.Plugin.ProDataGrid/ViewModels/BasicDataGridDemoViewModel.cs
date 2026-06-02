@@ -13,27 +13,6 @@ namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 [ViewMap(typeof(BasicDataGridDemo))]
 public partial class BasicDataGridDemoViewModel : ObservableObject
 {
-    private static readonly string[] FirstNames =
-    [
-        "张伟", "王芳", "李娜", "刘洋", "陈静", "杨磊", "赵敏", "黄强",
-        "周婷", "吴鹏", "徐明", "孙丽", "马超", "朱军", "胡雪", "郭涛",
-        "林峰", "何欣", "罗杰", "梁宇", "宋佳", "唐浩", "韩冰", "冯颖"
-    ];
-    private static readonly string[] LastNames =
-    [
-        "王", "李", "张", "刘", "陈", "杨", "赵", "黄",
-        "周", "吴", "徐", "孙", "马", "朱", "胡", "郭"
-    ];
-    private static readonly string[] Cities =
-    [
-        "上海", "北京", "深圳", "杭州", "成都", "武汉", "南京", "苏州",
-        "广州", "重庆", "西安", "长沙", "天津", "青岛", "大连", "厦门"
-    ];
-    private static readonly string[] Departments =
-    [
-        "研发部", "市场部", "销售部", "人力资源部", "财务部", "运营部", "法务部", "客服部",
-        "产品部", "设计部", "质量部", "行政部"
-    ];
     private static readonly Random _random = new();
     private int _nextId = 1;
     private List<Person> _allPeople;
@@ -94,16 +73,16 @@ public partial class BasicDataGridDemoViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        ExportHelper.ExportToJson(People, "people_export.json");
     }
 
     private void ApplyFilter()
     {
-        People.Clear();
         var filtered = string.IsNullOrWhiteSpace(FilterText)
             ? _allPeople
-            : _allPeople.Where(MatchesFilter);
-        foreach (var p in filtered)
-            People.Add(p);
+            : _allPeople.Where(MatchesFilter).ToList();
+
+        People.SyncWith(filtered);
     }
 
     private bool MatchesFilter(Person p)
@@ -117,7 +96,7 @@ public partial class BasicDataGridDemoViewModel : ObservableObject
 
     private List<Person> GeneratePeople(int count)
     {
-        var list = new List<Person>();
+        var list = new List<Person>(count);
         for (int i = 0; i < count; i++)
             list.Add(CreateRandomPerson());
         return list;
@@ -127,11 +106,11 @@ public partial class BasicDataGridDemoViewModel : ObservableObject
     {
         return new Person(
             _nextId++,
-            FirstNames[_random.Next(FirstNames.Length)],
-            LastNames[_random.Next(LastNames.Length)],
+            TestData.FirstNames[_random.Next(TestData.FirstNames.Length)],
+            TestData.LastNames[_random.Next(TestData.LastNames.Length)],
             _random.Next(22, 60),
-            Cities[_random.Next(Cities.Length)],
-            Departments[_random.Next(Departments.Length)],
+            TestData.Cities[_random.Next(TestData.Cities.Length)],
+            TestData.Departments[_random.Next(TestData.Departments.Length)],
             Math.Round(_random.NextDouble() * 45000 + 8000, 2)
         );
     }
