@@ -16,7 +16,7 @@ public partial class TemplatePlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "b5eab285-8673-4991-a45a-b43bee2cb840";
 
-    public void Initialize() { }
+    public void ConfigureServices(IServiceCollection services) { }
 
     public Task InitializeAsync(IServiceProvider serviceProvider)
     {

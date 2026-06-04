@@ -20,7 +20,7 @@ public partial class ButtonsInputsPlugin : IPluginMetadata
 
     public string PluginId => "0F2F7DB6-0E9B-D872-442F-2CBC3DAC1F56";
 
-    public void Initialize() { }
+    public void ConfigureServices(IServiceCollection services) { }
 
     public Task InitializeAsync(IServiceProvider serviceProvider)
     {

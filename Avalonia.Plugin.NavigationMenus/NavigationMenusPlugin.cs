@@ -16,7 +16,7 @@ public partial class NavigationMenusPlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "Avalonia.Plugin.NavigationMenus";
 
-    public void Initialize() { }
+    public void ConfigureServices(IServiceCollection services) { }
 
     public Task InitializeAsync(IServiceProvider serviceProvider)
     {

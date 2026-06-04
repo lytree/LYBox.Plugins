@@ -16,7 +16,7 @@ public partial class ProDataGridPlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "0F2F7DB6-0E9B-D872-442F-2CBC3DAC1FA1";
 
-    public void Initialize() { }
+    public void ConfigureServices(IServiceCollection services) { }
 
     public Task InitializeAsync(IServiceProvider serviceProvider)
     {
