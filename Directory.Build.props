@@ -7,5 +7,7 @@
         <ErrorOnDuplicatePublishOutputFiles>False</ErrorOnDuplicatePublishOutputFiles>
         <CheckEolWorkloads>false</CheckEolWorkloads>
         <IsPluginProject>true</IsPluginProject>
+        <!-- 包含所有语言资源（卫星程序集）到 publish 输出 -->
+        <SatelliteResourceLanguages>zh-CN;en</SatelliteResourceLanguages>
     </PropertyGroup>
 </Project>

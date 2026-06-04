@@ -16,9 +16,9 @@ public partial class BatchForwardViewModel : TdlViewModelBase
         Description = "将源频道/群聊的消息批量深度转发到目标频道/群聊",
         Parameters =
         [
-            ScriptParameter.Text("source", "源消息链接", "源频道/群聊消息链接", required: true),
-            ScriptParameter.Text("sourceId", "源消息ID", "指定源消息ID (可选)", required: false),
-            ScriptParameter.Text("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
+            ScriptParameter.HistoryText("source", "源消息链接", "源频道/群聊消息链接", required: true),
+            ScriptParameter.HistoryText("sourceId", "源消息ID", "指定源消息ID (可选)", required: false),
+            ScriptParameter.HistoryText("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
             ScriptParameter.Switch("older", "向旧消息方向", "true=向旧消息转发, false=向新消息转发", true),
             ScriptParameter.Number("limit", "最大转发数量", "0=全部", 0),
             ScriptParameter.Switch("comments", "转发评论", "是否转发评论", true),

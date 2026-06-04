@@ -25,7 +25,7 @@ public partial class DeepCopyViewModel : TdlViewModelBase
         Description = "将频道中的浅转发消息转换为深度Copy（从原始来源重新发送副本，然后删除旧浅转发）\n支持同时输入多个频道，每行一个",
         Parameters =
         [
-            ScriptParameter.MultiLineText("source", "源频道", "每行输入一个频道/群聊链接或用户名\n留空=收藏夹", required: false),
+            ScriptParameter.HistoryText("source", "源频道", "每行输入一个频道/群聊链接或用户名\n留空=收藏夹", required: false),
             ScriptParameter.Number("limit", "最大处理数量", "0=全部", 0),
             ScriptParameter.Switch("comments", "处理评论", "是否同时处理评论中的浅转发", true),
         ]

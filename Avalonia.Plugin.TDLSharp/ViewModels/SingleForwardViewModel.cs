@@ -16,8 +16,8 @@ public partial class SingleForwardViewModel : TdlViewModelBase
         Description = "将单条消息深度转发到目标频道/群聊（自动收集同组媒体消息一起转发）",
         Parameters =
         [
-            ScriptParameter.Text("source", "源消息链接", "源频道/群聊中的具体消息链接", required: true),
-            ScriptParameter.Text("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
+            ScriptParameter.HistoryText("source", "源消息链接", "源频道/群聊中的具体消息链接", required: true),
+            ScriptParameter.HistoryText("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
             ScriptParameter.Switch("comments", "转发评论", "是否同时转发该消息的评论", true),
         ]
     };

@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.DialogFeedbacks.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Avalonia.Plugin.DialogFeedbacks;
 
@@ -15,9 +16,12 @@ public partial class DialogFeedbacksPlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "Avalonia.Plugin.DialogFeedbacks";
 
-    public void Initialize()
+    public void Initialize() { }
+
+    public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+        if (serviceProvider.GetService<ILocalizationService>() is { } loc)
             loc.RegisterResourceManager(Strings.ResourceManager);
+        return Task.CompletedTask;
     }
 }

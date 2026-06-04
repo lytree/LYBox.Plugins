@@ -32,4 +32,5 @@ public static class Strings
     public static string NAV_SignalPlot => ResourceManager.GetString(nameof(NAV_SignalPlot), Culture)!;
     public static string NAV_ScatterPlot => ResourceManager.GetString(nameof(NAV_ScatterPlot), Culture)!;
     public static string NAV_BarChart => ResourceManager.GetString(nameof(NAV_BarChart), Culture)!;
+    public static string NAV_WaveformSpectrumTrend => ResourceManager.GetString(nameof(NAV_WaveformSpectrumTrend), Culture)!;
 }

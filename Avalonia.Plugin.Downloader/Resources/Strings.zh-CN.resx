@@ -52,4 +52,28 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="NAV_Downloader" xml:space="preserve"><value>下载器</value></data>
   <data name="NAV_Downloader_M3u8" xml:space="preserve"><value>M3U8 下载器</value></data>
+  <data name="BTN_Execute" xml:space="preserve"><value>执行</value></data>
+  <data name="BTN_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="BTN_Browse" xml:space="preserve"><value>浏览</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>清除</value></data>
+  <data name="BTN_AddLink" xml:space="preserve"><value>添加链接</value></data>
+  <data name="LBL_ParameterConfig" xml:space="preserve"><value>参数配置</value></data>
+  <data name="LBL_LogOutput" xml:space="preserve"><value>日志输出</value></data>
+  <data name="LBL_DownloadLinks" xml:space="preserve"><value>下载链接</value></data>
+  <data name="LBL_SaveSettings" xml:space="preserve"><value>保存设置</value></data>
+  <data name="LBL_M3u8UrlList" xml:space="preserve"><value>M3U8 链接列表</value></data>
+  <data name="LBL_SavePath" xml:space="preserve"><value>保存路径</value></data>
+  <data name="SW_On" xml:space="preserve"><value>是</value></data>
+  <data name="SW_Off" xml:space="preserve"><value>否</value></data>
+  <data name="MENU_Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="STATUS_Ready" xml:space="preserve"><value>就绪</value></data>
+  <data name="STATUS_Running" xml:space="preserve"><value>正在执行: {0}...</value></data>
+  <data name="STATUS_Completed" xml:space="preserve"><value>执行完成</value></data>
+  <data name="STATUS_Cancelled" xml:space="preserve"><value>已取消</value></data>
+  <data name="STATUS_Failed" xml:space="preserve"><value>执行失败</value></data>
+  <data name="STATUS_Cancelling" xml:space="preserve"><value>正在取消...</value></data>
+  <data name="HINT_InputM3u8Url" xml:space="preserve"><value>输入 M3U8 视频 URL</value></data>
+  <data name="HINT_FileNameOptional" xml:space="preserve"><value>文件名 (可选)</value></data>
+  <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>选择保存文件夹 (默认当前目录)</value></data>
+  <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>选择保存路径</value></data>
 </root>

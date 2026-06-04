@@ -16,8 +16,8 @@ public partial class MessageExportViewModel : TdlViewModelBase
         Description = "导出频道消息为JSON (支持分组和评论)",
         Parameters =
         [
-            ScriptParameter.Text("channel", "频道/群聊", "频道/群聊链接或用户名", required: true),
-            ScriptParameter.Text("output", "输出路径", "输出文件路径 (留空=自动)", required: false),
+            ScriptParameter.HistoryText("channel", "频道/群聊", "频道/群聊链接或用户名", required: true),
+            ScriptParameter.HistoryText("output", "输出路径", "输出文件路径 (留空=自动)", required: false),
             ScriptParameter.Switch("comments", "导出评论", "是否导出评论", false),
             ScriptParameter.Number("limit", "最大导出数量", "0=全部", 0),
         ]

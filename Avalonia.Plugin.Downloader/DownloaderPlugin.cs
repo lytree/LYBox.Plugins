@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.Downloader.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Avalonia.Plugin.Downloader;
 
@@ -15,9 +16,12 @@ public partial class DownloaderPlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "B2C3D4E5-F6A7-8901-BCDE-DOWNLOADER001";
 
-    public void Initialize()
+    public void Initialize() { }
+
+    public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+        if (serviceProvider.GetService<ILocalizationService>() is { } loc)
             loc.RegisterResourceManager(Strings.ResourceManager);
+        return Task.CompletedTask;
     }
 }

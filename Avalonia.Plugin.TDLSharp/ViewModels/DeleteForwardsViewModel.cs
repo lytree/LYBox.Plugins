@@ -16,8 +16,8 @@ public partial class DeleteForwardsViewModel : TdlViewModelBase
         Description = "删除频道/群聊中所有转发来源的消息，可指定从某条消息链接开始往前删除",
         Parameters =
         [
-            ScriptParameter.Text("channel", "频道/群聊", "频道/群聊链接或用户名 (留空=收藏夹)", required: false),
-            ScriptParameter.Text("fromLink", "起始消息链接", "指定消息链接，仅删除该消息之前的转发消息 (留空=从头开始)", required: false),
+            ScriptParameter.HistoryText("channel", "频道/群聊", "频道/群聊链接或用户名 (留空=收藏夹)", required: false),
+            ScriptParameter.HistoryText("fromLink", "起始消息链接", "指定消息链接，仅删除该消息之前的转发消息 (留空=从头开始)", required: false),
             ScriptParameter.Number("limit", "最大删除数量", "0=全部", 0),
         ]
     };

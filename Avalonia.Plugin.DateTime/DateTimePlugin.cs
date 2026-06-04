@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.DateTimeControls.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Avalonia.Plugin.DateTimeControls;
 
@@ -15,9 +16,12 @@ public partial class DateTimePlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "Avalonia.Plugin.DateTime";
 
-    public void Initialize()
+    public void Initialize() { }
+
+    public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+        if (serviceProvider.GetService<ILocalizationService>() is { } loc)
             loc.RegisterResourceManager(Strings.ResourceManager);
+        return Task.CompletedTask;
     }
 }

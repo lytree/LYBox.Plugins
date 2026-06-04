@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.Template.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Avalonia.Plugin.Template;
 
@@ -15,9 +16,12 @@ public partial class TemplatePlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "b5eab285-8673-4991-a45a-b43bee2cb840";
 
-    public void Initialize()
+    public void Initialize() { }
+
+    public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+        if (serviceProvider.GetService<ILocalizationService>() is { } loc)
             loc.RegisterResourceManager(Strings.ResourceManager);
+        return Task.CompletedTask;
     }
 }

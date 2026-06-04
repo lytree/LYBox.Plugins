@@ -54,5 +54,48 @@
   <data name="NAV_TDL_BatchForward" xml:space="preserve"><value>Batch Deep Forward</value></data>
   <data name="NAV_TDL_ClearMessage" xml:space="preserve"><value>Clear Messages</value></data>
   <data name="NAV_TDL_DeepCopy" xml:space="preserve"><value>Deep Copy Forward</value></data>
+  <data name="NAV_TDL_DeleteForwards" xml:space="preserve"><value>Delete Forwarded Messages</value></data>
   <data name="NAV_TDL_MessageExport" xml:space="preserve"><value>Message Export</value></data>
+  <data name="NAV_TDL_SingleForward" xml:space="preserve"><value>Single Deep Forward</value></data>
+  <data name="BTN_Execute" xml:space="preserve"><value>Execute</value></data>
+  <data name="BTN_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="BTN_Browse" xml:space="preserve"><value>Browse</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="BTN_ClearAll" xml:space="preserve"><value>Clear All</value></data>
+  <data name="BTN_ClearHistory" xml:space="preserve"><value>Clear History</value></data>
+  <data name="BTN_Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="BTN_AddLink" xml:space="preserve"><value>Add Link</value></data>
+  <data name="LBL_ParameterConfig" xml:space="preserve"><value>Parameter Configuration</value></data>
+  <data name="LBL_LogOutput" xml:space="preserve"><value>Log Output</value></data>
+  <data name="LBL_ExecutionHistory" xml:space="preserve"><value>Execution History</value></data>
+  <data name="LBL_DownloadLinks" xml:space="preserve"><value>Download Links</value></data>
+  <data name="LBL_SaveSettings" xml:space="preserve"><value>Save Settings</value></data>
+  <data name="LBL_M3u8UrlList" xml:space="preserve"><value>M3U8 URL List</value></data>
+  <data name="LBL_SavePath" xml:space="preserve"><value>Save Path</value></data>
+  <data name="LBL_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="LBL_SourceChannel" xml:space="preserve"><value>Source Channel</value></data>
+  <data name="LBL_ExecutedAt" xml:space="preserve"><value>Executed At</value></data>
+  <data name="LBL_Result" xml:space="preserve"><value>Result</value></data>
+  <data name="LBL_ErrorMessage" xml:space="preserve"><value>Error Message</value></data>
+  <data name="MENU_Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="MENU_ApplyToInput" xml:space="preserve"><value>Apply to Input</value></data>
+  <data name="MENU_DeleteRecord" xml:space="preserve"><value>Delete Record</value></data>
+  <data name="SW_On" xml:space="preserve"><value>Yes</value></data>
+  <data name="SW_Off" xml:space="preserve"><value>No</value></data>
+  <data name="STATUS_Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="STATUS_Running" xml:space="preserve"><value>Running: {0}...</value></data>
+  <data name="STATUS_Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="STATUS_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="STATUS_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="STATUS_Cancelling" xml:space="preserve"><value>Cancelling...</value></data>
+  <data name="STATUS_Executing" xml:space="preserve"><value>Executing</value></data>
+  <data name="RESULT_Success" xml:space="preserve"><value>Success</value></data>
+  <data name="RESULT_Partial" xml:space="preserve"><value>Partial</value></data>
+  <data name="RESULT_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="FAVORITES" xml:space="preserve"><value>Favorites</value></data>
+  <data name="HINT_SelectFilePath" xml:space="preserve"><value>Select file path...</value></data>
+  <data name="HINT_InputM3u8Url" xml:space="preserve"><value>Enter M3U8 video URL</value></data>
+  <data name="HINT_FileNameOptional" xml:space="preserve"><value>File name (optional)</value></data>
+  <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>Select save folder (default: current directory)</value></data>
+  <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>Select Save Path</value></data>
 </root>

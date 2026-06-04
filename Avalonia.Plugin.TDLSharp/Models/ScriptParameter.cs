@@ -74,6 +74,19 @@ public partial class ScriptParameter : ObservableObject
             DefaultValue = defaultValue.ToString()
         };
     }
+
+    public static ScriptParameter HistoryText(string key, string displayName, string? description = null,
+        string? defaultValue = null, bool required = false)
+    {
+        return new HistoryScriptParameter
+        {
+            Key = key,
+            DisplayName = displayName,
+            Description = description,
+            DefaultValue = defaultValue,
+            IsRequired = required
+        };
+    }
 }
 
 public partial class TextScriptParameter : ScriptParameter
@@ -127,6 +140,14 @@ public partial class PathScriptParameter : ScriptParameter
         }
     }
 }
+public partial class HistoryScriptParameter : ScriptParameter
+{
+    /// <summary>
+    /// 历史记录分组 Key，默认使用参数 Key。
+    /// </summary>
+    public string HistoryKey => $"param_{Key}";
+}
+
 public class ScriptDescriptor
 {
     public string Id { get; init; } = string.Empty;

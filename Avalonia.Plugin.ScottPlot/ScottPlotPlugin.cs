@@ -2,6 +2,7 @@ using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.ScottPlot.Resources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Avalonia.Plugin.ScottPlot;
 
@@ -15,9 +16,12 @@ public partial class ScottPlotPlugin : IPluginMetadata
     public IEnumerable<string> Dependencies => [];
     public string PluginId => "0F2F7DB6-0E9B-D872-442F-2CBC3DAC1FA0";
 
-    public void Initialize()
+    public void Initialize() { }
+
+    public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        if (ServiceLocator.TryGetService<ILocalizationService>(out var loc) && loc is not null)
+        if (serviceProvider.GetService<ILocalizationService>() is { } loc)
             loc.RegisterResourceManager(Strings.ResourceManager);
+        return Task.CompletedTask;
     }
 }
