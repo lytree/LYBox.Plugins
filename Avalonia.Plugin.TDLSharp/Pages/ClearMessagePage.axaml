@@ -9,10 +9,15 @@
 			 mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700">
 	<Grid Margin="16" RowDefinitions="Auto,Auto,*">
 
-		<StackPanel Grid.Row="0" Spacing="4" Margin="0 0 0 16">
-			<TextBlock Text="{Binding Script.Name}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
-			<TextBlock Text="{Binding Script.Description}" Classes="Secondary" />
-		</StackPanel>
+		<Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0 0 0 16">
+			<StackPanel Grid.Column="0" Spacing="4">
+				<TextBlock Text="{Binding Script.Name}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
+				<TextBlock Text="{Binding Script.Description}" Classes="Secondary" />
+			</StackPanel>
+			<Button Grid.Column="1" Command="{Binding ShowExecutionHistoryCommand}" ToolTip.Tip="执行历史" VerticalAlignment="Center" Padding="6">
+				<PathIcon Data="{DynamicResource SemiIconHistory}" Width="20" Height="20" />
+			</Button>
+		</Grid>
 
 		<Border Grid.Row="1" Theme="{DynamicResource CardBorder}" Padding="16" Margin="0 0 0 12">
 			<StackPanel Spacing="12">
@@ -68,7 +73,6 @@
 				<StackPanel Orientation="Horizontal" Spacing="12" Margin="0 8 0 0">
 					<Button Content="执行" Command="{Binding ExecuteScriptCommand}" Classes="Primary" MinWidth="100" IsEnabled="{Binding !IsRunning}" />
 					<Button Content="取消" Command="{Binding CancelExecutionCommand}" MinWidth="80" IsVisible="{Binding IsRunning}" />
-					<Button Content="执行历史" Command="{Binding ShowExecutionHistoryCommand}" MinWidth="80" />
 					<TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Classes="Tertiary" Margin="12 0 0 0" />
 				</StackPanel>
 			</StackPanel>

@@ -55,12 +55,15 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     private async Task ShowExecutionHistory()
     {
         await LoadExecutionHistoryAsync();
-        var dialogVm = new ExecutionHistoryDialogViewModel(ExecutionHistoryRecords, ApplyParametersFromJson);
+        var dialogVm = new ExecutionHistoryDialogViewModel(ExecutionHistoryRecords, ApplyParametersFromJson, Script.Parameters);
         var options = new OverlayDialogOptions
         {
             Title = $"执行历史 - {Script.Name}",
-            CanResize = true,
+            CanResize = false,
             CanLightDismiss = true,
+            IsCloseButtonVisible = true,
+            HorizontalAnchor = HorizontalPosition.Center,
+            VerticalAnchor = VerticalPosition.Center,
         };
         await OverlayDialog.ShowCustomAsync<Controls.ExecutionHistoryDialog, ExecutionHistoryDialogViewModel, bool>(dialogVm, options: options);
     }

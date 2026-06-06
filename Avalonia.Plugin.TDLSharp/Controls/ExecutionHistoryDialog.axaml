@@ -9,45 +9,34 @@
     d:DesignHeight="480"
     d:DesignWidth="720"
     x:DataType="vm:ExecutionHistoryDialogViewModel"
+    Loaded="OnLoaded"
     mc:Ignorable="d">
 
     <Grid Margin="16" RowDefinitions="Auto,*">
 
-        <!-- 标题行 + 按钮右侧 -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0 0 0 12">
+        <!-- 标题行 + 操作按钮靠左 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0 0 0 12">
             <TextBlock
-                Grid.Column="0"
                 VerticalAlignment="Center"
                 FontSize="15"
                 FontWeight="600"
                 Text="执行历史" />
-            <StackPanel
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Orientation="Horizontal"
-                Spacing="8">
-                <Button
-                    Command="{Binding ClearAllCommand}"
-                    Content="清除全部"
-                    FontSize="12"
-                    Padding="10 4" />
-                <Button
-                    Command="{Binding ApplyParametersCommand}"
-                    CommandParameter="{Binding SelectedRecord}"
-                    Content="应用选中"
-                    FontSize="12"
-                    Padding="10 4" />
-                <Button
-                    Classes="Tertiary"
-                    Command="{Binding CloseDialogCommand}"
-                    Content="关闭"
-                    FontSize="12"
-                    Padding="10 4" />
-            </StackPanel>
-        </Grid>
+            <Button
+                Command="{Binding ClearAllCommand}"
+                Content="清除全部"
+                FontSize="12"
+                Padding="10 4" />
+            <Button
+                Command="{Binding ApplyParametersCommand}"
+                CommandParameter="{Binding SelectedRecord}"
+                Content="应用选中"
+                FontSize="12"
+                Padding="10 4" />
+        </StackPanel>
 
-        <!-- 历史表格 -->
+        <!-- 历史表格（列在 code-behind 动态生成） -->
         <DataGrid
+            x:Name="HistoryDataGrid"
             Grid.Row="1"
             AutoGenerateColumns="False"
             CanUserReorderColumns="True"
@@ -60,14 +49,6 @@
             SelectedItem="{Binding SelectedRecord}"
             SelectionMode="Single"
             DoubleTapped="DataGrid_DoubleTapped">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding StatusIcon}" Header="" Width="36" />
-                <DataGridTextColumn Binding="{Binding ParameterSummary}" Header="参数" Width="*" />
-                <DataGridTextColumn Binding="{Binding ExecutedAt, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" Header="执行时间" Width="150" />
-                <DataGridTextColumn Binding="{Binding DurationText}" Header="耗时" Width="70" />
-                <DataGridTextColumn Binding="{Binding Status}" Header="状态" Width="60" />
-                <DataGridTextColumn Binding="{Binding ErrorMessage}" Header="错误信息" Width="140" />
-            </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding $parent[DataGrid].((vm:ExecutionHistoryDialogViewModel)DataContext).ApplyParametersCommand}" CommandParameter="{Binding $parent[DataGrid].SelectedItem}" Header="应用参数到输入框" />

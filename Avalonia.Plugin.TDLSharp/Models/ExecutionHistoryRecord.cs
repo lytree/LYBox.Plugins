@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Avalonia.Plugin.TDLSharp.Models;
@@ -48,4 +49,19 @@ public partial class ExecutionHistoryRecord : ObservableObject
         : Duration.TotalMinutes < 1
             ? $"{Duration.TotalSeconds:F1}s"
             : $"{Duration.Minutes}m {Duration.Seconds}s";
+
+    /// <summary>
+    /// 缓存的参数字典，避免重复反序列化
+    /// </summary>
+    private Dictionary<string, string>? _parametersCache;
+
+    /// <summary>
+    /// 根据参数 Key 获取参数值（用于 DataGrid 列绑定）
+    /// </summary>
+    public string GetParameterValue(string key)
+    {
+        _parametersCache ??= JsonSerializer.Deserialize<Dictionary<string, string>>(ParametersJson)
+                             ?? new Dictionary<string, string>();
+        return _parametersCache.TryGetValue(key, out var val) ? val : string.Empty;
+    }
 }

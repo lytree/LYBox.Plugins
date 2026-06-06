@@ -16,12 +16,50 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
 
     public ObservableCollection<ExecutionHistoryRecord> Records { get; }
 
+    /// <summary>
+    /// 根据脚本参数定义的动态列配置
+    /// </summary>
+    public List<HistoryColumnDefinition> ColumnDefinitions { get; }
+
     public ExecutionHistoryDialogViewModel(
         ObservableCollection<ExecutionHistoryRecord> records,
-        Action<string>? applyParametersCallback = null)
+        Action<string>? applyParametersCallback = null,
+        List<ScriptParameter>? scriptParameters = null)
     {
         Records = records;
         _applyParametersCallback = applyParametersCallback;
+
+        // 根据脚本参数构建列定义
+        ColumnDefinitions = BuildColumnDefinitions(scriptParameters ?? []);
+    }
+
+    private static List<HistoryColumnDefinition> BuildColumnDefinitions(List<ScriptParameter> parameters)
+    {
+        var columns = new List<HistoryColumnDefinition>();
+
+        // 状态图标列
+        columns.Add(new HistoryColumnDefinition("StatusIcon", "", "36", isParameter: false));
+
+        // 每个脚本参数一列
+        foreach (var param in parameters)
+        {
+            var width = param.Key is "source" or "channel" or "target" or "output" ? "*" : "Auto";
+            columns.Add(new HistoryColumnDefinition(param.Key, param.DisplayName, width, isParameter: true));
+        }
+
+        // 如果没有参数定义，回退到 ParameterSummary 列
+        if (parameters.Count == 0)
+        {
+            columns.Add(new HistoryColumnDefinition("ParameterSummary", "参数", "*", isParameter: false));
+        }
+
+        // 固定列：执行时间、耗时、状态、错误信息
+        columns.Add(new HistoryColumnDefinition("ExecutedAt", "执行时间", "150", isParameter: false));
+        columns.Add(new HistoryColumnDefinition("DurationText", "耗时", "70", isParameter: false));
+        columns.Add(new HistoryColumnDefinition("Status", "状态", "60", isParameter: false));
+        columns.Add(new HistoryColumnDefinition("ErrorMessage", "错误信息", "140", isParameter: false));
+
+        return columns;
     }
 
     public void Close()
@@ -74,5 +112,24 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
     private void CloseDialog()
     {
         Close();
+    }
+}
+
+/// <summary>
+/// 历史弹框 DataGrid 列定义
+/// </summary>
+public class HistoryColumnDefinition
+{
+    public string BindingKey { get; }
+    public string Header { get; }
+    public string Width { get; }
+    public bool IsParameter { get; }
+
+    public HistoryColumnDefinition(string bindingKey, string header, string width, bool isParameter)
+    {
+        BindingKey = bindingKey;
+        Header = header;
+        Width = width;
+        IsParameter = isParameter;
     }
 }
