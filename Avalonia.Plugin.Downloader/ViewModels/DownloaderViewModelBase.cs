@@ -67,10 +67,15 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
         StatusText = Strings.Get("STATUS_Running", Script.Name);
         _cts = new CancellationTokenSource();
 
+        // 注册到 TaskRegistry，主程序退出时可检测
+        var taskScope = new TaskScope(Script.Name, "B2C3D4E5-F6A7-8901-BCDE-DOWNLOADER001");
+        // 将 TaskScope 的取消令牌链接到本地 CTS
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, taskScope.Token.CancellationTokenSource.Token);
+
         try
         {
             var paramValues = BuildParameterValues();
-            await ExecuteCoreAsync(paramValues, _cts.Token);
+            await ExecuteCoreAsync(paramValues, linkedCts.Token);
             StatusText = Strings.Get("STATUS_Completed");
         }
         catch (OperationCanceledException)
@@ -87,6 +92,7 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
             IsRunning = false;
             _cts?.Dispose();
             _cts = null;
+            taskScope.Dispose();
         }
     }
 

@@ -144,7 +144,7 @@
 								<SelectableTextBlock Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap">
 									<SelectableTextBlock.ContextMenu>
 										<ContextMenu x:CompileBindings="False">
-											<MenuItem Header="{DynamicResource MENU_Copy}" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
+											<MenuItem Header="{DynamicResource MENU_COPY}" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
 										</ContextMenu>
 									</SelectableTextBlock.ContextMenu>
 								</SelectableTextBlock>

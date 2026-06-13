@@ -94,6 +94,11 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         var sw = Stopwatch.StartNew();
         var paramSnapshot = BuildParameterValues();
 
+        // 注册到 TaskRegistry，主程序退出时可检测
+        var taskScope = new TaskScope(Script.Name, "A1B2C3D4-E5F6-7890-ABCD-TDLSHARP00001");
+        // 将 TaskScope 的取消令牌链接到本地 CTS
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, taskScope.Token.CancellationTokenSource.Token);
+
         // 执行开始时即创建历史记录
         var record = new ExecutionHistoryRecord
         {
@@ -117,7 +122,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         try
         {
             var tdlService = CreateTdlService();
-            await ExecuteCoreAsync(tdlService, paramSnapshot, _cts.Token);
+            await ExecuteCoreAsync(tdlService, paramSnapshot, linkedCts.Token);
             record.Status = Strings.Get("RESULT_Success");
             StatusText = Strings.Get("STATUS_Completed");
         }
@@ -139,6 +144,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             IsRunning = false;
             _cts?.Dispose();
             _cts = null;
+            taskScope.Dispose();
             OnExecutionFinished();
 
             // 更新历史记录的最终状态
