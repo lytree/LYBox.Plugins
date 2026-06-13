@@ -24,18 +24,18 @@
                     Value="{x:Static PlacementMode.BottomEdgeAlignedLeft}" />
             </u:Form>
         </Border>
-        <TextBlock Text="Default PopConfirm" Margin="0 16" />
-        <u:PopConfirm PopupHeader="确定是否要保存此修改？"
+        <TextBlock Text="{DynamicResource STRING_LBL_DefaultPopConfirm}" Margin="0 16" />
+        <u:PopConfirm PopupHeader="{DynamicResource STRING_POP_ConfirmSaveHeader}"
                       HorizontalAlignment="Left"
-                      PopupContent="此修改将不可逆"
+                      PopupContent="{DynamicResource STRING_POP_IrreversibleChange}"
                       Placement="{Binding #placement.Value}"
                       ConfirmCommand="{Binding ConfirmCommand}"
                       CancelCommand="{Binding Path=CancelCommand}">
             <Button Content="Hello World" />
         </u:PopConfirm>
-        <TextBlock Text="GotFocus to open, LostFocus to close" Margin="0 16" />
-        <u:PopConfirm PopupHeader="确定是否要保存此修改？"
-                      PopupContent="此修改将不可逆"
+        <TextBlock Text="{DynamicResource STRING_LBL_FocusTriggerMode}" Margin="0 16" />
+        <u:PopConfirm PopupHeader="{DynamicResource STRING_POP_ConfirmSaveHeader}"
+                      PopupContent="{DynamicResource STRING_POP_IrreversibleChange}"
                       TriggerMode="Focus, Click"
                       HorizontalAlignment="Left"
                       Placement="{Binding #placement.Value}"
@@ -45,10 +45,10 @@
             <Button Content="Hello World" />
         </u:PopConfirm>
         <TextBlock
-            Text="Non-button control as main element"
+            Text="{DynamicResource STRING_LBL_NonButtonElement}"
             Margin="0 16" />
-        <u:PopConfirm PopupHeader="确定是否要保存此修改？"
-                      PopupContent="此修改将不可逆"
+        <u:PopConfirm PopupHeader="{DynamicResource STRING_POP_ConfirmSaveHeader}"
+                      PopupContent="{DynamicResource STRING_POP_IrreversibleChange}"
                       TriggerMode="Click"
                       HorizontalAlignment="Left"
                       u:ControlClassesInput.Source="{Binding #classInput}"
@@ -57,10 +57,10 @@
                       CancelCommand="{Binding Path=CancelCommand}">
             <TextBlock Text="Hello World" />
         </u:PopConfirm>
-        <TextBlock Text="Asynchronized command support"
+        <TextBlock Text="{DynamicResource STRING_LBL_AsyncCommandSupport}"
                    Margin="0 16" />
-        <u:PopConfirm PopupHeader="确定是否要保存此修改？"
-                      PopupContent="此修改将不可逆"
+        <u:PopConfirm PopupHeader="{DynamicResource STRING_POP_ConfirmSaveHeader}"
+                      PopupContent="{DynamicResource STRING_POP_IrreversibleChange}"
                       HorizontalAlignment="Left"
                       Placement="{Binding #placement.Value}"
                       u:ControlClassesInput.Source="{Binding #classInput}"

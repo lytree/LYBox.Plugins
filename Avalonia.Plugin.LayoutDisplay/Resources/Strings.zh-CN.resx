@@ -67,4 +67,18 @@
   <data name="NAV_ScrollToButton" xml:space="preserve"><value>滚动定位按钮</value></data>
   <data name="NAV_Timeline" xml:space="preserve"><value>时间线</value></data>
   <data name="NAV_TwoTonePathIcon" xml:space="preserve"><value>双色路径图标</value></data>
+  <data name="LBL_Step1" xml:space="preserve"><value>第一步</value></data>
+  <data name="LBL_Step2" xml:space="preserve"><value>第二步</value></data>
+  <data name="LBL_Step3" xml:space="preserve"><value>第三步</value></data>
+  <data name="LBL_Step4" xml:space="preserve"><value>第四步</value></data>
+  <data name="LBL_Step5" xml:space="preserve"><value>第五步</value></data>
+  <data name="LBL_ActualUsers" xml:space="preserve"><value>实际用户数量</value></data>
+  <data name="LBL_7DayRetention" xml:space="preserve"><value>7天留存</value></data>
+  <data name="LBL_SecurityLevel" xml:space="preserve"><value>安全等级</value></data>
+  <data name="LBL_Level3" xml:space="preserve"><value>3级</value></data>
+  <data name="LBL_VerticalTag" xml:space="preserve"><value>垂类标签</value></data>
+  <data name="LBL_ECommerce" xml:space="preserve"><value>电商</value></data>
+  <data name="LBL_CertStatus" xml:space="preserve"><value>认证状态</value></data>
+  <data name="LBL_NotCertified" xml:space="preserve"><value>未认证</value></data>
+  <data name="BTN_TestSetNull" xml:space="preserve"><value>测试设置为 null</value></data>
 </root>

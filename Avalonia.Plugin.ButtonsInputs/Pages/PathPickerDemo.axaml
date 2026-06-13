@@ -25,7 +25,7 @@
                     <TextBox
                         Name="Title"
                         u:FormItem.Label="Title"
-                        Text="选择文件" />
+                        Text="{DynamicResource STRING_LBL_SelectFile}" />
                     <TextBox
                         Name="SuggestedFileName"
                         u:FormItem.Label="SuggestedFileName"

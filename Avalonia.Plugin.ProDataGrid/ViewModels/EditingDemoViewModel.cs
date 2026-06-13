@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Resources;
 
 namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 
@@ -17,6 +18,8 @@ namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 [ViewMap(typeof(EditingDemoPage))]
 public partial class EditingDemoViewModel : ObservableObject
 {
+    private static readonly ResourceManager _rm = new("Avalonia.Plugin.ProDataGrid.Resources.Strings", typeof(EditingDemoViewModel).Assembly);
+    private static string L(string key) => _rm.GetString(key) ?? key;
     private static readonly string[] Products =
     [
         "笔记本电脑", "无线鼠标", "机械键盘", "显示器", "USB集线器",
@@ -62,9 +65,13 @@ public partial class EditingDemoViewModel : ObservableObject
     [ObservableProperty] private DataGridEditTriggers _editTriggers = DataGridEditTriggers.CellDoubleClick | DataGridEditTriggers.F2;
     [ObservableProperty] private bool _isReadOnly;
     [ObservableProperty] private string _modeDescription = string.Empty;
-    [ObservableProperty] private string _editStatus = "就绪";
+    [ObservableProperty] private string _editStatus = "Ready";
     [ObservableProperty] private int _dirtyCount;
+
+    public string DirtyCountText => string.Format(L("FMT_UncommittedChanges"), DirtyCount);
     [ObservableProperty] private bool _canUndo;
+
+    partial void OnDirtyCountChanged(int value) => OnPropertyChanged(nameof(DirtyCountText));
     [ObservableProperty] private bool _canRedo;
     [ObservableProperty] private string _batchCategory = string.Empty;
     [ObservableProperty] private string _batchSupplier = string.Empty;
@@ -128,7 +135,7 @@ public partial class EditingDemoViewModel : ObservableObject
         var row = CreateRandomRow();
         Rows.Add(row);
         PushUndo(new EditAction(EditActionType.Add, row, Rows.Count - 1));
-        EditStatus = $"已添加行: {row.Product}";
+        EditStatus = string.Format(L("MSG_RowAdded"), row.Product);
     }
 
     [RelayCommand]
@@ -142,7 +149,7 @@ public partial class EditingDemoViewModel : ObservableObject
                 var snapshot = CloneRow(SelectedRow);
                 PushUndo(new EditAction(EditActionType.Remove, snapshot, index));
                 Rows.RemoveAt(index);
-                EditStatus = $"已删除行: {snapshot.Product}";
+                EditStatus = string.Format(L("MSG_RowDeleted"), snapshot.Product);
             }
             SelectedRow = null;
         }
@@ -166,7 +173,7 @@ public partial class EditingDemoViewModel : ObservableObject
             Rows.Add(row);
         EventLog.Clear();
         _logBuffer.Clear();
-        EditStatus = "数据已重置";
+        EditStatus = L("MSG_DataReset");
         DirtyCount = 0;
     }
 
@@ -186,7 +193,7 @@ public partial class EditingDemoViewModel : ObservableObject
         _redoList[_redoTop++] = action;
         ApplyUndo(action);
         UpdateUndoRedoState();
-        EditStatus = $"已撤销: {action.Type}";
+        EditStatus = string.Format(L("MSG_Undone"), action.Type);
     }
 
     [RelayCommand]
@@ -198,7 +205,7 @@ public partial class EditingDemoViewModel : ObservableObject
         _undoList[_undoTop++] = action;
         ApplyRedo(action);
         UpdateUndoRedoState();
-        EditStatus = $"已重做: {action.Type}";
+        EditStatus = string.Format(L("MSG_Redone"), action.Type);
     }
 
     [RelayCommand]
@@ -211,14 +218,14 @@ public partial class EditingDemoViewModel : ObservableObject
         _redoList.Clear();
         _redoTop = 0;
         UpdateUndoRedoState();
-        EditStatus = "所有修改已提交";
+        EditStatus = L("MSG_AllChangesCommitted");
     }
 
     [RelayCommand]
     private void Save()
     {
         ExportHelper.ExportToJson(Rows, "editing_data_export.json");
-        EditStatus = "数据已导出";
+        EditStatus = L("MSG_DataExported");
     }
 
     [RelayCommand]
@@ -238,7 +245,7 @@ public partial class EditingDemoViewModel : ObservableObject
         if (changes.Count > 0)
         {
             PushUndo(new EditAction(EditActionType.BatchEdit, changes));
-            EditStatus = $"已批量设置 {changes.Count} 行分类为: {BatchCategory}";
+            EditStatus = string.Format(L("MSG_BatchCategorySet"), changes.Count, BatchCategory);
         }
     }
 
@@ -259,7 +266,7 @@ public partial class EditingDemoViewModel : ObservableObject
         if (changes.Count > 0)
         {
             PushUndo(new EditAction(EditActionType.BatchEdit, changes));
-            EditStatus = $"已批量设置 {changes.Count} 行供应商为: {BatchSupplier}";
+            EditStatus = string.Format(L("MSG_BatchSupplierSet"), changes.Count, BatchSupplier);
         }
     }
 
@@ -270,7 +277,7 @@ public partial class EditingDemoViewModel : ObservableObject
         var before = CloneRow(row);
         SetPropertyValue(before, propertyName, oldValue);
         PushUndo(new EditAction(EditActionType.CellEdit, (index, before, propertyName, oldValue, newValue)));
-        AddLog($"编辑: 行{index} [{propertyName}] {oldValue} → {newValue}");
+        AddLog(string.Format(L("MSG_CellEdit"), index, propertyName, oldValue, newValue));
     }
 
     public void AddLog(string message)
@@ -383,30 +390,30 @@ public partial class EditingDemoViewModel : ObservableObject
                 IsReadOnly = false;
                 EditingInteractionModel = new DoubleClickOnlyEditingInteractionModel();
                 EditTriggers = DataGridEditTriggers.CellDoubleClick | DataGridEditTriggers.F2;
-                ModeDescription = "双击或按 F2 进入编辑模式";
-                EditStatus = "已切换到: 双击编辑";
+                ModeDescription = L("DESC_DoubleClickEdit");
+                EditStatus = L("STATUS_DoubleClickEdit");
                 break;
             case 1:
                 IsReadOnly = false;
                 EditingInteractionModel = new DataGridEditingInteractionModel();
                 EditTriggers = DataGridEditTriggers.CellClick | DataGridEditTriggers.CellDoubleClick |
                                DataGridEditTriggers.F2 | DataGridEditTriggers.TextInput;
-                ModeDescription = "单击即可编辑单元格，支持双击、F2、直接输入";
-                EditStatus = "已切换到: 单击编辑";
+                ModeDescription = L("DESC_SingleClickEdit");
+                EditStatus = L("STATUS_SingleClickEdit");
                 break;
             case 2:
                 IsReadOnly = false;
                 EditingInteractionModel = new AltClickEditingInteractionModel();
                 EditTriggers = DataGridEditTriggers.CellClick | DataGridEditTriggers.CellDoubleClick;
-                ModeDescription = "按住 Alt + 单击进入编辑模式";
-                EditStatus = "已切换到: Alt+点击编辑";
+                ModeDescription = L("DESC_AltClickEdit");
+                EditStatus = L("STATUS_AltClickEdit");
                 break;
             case 3:
                 IsReadOnly = true;
                 EditingInteractionModel = null;
                 EditTriggers = DataGridEditTriggers.None;
-                ModeDescription = "只读模式，不可编辑";
-                EditStatus = "已切换到: 只读";
+                ModeDescription = L("DESC_ReadOnly");
+                EditStatus = L("STATUS_ReadOnly");
                 break;
         }
     }

@@ -58,4 +58,8 @@
   <data name="NAV_TimeRangePicker" xml:space="preserve"><value>时间范围选择器</value></data>
   <data name="NAV_TimeBox" xml:space="preserve"><value>时间输入框</value></data>
   <data name="NAV_Clock" xml:space="preserve"><value>时钟</value></data>
+  <data name="FMT_DateTimeDisplay" xml:space="preserve"><value>yyyy年MM月dd日 HH时mm分ss秒</value></data>
+  <data name="FMT_TimeDisplay" xml:space="preserve"><value>HH 时 mm 分 ss 秒</value></data>
+  <data name="LBL_TimeStart" xml:space="preserve"><value>时刻</value></data>
+  <data name="LBL_TimeEnd" xml:space="preserve"><value>截止</value></data>
 </root>

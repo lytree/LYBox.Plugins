@@ -13,15 +13,15 @@
     mc:Ignorable="d">
     <Grid RowDefinitions="Auto, Auto, *">
         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
-            <Button Content="添加任务" Command="{Binding AddTaskCommand}" />
-            <Button Content="重置数据" Command="{Binding ResetDataCommand}" />
-            <Button Content="清除筛选" Command="{Binding ClearFilterCommand}" />
-            <Button Content="保存" Command="{Binding SaveCommand}" />
+            <Button Content="{DynamicResource STRING_BTN_AddTask}" Command="{Binding AddTaskCommand}" />
+            <Button Content="{DynamicResource STRING_BTN_ResetData}" Command="{Binding ResetDataCommand}" />
+            <Button Content="{DynamicResource STRING_BTN_ClearFilter}" Command="{Binding ClearFilterCommand}" />
+            <Button Content="{DynamicResource STRING_BTN_Save}" Command="{Binding SaveCommand}" />
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="Auto, *, Auto, Auto" Margin="0,0,0,8">
-            <TextBlock Text="筛选：" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <TextBox Grid.Column="1" Text="{Binding FilterText}" PlaceholderText="按标题、负责人、状态搜索..." />
-            <TextBlock Grid.Column="2" Text="分组：" VerticalAlignment="Center" Margin="16,0,8,0" />
+            <TextBlock Text="{DynamicResource STRING_LBL_Filter}" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Grid.Column="1" Text="{Binding FilterText}" PlaceholderText="{DynamicResource STRING_HINT_FilterTitleAssigneeStatus}" />
+            <TextBlock Grid.Column="2" Text="{DynamicResource STRING_LBL_GroupBy}" VerticalAlignment="Center" Margin="16,0,8,0" />
             <ComboBox Grid.Column="3" ItemsSource="{Binding GroupByOptions}" SelectedItem="{Binding GroupByProperty}" MinWidth="120" />
         </Grid>
         <DataGrid
@@ -38,12 +38,12 @@
             EditTriggers="CellClick,CellDoubleClick,F2,TextInput"
             x:CompileBindings="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id, Mode=OneWay}" Width="60" IsReadOnly="True" />
-                <DataGridTextColumn Header="标题" Binding="{Binding Title, Mode=TwoWay}" Width="2*" />
-                <DataGridTextColumn Header="负责人" Binding="{Binding Assignee, Mode=TwoWay}" Width="*" />
-                <DataGridTextColumn Header="状态" Binding="{Binding Status, Mode=TwoWay}" Width="100" />
-                <DataGridTextColumn Header="优先级" Binding="{Binding Priority, Mode=TwoWay}" Width="80" />
-                <DataGridTemplateColumn Header="进度" Width="120">
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_ID}" Binding="{Binding Id, Mode=OneWay}" Width="60" IsReadOnly="True" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_Title}" Binding="{Binding Title, Mode=TwoWay}" Width="2*" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_Assignee}" Binding="{Binding Assignee, Mode=TwoWay}" Width="*" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_Status}" Binding="{Binding Status, Mode=TwoWay}" Width="100" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_Priority}" Binding="{Binding Priority, Mode=TwoWay}" Width="80" />
+                <DataGridTemplateColumn Header="{DynamicResource STRING_COL_Progress}" Width="120">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="models:TaskItem">
                             <Grid ColumnDefinitions="*, Auto">
@@ -53,8 +53,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="截止日期" Binding="{Binding DueDate, Mode=TwoWay}" Width="110" />
-                <DataGridTextColumn Header="分类" Binding="{Binding Category, Mode=TwoWay}" Width="100" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_DueDate}" Binding="{Binding DueDate, Mode=TwoWay}" Width="110" />
+                <DataGridTextColumn Header="{DynamicResource STRING_COL_Category}" Binding="{Binding Category, Mode=TwoWay}" Width="100" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

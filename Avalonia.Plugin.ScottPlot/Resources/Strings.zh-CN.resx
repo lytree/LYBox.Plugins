@@ -56,4 +56,19 @@
   <data name="NAV_ScatterPlot" xml:space="preserve"><value>散点图</value></data>
   <data name="NAV_BarChart" xml:space="preserve"><value>柱状图</value></data>
   <data name="NAV_WaveformSpectrumTrend" xml:space="preserve"><value>波形图 / 频谱图 / 趋势图</value></data>
+  <data name="BTN_SineWave" xml:space="preserve"><value>正弦波</value></data>
+  <data name="BTN_CosineWave" xml:space="preserve"><value>余弦波</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>清除</value></data>
+  <data name="BTN_RandomSignal" xml:space="preserve"><value>随机信号</value></data>
+  <data name="BTN_SineSignal" xml:space="preserve"><value>正弦信号</value></data>
+  <data name="BTN_RandomPoints" xml:space="preserve"><value>随机点</value></data>
+  <data name="BTN_Spiral" xml:space="preserve"><value>螺旋线</value></data>
+  <data name="BTN_RandomBars" xml:space="preserve"><value>随机柱状</value></data>
+  <data name="BTN_CategoryBars" xml:space="preserve"><value>分类柱状</value></data>
+  <data name="BTN_Autoscale" xml:space="preserve"><value>自动缩放</value></data>
+  <data name="LBL_Waveform" xml:space="preserve"><value>波形图</value></data>
+  <data name="LBL_Spectrum" xml:space="preserve"><value>频谱图</value></data>
+  <data name="LBL_Trend" xml:space="preserve"><value>趋势图</value></data>
+  <data name="TIP_RegenerateData" xml:space="preserve"><value>重新生成数据</value></data>
+  <data name="TIP_ResetAll" xml:space="preserve"><value>全部重置</value></data>
 </root>

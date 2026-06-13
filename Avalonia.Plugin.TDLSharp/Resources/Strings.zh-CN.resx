@@ -98,4 +98,10 @@
   <data name="HINT_FileNameOptional" xml:space="preserve"><value>文件名 (可选)</value></data>
   <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>选择保存文件夹 (默认当前目录)</value></data>
   <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>选择保存路径</value></data>
+  <data name="BTN_ApplySelected" xml:space="preserve"><value>应用选中</value></data>
+  <data name="BTN_DeleteSelected" xml:space="preserve"><value>删除选中</value></data>
+  <data name="BTN_Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="LBL_Parameters" xml:space="preserve"><value>参数</value></data>
+  <data name="LBL_Duration" xml:space="preserve"><value>耗时</value></data>
+  <data name="LBL_Actions" xml:space="preserve"><value>操作</value></data>
 </root>

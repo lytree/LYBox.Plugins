@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Resources;
 
 namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 
@@ -13,6 +14,8 @@ namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 [ViewMap(typeof(CustomDrawingLiveUpdatesPage))]
 public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
 {
+    private static readonly ResourceManager _rm = new("Avalonia.Plugin.ProDataGrid.Resources.Strings", typeof(CustomDrawingLiveUpdatesViewModel).Assembly);
+    private static string L(string key) => _rm.GetString(key) ?? key;
     private readonly DispatcherTimer _timer;
     private readonly Random _random = new();
     private SkiaAnimatedTextCellDrawOperationFactory? _factory;
@@ -51,6 +54,7 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
         StartCommand.NotifyCanExecuteChanged();
         StopCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(RunState));
+        OnPropertyChanged(nameof(RunStateText));
     }
 
     public bool IsRunning
@@ -64,6 +68,7 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
                 StartCommand.NotifyCanExecuteChanged();
                 StopCommand.NotifyCanExecuteChanged();
                 OnPropertyChanged(nameof(RunState));
+                OnPropertyChanged(nameof(RunStateText));
             }
         }
     }
@@ -94,7 +99,11 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
     public long FrameCount
     {
         get => _frameCount;
-        private set => SetProperty(ref _frameCount, value);
+        private set
+        {
+            if (SetProperty(ref _frameCount, value))
+                OnPropertyChanged(nameof(FrameCountText));
+        }
     }
 
     public float Phase
@@ -103,7 +112,10 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
         private set => SetProperty(ref _phase, value);
     }
 
-    public string RunState => IsRunning ? "运行中" : "已停止";
+    public string RunState => IsRunning ? L("STATE_Running") : L("STATE_Stopped");
+
+    public string FrameCountText => string.Format(L("FMT_FrameCount"), FrameCount);
+    public string RunStateText => string.Format(L("FMT_RunState"), RunState);
 
     public void AttachFactory(SkiaAnimatedTextCellDrawOperationFactory? factory)
     {
@@ -119,7 +131,7 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
     public void OnDetached()
     {
         Stop();
-        _factory = null; // 释放工厂引用，避免内存泄漏
+        _factory = null;
     }
 
     private void Start()
@@ -167,15 +179,15 @@ public partial class CustomDrawingLiveUpdatesViewModel : ObservableObject
     {
         string[] words =
         [
-            "延迟", "指标", "渲染", "单元格", "缓存", "虚拟化",
-            "前景色", "选择", "测量", "排列", "失效"
+            L("WORD_Latency"), L("WORD_Metric"), L("WORD_Render"), L("WORD_Cell"), L("WORD_Cache"), L("WORD_Virtualization"),
+            L("WORD_Foreground"), L("WORD_Selection"), L("WORD_Measure"), L("WORD_Arrange"), L("WORD_Invalidate")
         ];
 
         int wordA = _random.Next(words.Length);
         int wordB = _random.Next(words.Length);
         int wordC = _random.Next(words.Length);
 
-        return $"第 {index + 1} 行: {words[wordA]} {words[wordB]} {words[wordC]} 脉冲流";
+        return string.Format(L("FMT_PulseRow"), index + 1, words[wordA], words[wordB], words[wordC]);
     }
 }
 

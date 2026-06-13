@@ -5,6 +5,7 @@ using Avalonia.Plugin.ProDataGrid.Pages;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Resources;
 
 namespace Avalonia.Plugin.ProDataGrid.ViewModels;
 
@@ -46,6 +47,12 @@ public partial class FormulaDataGridDemoViewModel : ObservableObject
     public int TotalQuantity => Products.Sum(p => p.Quantity);
     public double GrandTotal => Products.Sum(p => p.Total);
 
+    private static readonly ResourceManager _rm = new("Avalonia.Plugin.ProDataGrid.Resources.Strings", typeof(FormulaDataGridDemoViewModel).Assembly);
+
+    public string TotalPriceText => string.Format(_rm.GetString("FMT_TotalPrice") ?? "Unit Total: {0:C2}", TotalPrice);
+    public string TotalQuantityText => string.Format(_rm.GetString("FMT_TotalQuantity") ?? "Quantity Total: {0}", TotalQuantity);
+    public string GrandTotalText => string.Format(_rm.GetString("FMT_GrandTotal") ?? "Grand Total: {0:C2}", GrandTotal);
+
     public FormulaDataGridDemoViewModel()
     {
         Products = new ObservableCollection<Product>(GenerateProducts(15));
@@ -78,6 +85,9 @@ public partial class FormulaDataGridDemoViewModel : ObservableObject
         OnPropertyChanged(nameof(TotalPrice));
         OnPropertyChanged(nameof(TotalQuantity));
         OnPropertyChanged(nameof(GrandTotal));
+        OnPropertyChanged(nameof(TotalPriceText));
+        OnPropertyChanged(nameof(TotalQuantityText));
+        OnPropertyChanged(nameof(GrandTotalText));
     }
 
     private List<Product> GenerateProducts(int count)

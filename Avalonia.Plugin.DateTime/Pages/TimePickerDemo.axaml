@@ -19,7 +19,7 @@
             Name="displayFormat"
             Width="300"
             InnerLeftContent="Display Format"
-            Text="HH 时 mm 分 ss 秒" />
+            Text="{DynamicResource STRING_FMT_TimeDisplay}" />
         <TextBox
             Name="panelFormat"
             Width="300"
@@ -39,8 +39,8 @@
             HorizontalAlignment="Left"
             Classes="ClearButton"
             DisplayFormat="{Binding #displayFormat.Text}"
-            InnerLeftContent="时刻"
-            InnerRightContent="截止"
+            InnerLeftContent="{DynamicResource STRING_LBL_TimeStart}"
+            InnerRightContent="{DynamicResource STRING_LBL_TimeEnd}"
             NeedConfirmation="True"
             PanelFormat="{Binding #panelFormat.Text}" />
         

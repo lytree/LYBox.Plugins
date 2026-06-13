@@ -98,4 +98,10 @@
   <data name="HINT_FileNameOptional" xml:space="preserve"><value>File name (optional)</value></data>
   <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>Select save folder (default: current directory)</value></data>
   <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>Select Save Path</value></data>
+  <data name="BTN_ApplySelected" xml:space="preserve"><value>Apply Selected</value></data>
+  <data name="BTN_DeleteSelected" xml:space="preserve"><value>Delete Selected</value></data>
+  <data name="BTN_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="LBL_Parameters" xml:space="preserve"><value>Parameters</value></data>
+  <data name="LBL_Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="LBL_Actions" xml:space="preserve"><value>Actions</value></data>
 </root>

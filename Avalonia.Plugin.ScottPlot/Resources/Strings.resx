@@ -56,4 +56,19 @@
   <data name="NAV_ScatterPlot" xml:space="preserve"><value>Scatter Plot</value></data>
   <data name="NAV_BarChart" xml:space="preserve"><value>Bar Chart</value></data>
   <data name="NAV_WaveformSpectrumTrend" xml:space="preserve"><value>Waveform / Spectrum / Trend</value></data>
+  <data name="BTN_SineWave" xml:space="preserve"><value>Sine Wave</value></data>
+  <data name="BTN_CosineWave" xml:space="preserve"><value>Cosine Wave</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="BTN_RandomSignal" xml:space="preserve"><value>Random Signal</value></data>
+  <data name="BTN_SineSignal" xml:space="preserve"><value>Sine Signal</value></data>
+  <data name="BTN_RandomPoints" xml:space="preserve"><value>Random Points</value></data>
+  <data name="BTN_Spiral" xml:space="preserve"><value>Spiral</value></data>
+  <data name="BTN_RandomBars" xml:space="preserve"><value>Random Bars</value></data>
+  <data name="BTN_CategoryBars" xml:space="preserve"><value>Category Bars</value></data>
+  <data name="BTN_Autoscale" xml:space="preserve"><value>Autoscale</value></data>
+  <data name="LBL_Waveform" xml:space="preserve"><value>Waveform</value></data>
+  <data name="LBL_Spectrum" xml:space="preserve"><value>Spectrum</value></data>
+  <data name="LBL_Trend" xml:space="preserve"><value>Trend</value></data>
+  <data name="TIP_RegenerateData" xml:space="preserve"><value>Regenerate Data</value></data>
+  <data name="TIP_ResetAll" xml:space="preserve"><value>Reset All</value></data>
 </root>

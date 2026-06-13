@@ -67,4 +67,18 @@
   <data name="NAV_ScrollToButton" xml:space="preserve"><value>Scroll To</value></data>
   <data name="NAV_Timeline" xml:space="preserve"><value>Timeline</value></data>
   <data name="NAV_TwoTonePathIcon" xml:space="preserve"><value>TwoTonePathIcon</value></data>
+  <data name="LBL_Step1" xml:space="preserve"><value>Step 1</value></data>
+  <data name="LBL_Step2" xml:space="preserve"><value>Step 2</value></data>
+  <data name="LBL_Step3" xml:space="preserve"><value>Step 3</value></data>
+  <data name="LBL_Step4" xml:space="preserve"><value>Step 4</value></data>
+  <data name="LBL_Step5" xml:space="preserve"><value>Step 5</value></data>
+  <data name="LBL_ActualUsers" xml:space="preserve"><value>Actual Users</value></data>
+  <data name="LBL_7DayRetention" xml:space="preserve"><value>7-Day Retention</value></data>
+  <data name="LBL_SecurityLevel" xml:space="preserve"><value>Security Level</value></data>
+  <data name="LBL_Level3" xml:space="preserve"><value>Level 3</value></data>
+  <data name="LBL_VerticalTag" xml:space="preserve"><value>Vertical Tag</value></data>
+  <data name="LBL_ECommerce" xml:space="preserve"><value>E-Commerce</value></data>
+  <data name="LBL_CertStatus" xml:space="preserve"><value>Certification Status</value></data>
+  <data name="LBL_NotCertified" xml:space="preserve"><value>Not Certified</value></data>
+  <data name="BTN_TestSetNull" xml:space="preserve"><value>Test Set to Null</value></data>
 </root>

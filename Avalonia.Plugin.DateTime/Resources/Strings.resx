@@ -58,4 +58,8 @@
   <data name="NAV_TimeRangePicker" xml:space="preserve"><value>Time Range Picker</value></data>
   <data name="NAV_TimeBox" xml:space="preserve"><value>Time Box</value></data>
   <data name="NAV_Clock" xml:space="preserve"><value>Clock</value></data>
+  <data name="FMT_DateTimeDisplay" xml:space="preserve"><value>yyyy/MM/dd HH:mm:ss</value></data>
+  <data name="FMT_TimeDisplay" xml:space="preserve"><value>HH:mm:ss</value></data>
+  <data name="LBL_TimeStart" xml:space="preserve"><value>Start</value></data>
+  <data name="LBL_TimeEnd" xml:space="preserve"><value>End</value></data>
 </root>
