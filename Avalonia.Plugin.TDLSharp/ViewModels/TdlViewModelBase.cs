@@ -6,6 +6,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Services;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -24,7 +25,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     [ObservableProperty] private ObservableCollection<LogEntry> _logEntries = [];
     [ObservableProperty] private ObservableCollection<ExecutionHistoryRecord> _executionHistoryRecords = [];
     [ObservableProperty] private bool _isRunning;
-    [ObservableProperty] private string _statusText = "就绪";
+    [ObservableProperty] private string _statusText = Strings.Get("STATUS_Ready");
     [ObservableProperty] private double _logMaxHeight = 400;
 
     private CancellationTokenSource? _cts;
@@ -58,7 +59,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         var dialogVm = new ExecutionHistoryDialogViewModel(Script.Id, ExecutionHistoryRecords, ApplyParametersFromJson);
         var options = new OverlayDialogOptions
         {
-            Title = $"执行历史 - {Script.Name}",
+            Title = Strings.Get("FMT_ExecutionHistoryTitle", Script.Name),
             CanResize = false,
             CanLightDismiss = true,
             IsCloseButtonVisible = true,
@@ -87,7 +88,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         if (IsRunning) return;
 
         IsRunning = true;
-        StatusText = $"正在执行: {Script.Name}...";
+        StatusText = Strings.Get("STATUS_Running", Script.Name);
         _cts = new CancellationTokenSource();
 
         var sw = Stopwatch.StartNew();
@@ -102,7 +103,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             ParameterSummary = BuildParameterSummary(paramSnapshot),
             ExecutedAt = DateTime.Now,
             Duration = TimeSpan.Zero,
-            Status = "执行中",
+            Status = Strings.Get("STATUS_Executing"),
             ErrorMessage = null
         };
         await SaveExecutionHistoryRecordAsync(record);
@@ -117,20 +118,20 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         {
             var tdlService = CreateTdlService();
             await ExecuteCoreAsync(tdlService, paramSnapshot, _cts.Token);
-            record.Status = "成功";
-            StatusText = "执行完成";
+            record.Status = Strings.Get("RESULT_Success");
+            StatusText = Strings.Get("STATUS_Completed");
         }
         catch (OperationCanceledException)
         {
-            record.Status = "已取消";
-            StatusText = "已取消";
+            record.Status = Strings.Get("STATUS_Cancelled");
+            StatusText = Strings.Get("STATUS_Cancelled");
         }
         catch (Exception ex)
         {
-            record.Status = "失败";
+            record.Status = Strings.Get("RESULT_Failed");
             record.ErrorMessage = ex.Message;
-            AddLogEntry(new LogEntry { Message = $"执行失败: {ex.Message}" });
-            StatusText = "执行失败";
+            AddLogEntry(new LogEntry { Message = Strings.Get("FMT_ExecuteFailed", ex.Message) });
+            StatusText = Strings.Get("STATUS_Failed");
         }
         finally
         {
@@ -150,7 +151,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     private void CancelExecution()
     {
         _cts?.Cancel();
-        StatusText = "正在取消...";
+        StatusText = Strings.Get("STATUS_Cancelling");
     }
 
     protected abstract Task ExecuteCoreAsync(TdlService tdlService, Dictionary<string, string> paramValues, CancellationToken ct);

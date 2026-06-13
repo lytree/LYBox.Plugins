@@ -73,7 +73,4 @@
   <data name="NAV_TreeComboBox" xml:space="preserve"><value>树形下拉框</value></data>
   <data name="LBL_SelectFile" xml:space="preserve"><value>选择文件</value></data>
   <data name="LBL_LoadingState" xml:space="preserve"><value>加载态</value></data>
-  <data name="BTN_Save" xml:space="preserve"><value>保存</value></data>
-  <data name="BTN_Delete" xml:space="preserve"><value>删除</value></data>
-  <data name="BTN_Undo" xml:space="preserve"><value>撤销</value></data>
 </root>

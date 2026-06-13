@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,16 +13,16 @@ public partial class BatchForwardViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "batch-forward",
-        Name = "批量深度转发",
-        Description = "将源频道/群聊的消息批量深度转发到目标频道/群聊",
+        Name = Strings.Get("SCRIPT_BatchForward_Name"),
+        Description = Strings.Get("SCRIPT_BatchForward_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("source", "源消息链接", "源频道/群聊消息链接", required: true),
-            ScriptParameter.HistoryText("sourceId", "源消息ID", "指定源消息ID (可选)", required: false),
-            ScriptParameter.HistoryText("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
-            ScriptParameter.Switch("older", "向旧消息方向", "true=向旧消息转发, false=向新消息转发", true),
-            ScriptParameter.Number("limit", "最大转发数量", "0=全部", 0),
-            ScriptParameter.Switch("comments", "转发评论", "是否转发评论", true),
+            ScriptParameter.HistoryText("source", Strings.Get("PARAM_Source"), Strings.Get("PARAM_SourceDesc"), required: true),
+            ScriptParameter.HistoryText("sourceId", Strings.Get("PARAM_SourceId"), Strings.Get("PARAM_SourceIdDesc"), required: false),
+            ScriptParameter.HistoryText("target", Strings.Get("PARAM_Target"), Strings.Get("PARAM_TargetDesc"), required: true),
+            ScriptParameter.Switch("older", Strings.Get("PARAM_Older"), Strings.Get("PARAM_OlderDesc"), true),
+            ScriptParameter.Number("limit", Strings.Get("PARAM_Limit"), Strings.Get("PARAM_LimitDesc"), 0),
+            ScriptParameter.Switch("comments", Strings.Get("PARAM_Comments"), Strings.Get("PARAM_CommentsDesc"), true),
         ]
     };
 

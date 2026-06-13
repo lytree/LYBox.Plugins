@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,14 +13,14 @@ public partial class DeepCopyViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "forward",
-        Name = "深度Copy转发",
-        Description = "将频道中的浅转发消息转换为深度Copy（从原始来源重新发送副本，然后删除旧浅转发）\n支持同时输入多个频道，每行一个",
+        Name = Strings.Get("SCRIPT_DeepCopy_Name"),
+        Description = Strings.Get("SCRIPT_DeepCopy_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("source", "源频道", "每行输入一个频道/群聊链接或用户名\n留空=收藏夹", required: false),
-            ScriptParameter.Number("limit", "最大处理数量", "0=全部", 0),
-            ScriptParameter.Switch("comments", "处理评论", "是否同时处理评论中的浅转发", true),
-            ScriptParameter.Number("maxNonShallow", "非浅转发阈值", "连续N条非浅转发消息后停止扫描", 5000),
+            ScriptParameter.HistoryText("source", Strings.Get("PARAM_SourceChannel"), Strings.Get("PARAM_SourceChannelDesc"), required: false),
+            ScriptParameter.Number("limit", Strings.Get("PARAM_Limit"), Strings.Get("PARAM_LimitDesc"), 0),
+            ScriptParameter.Switch("comments", Strings.Get("PARAM_ProcessComments"), Strings.Get("PARAM_ProcessCommentsDesc"), true),
+            ScriptParameter.Number("maxNonShallow", Strings.Get("PARAM_MaxNonShallow"), Strings.Get("PARAM_MaxNonShallowDesc"), 5000),
         ]
     };
 
@@ -39,10 +40,10 @@ public partial class DeepCopyViewModel : TdlViewModelBase
         {
             ct.ThrowIfCancellationRequested();
             var source = sources[i];
-            var channelLabel = string.IsNullOrWhiteSpace(source) ? "收藏夹" : source;
+            var channelLabel = string.IsNullOrWhiteSpace(source) ? Strings.Get("WORD_Favorites") : source;
 
             if (sources.Count > 1)
-                AddLogEntry(new LogEntry { Message = $"━━━ 处理频道 [{i + 1}/{sources.Count}]: {channelLabel} ━━━" });
+                AddLogEntry(new LogEntry { Message = Strings.Get("FMT_ProcessingChannel", i + 1, sources.Count, channelLabel) });
 
             await tdlService.DeepCopyAsync(source, limit, comments, maxNonShallow, ct);
 

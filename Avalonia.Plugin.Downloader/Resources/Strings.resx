@@ -52,28 +52,36 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="NAV_Downloader" xml:space="preserve"><value>Downloader</value></data>
   <data name="NAV_Downloader_M3u8" xml:space="preserve"><value>M3U8 Downloader</value></data>
-  <data name="BTN_Execute" xml:space="preserve"><value>Execute</value></data>
-  <data name="BTN_Cancel" xml:space="preserve"><value>Cancel</value></data>
-  <data name="BTN_Browse" xml:space="preserve"><value>Browse</value></data>
-  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
-  <data name="BTN_AddLink" xml:space="preserve"><value>Add Link</value></data>
-  <data name="LBL_ParameterConfig" xml:space="preserve"><value>Parameter Configuration</value></data>
-  <data name="LBL_LogOutput" xml:space="preserve"><value>Log Output</value></data>
-  <data name="LBL_DownloadLinks" xml:space="preserve"><value>Download Links</value></data>
-  <data name="LBL_SaveSettings" xml:space="preserve"><value>Save Settings</value></data>
-  <data name="LBL_M3u8UrlList" xml:space="preserve"><value>M3U8 URL List</value></data>
-  <data name="LBL_SavePath" xml:space="preserve"><value>Save Path</value></data>
-  <data name="SW_On" xml:space="preserve"><value>Yes</value></data>
-  <data name="SW_Off" xml:space="preserve"><value>No</value></data>
-  <data name="MENU_Copy" xml:space="preserve"><value>Copy</value></data>
-  <data name="STATUS_Ready" xml:space="preserve"><value>Ready</value></data>
-  <data name="STATUS_Running" xml:space="preserve"><value>Running: {0}...</value></data>
-  <data name="STATUS_Completed" xml:space="preserve"><value>Completed</value></data>
-  <data name="STATUS_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
-  <data name="STATUS_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="STATUS_Cancelling" xml:space="preserve"><value>Cancelling...</value></data>
-  <data name="HINT_InputM3u8Url" xml:space="preserve"><value>Enter M3U8 video URL</value></data>
-  <data name="HINT_FileNameOptional" xml:space="preserve"><value>File name (optional)</value></data>
-  <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>Select save folder (default: current directory)</value></data>
-  <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>Select Save Path</value></data>
+  <data name="MSG_NoValidM3u8Url" xml:space="preserve"><value>No valid M3U8 URL entered</value></data>
+  <data name="FMT_Downloading" xml:space="preserve"><value>[{0}/{1}] Downloading: {2}</value></data>
+  <data name="SCRIPT_M3u8_Name" xml:space="preserve"><value>M3U8 Downloader</value></data>
+  <data name="SCRIPT_M3u8_Desc" xml:space="preserve"><value>Download M3U8 video streams with AES-128/AES-128-ECB/CHACHA20 encryption support and FFmpeg merging</value></data>
+  <data name="PARAM_Concurrency" xml:space="preserve"><value>Concurrency</value></data>
+  <data name="PARAM_ConcurrencyDesc" xml:space="preserve"><value>Number of simultaneous download segments</value></data>
+  <data name="PARAM_Quality" xml:space="preserve"><value>Quality</value></data>
+  <data name="PARAM_QualityDesc" xml:space="preserve"><value>best/worst/resolution/bandwidth</value></data>
+  <data name="PARAM_Headers" xml:space="preserve"><value>HTTP Headers</value></data>
+  <data name="PARAM_HeadersDesc" xml:space="preserve"><value>Format: key=value (comma separated)</value></data>
+  <data name="PARAM_FFmpegPath" xml:space="preserve"><value>FFmpeg Path</value></data>
+  <data name="PARAM_FFmpegPathDesc" xml:space="preserve"><value>FFmpeg executable path</value></data>
+  <data name="PARAM_Retry" xml:space="preserve"><value>Retry Count</value></data>
+  <data name="PARAM_RetryDesc" xml:space="preserve"><value>Failed segment retry count</value></data>
+  <data name="LOG_FetchingM3u8" xml:space="preserve"><value>Fetching M3U8...</value></data>
+  <data name="FMT_QualityOptions" xml:space="preserve"><value>Found {0} quality options, {1} video streams</value></data>
+  <data name="WORD_AudioOnly" xml:space="preserve"><value> (audio only)</value></data>
+  <data name="FMT_UsingStream" xml:space="preserve"><value>Using: {0}</value></data>
+  <data name="FMT_SegmentsFound" xml:space="preserve"><value>Found {0} segments</value></data>
+  <data name="FMT_EncryptionMethod" xml:space="preserve"><value>Encryption: {0}</value></data>
+  <data name="FMT_KeyFetchSuccess" xml:space="preserve"><value>{0} key fetched successfully</value></data>
+  <data name="MSG_FairPlayNotSupported" xml:space="preserve"><value>SAMPLE-AES (FairPlay) encryption requires a license server.</value></data>
+  <data name="MSG_CHACHA20KeySuccess" xml:space="preserve"><value>CHACHA20 key fetched successfully</value></data>
+  <data name="FMT_UnsupportedEncryption" xml:space="preserve"><value>Unsupported encryption method '{0}'.</value></data>
+  <data name="FMT_CompletedOutput" xml:space="preserve"><value>Completed: {0}</value></data>
+  <data name="FMT_Error" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="FMT_DownloadProgress" xml:space="preserve"><value>Download progress: {0}/{1} ({2})</value></data>
+  <data name="FMT_DownloadSummary" xml:space="preserve"><value>Downloaded {0}/{1} segments ({2}), elapsed {3:F1}s ({4})</value></data>
+  <data name="FMT_FailedSegments" xml:space="preserve"><value>Failed segments: {0}</value></data>
+  <data name="LOG_MergingFFmpeg" xml:space="preserve"><value>Merging with FFmpeg...</value></data>
+  <data name="FMT_FFmpegExitCode" xml:space="preserve"><value>FFmpeg exit code {0}</value></data>
+  <data name="LOG_MergeComplete" xml:space="preserve"><value>Merge complete!</value></data>
 </root>

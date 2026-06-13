@@ -73,7 +73,4 @@
   <data name="NAV_TreeComboBox" xml:space="preserve"><value>TreeComboBox</value></data>
   <data name="LBL_SelectFile" xml:space="preserve"><value>Select File</value></data>
   <data name="LBL_LoadingState" xml:space="preserve"><value>Loading State</value></data>
-  <data name="BTN_Save" xml:space="preserve"><value>Save</value></data>
-  <data name="BTN_Delete" xml:space="preserve"><value>Delete</value></data>
-  <data name="BTN_Undo" xml:space="preserve"><value>Undo</value></data>
 </root>

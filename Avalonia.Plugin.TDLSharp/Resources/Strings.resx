@@ -57,31 +57,19 @@
   <data name="NAV_TDL_DeleteForwards" xml:space="preserve"><value>Delete Forwarded Messages</value></data>
   <data name="NAV_TDL_MessageExport" xml:space="preserve"><value>Message Export</value></data>
   <data name="NAV_TDL_SingleForward" xml:space="preserve"><value>Single Deep Forward</value></data>
-  <data name="BTN_Execute" xml:space="preserve"><value>Execute</value></data>
-  <data name="BTN_Cancel" xml:space="preserve"><value>Cancel</value></data>
-  <data name="BTN_Browse" xml:space="preserve"><value>Browse</value></data>
-  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="BTN_ClearAll" xml:space="preserve"><value>Clear All</value></data>
   <data name="BTN_ClearHistory" xml:space="preserve"><value>Clear History</value></data>
   <data name="BTN_Apply" xml:space="preserve"><value>Apply</value></data>
-  <data name="BTN_AddLink" xml:space="preserve"><value>Add Link</value></data>
   <data name="LBL_ParameterConfig" xml:space="preserve"><value>Parameter Configuration</value></data>
   <data name="LBL_LogOutput" xml:space="preserve"><value>Log Output</value></data>
   <data name="LBL_ExecutionHistory" xml:space="preserve"><value>Execution History</value></data>
-  <data name="LBL_DownloadLinks" xml:space="preserve"><value>Download Links</value></data>
-  <data name="LBL_SaveSettings" xml:space="preserve"><value>Save Settings</value></data>
-  <data name="LBL_M3u8UrlList" xml:space="preserve"><value>M3U8 URL List</value></data>
-  <data name="LBL_SavePath" xml:space="preserve"><value>Save Path</value></data>
   <data name="LBL_Status" xml:space="preserve"><value>Status</value></data>
   <data name="LBL_SourceChannel" xml:space="preserve"><value>Source Channel</value></data>
   <data name="LBL_ExecutedAt" xml:space="preserve"><value>Executed At</value></data>
   <data name="LBL_Result" xml:space="preserve"><value>Result</value></data>
   <data name="LBL_ErrorMessage" xml:space="preserve"><value>Error Message</value></data>
-  <data name="MENU_Copy" xml:space="preserve"><value>Copy</value></data>
   <data name="MENU_ApplyToInput" xml:space="preserve"><value>Apply to Input</value></data>
   <data name="MENU_DeleteRecord" xml:space="preserve"><value>Delete Record</value></data>
-  <data name="SW_On" xml:space="preserve"><value>Yes</value></data>
-  <data name="SW_Off" xml:space="preserve"><value>No</value></data>
   <data name="STATUS_Ready" xml:space="preserve"><value>Ready</value></data>
   <data name="STATUS_Running" xml:space="preserve"><value>Running: {0}...</value></data>
   <data name="STATUS_Completed" xml:space="preserve"><value>Completed</value></data>
@@ -89,19 +77,133 @@
   <data name="STATUS_Failed" xml:space="preserve"><value>Failed</value></data>
   <data name="STATUS_Cancelling" xml:space="preserve"><value>Cancelling...</value></data>
   <data name="STATUS_Executing" xml:space="preserve"><value>Executing</value></data>
-  <data name="RESULT_Success" xml:space="preserve"><value>Success</value></data>
-  <data name="RESULT_Partial" xml:space="preserve"><value>Partial</value></data>
-  <data name="RESULT_Failed" xml:space="preserve"><value>Failed</value></data>
   <data name="FAVORITES" xml:space="preserve"><value>Favorites</value></data>
   <data name="HINT_SelectFilePath" xml:space="preserve"><value>Select file path...</value></data>
-  <data name="HINT_InputM3u8Url" xml:space="preserve"><value>Enter M3U8 video URL</value></data>
-  <data name="HINT_FileNameOptional" xml:space="preserve"><value>File name (optional)</value></data>
-  <data name="HINT_SelectSaveFolder" xml:space="preserve"><value>Select save folder (default: current directory)</value></data>
-  <data name="DIALOG_SelectSavePath" xml:space="preserve"><value>Select Save Path</value></data>
   <data name="BTN_ApplySelected" xml:space="preserve"><value>Apply Selected</value></data>
-  <data name="BTN_DeleteSelected" xml:space="preserve"><value>Delete Selected</value></data>
-  <data name="BTN_Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="LBL_Parameters" xml:space="preserve"><value>Parameters</value></data>
   <data name="LBL_Duration" xml:space="preserve"><value>Duration</value></data>
   <data name="LBL_Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="SCRIPT_BatchForward_Name" xml:space="preserve"><value>Batch Deep Forward</value></data>
+  <data name="SCRIPT_BatchForward_Desc" xml:space="preserve"><value>Batch deep forward messages from source channel/group to target channel/group</value></data>
+  <data name="SCRIPT_DeepCopy_Name" xml:space="preserve"><value>Deep Copy Forward</value></data>
+  <data name="SCRIPT_DeepCopy_Desc" xml:space="preserve"><value>Convert shallow forwarded messages to deep copies (re-send from original source, then delete old shallow forwards). Supports multiple channels, one per line.</value></data>
+  <data name="SCRIPT_ClearMessage_Name" xml:space="preserve"><value>Clear Messages</value></data>
+  <data name="SCRIPT_ClearMessage_Desc" xml:space="preserve"><value>Clear messages containing specified content from a channel</value></data>
+  <data name="SCRIPT_DeleteForwards_Name" xml:space="preserve"><value>Delete Forwarded Messages</value></data>
+  <data name="SCRIPT_DeleteForwards_Desc" xml:space="preserve"><value>Delete all forwarded messages from a channel/group, optionally specifying a start message link</value></data>
+  <data name="SCRIPT_MessageExport_Name" xml:space="preserve"><value>Message Export</value></data>
+  <data name="SCRIPT_MessageExport_Desc" xml:space="preserve"><value>Export channel messages to JSON (supports groups and comments)</value></data>
+  <data name="SCRIPT_SingleForward_Name" xml:space="preserve"><value>Single Deep Forward</value></data>
+  <data name="SCRIPT_SingleForward_Desc" xml:space="preserve"><value>Deep forward a single message to target channel/group (auto-collects same-group media messages)</value></data>
+  <data name="WORD_Favorites" xml:space="preserve"><value>Saved Messages</value></data>
+  <data name="FMT_ProcessingChannel" xml:space="preserve"><value>━━━ Processing channel [{0}/{1}]: {2} ━━━</value></data>
+  <data name="PARAM_Source" xml:space="preserve"><value>Source Message Link</value></data>
+  <data name="PARAM_SourceDesc" xml:space="preserve"><value>Source channel/group message link</value></data>
+  <data name="PARAM_SourceId" xml:space="preserve"><value>Source Message ID</value></data>
+  <data name="PARAM_SourceIdDesc" xml:space="preserve"><value>Specify source message ID (optional)</value></data>
+  <data name="PARAM_Target" xml:space="preserve"><value>Target Link</value></data>
+  <data name="PARAM_TargetDesc" xml:space="preserve"><value>Target channel/group link or username</value></data>
+  <data name="PARAM_Older" xml:space="preserve"><value>Towards Older Messages</value></data>
+  <data name="PARAM_OlderDesc" xml:space="preserve"><value>true=forward to older, false=forward to newer</value></data>
+  <data name="PARAM_Limit" xml:space="preserve"><value>Max Count</value></data>
+  <data name="PARAM_LimitDesc" xml:space="preserve"><value>0=all</value></data>
+  <data name="PARAM_Comments" xml:space="preserve"><value>Forward Comments</value></data>
+  <data name="PARAM_CommentsDesc" xml:space="preserve"><value>Whether to forward comments</value></data>
+  <data name="PARAM_Channel" xml:space="preserve"><value>Channel/Group</value></data>
+  <data name="PARAM_ChannelDesc" xml:space="preserve"><value>Channel/group link or username (empty=Saved Messages)</value></data>
+  <data name="PARAM_Contains" xml:space="preserve"><value>Match Text</value></data>
+  <data name="PARAM_ContainsDesc" xml:space="preserve"><value>Text content to match in messages</value></data>
+  <data name="PARAM_Silent" xml:space="preserve"><value>Silent Delete</value></data>
+  <data name="PARAM_SilentDesc" xml:space="preserve"><value>Delete silently without confirmation</value></data>
+  <data name="PARAM_SourceChannel" xml:space="preserve"><value>Source Channel</value></data>
+  <data name="PARAM_SourceChannelDesc" xml:space="preserve"><value>One channel/group link or username per line. Empty=Saved Messages</value></data>
+  <data name="PARAM_ProcessComments" xml:space="preserve"><value>Process Comments</value></data>
+  <data name="PARAM_ProcessCommentsDesc" xml:space="preserve"><value>Whether to process shallow forwards in comments</value></data>
+  <data name="PARAM_MaxNonShallow" xml:space="preserve"><value>Non-Shallow Threshold</value></data>
+  <data name="PARAM_MaxNonShallowDesc" xml:space="preserve"><value>Stop scanning after N consecutive non-shallow messages</value></data>
+  <data name="PARAM_FromLink" xml:space="preserve"><value>Start Message Link</value></data>
+  <data name="PARAM_FromLinkDesc" xml:space="preserve"><value>Only delete forwarded messages before this link (empty=from beginning)</value></data>
+  <data name="PARAM_MaxDelete" xml:space="preserve"><value>Max Delete Count</value></data>
+  <data name="PARAM_MaxDeleteDesc" xml:space="preserve"><value>0=all</value></data>
+  <data name="PARAM_Output" xml:space="preserve"><value>Output Path</value></data>
+  <data name="PARAM_OutputDesc" xml:space="preserve"><value>Output file path (empty=auto)</value></data>
+  <data name="PARAM_ExportComments" xml:space="preserve"><value>Export Comments</value></data>
+  <data name="PARAM_ExportCommentsDesc" xml:space="preserve"><value>Whether to export comments</value></data>
+  <data name="PARAM_MaxExport" xml:space="preserve"><value>Max Export Count</value></data>
+  <data name="PARAM_MaxExportDesc" xml:space="preserve"><value>0=all</value></data>
+  <data name="PARAM_SingleSourceDesc" xml:space="preserve"><value>Specific message link in source channel/group</value></data>
+  <data name="PARAM_ForwardComments" xml:space="preserve"><value>Forward Comments</value></data>
+  <data name="PARAM_ForwardCommentsDesc" xml:space="preserve"><value>Whether to forward comments of this message</value></data>
+  <data name="SETTING_ProxyServer" xml:space="preserve"><value>Proxy Server</value></data>
+  <data name="SETTING_ProxyServerDesc" xml:space="preserve"><value>SOCKS5 proxy server address</value></data>
+  <data name="SETTING_ProxyPort" xml:space="preserve"><value>Proxy Port</value></data>
+  <data name="SETTING_ProxyPortDesc" xml:space="preserve"><value>SOCKS5 proxy port</value></data>
+  <data name="SETTING_EnableProxy" xml:space="preserve"><value>Enable Proxy</value></data>
+  <data name="SETTING_EnableProxyDesc" xml:space="preserve"><value>Whether to enable SOCKS5 proxy</value></data>
+  <data name="LOG_CannotParseSourceLink" xml:space="preserve"><value>Cannot parse source link: {0}</value></data>
+  <data name="LOG_CannotParseTargetLink" xml:space="preserve"><value>Cannot parse target link: {0}</value></data>
+  <data name="LOG_CannotParseChannel" xml:space="preserve"><value>Cannot parse channel: {0}</value></data>
+  <data name="LOG_SourceLinkNoMessage" xml:space="preserve"><value>Source link not associated with any message: {0}</value></data>
+  <data name="LOG_SourceInfo" xml:space="preserve"><value>Source: [{0}] ChatId={1}</value></data>
+  <data name="LOG_TargetInfo" xml:space="preserve"><value>Target: [{0}] ChatId={1}</value></data>
+  <data name="LOG_DefaultToSavedMessages" xml:space="preserve"><value>No channel specified, using Saved Messages (ChatId={0})</value></data>
+  <data name="LOG_DatabaseReady" xml:space="preserve"><value>Database ready: forward-{0}.db</value></data>
+  <data name="LOG_FloodWait" xml:space="preserve"><value>Flood limit triggered, waiting {0} seconds before continuing...</value></data>
+  <data name="LOG_ForwardLimitReached" xml:space="preserve"><value>Forward limit reached: {0}</value></data>
+  <data name="LOG_ForwardException" xml:space="preserve"><value>Exception during forwarding: {0}</value></data>
+  <data name="LOG_StartDeepCopy" xml:space="preserve"><value>Start scanning shallow forwards, converting to deep copies...</value></data>
+  <data name="LOG_NonShallowThresholdReached" xml:space="preserve"><value>{0} consecutive non-shallow messages, exceeding threshold {1}, stopping scan</value></data>
+  <data name="LOG_NoMoreShallowForwards" xml:space="preserve"><value>No more shallow forwards in subsequent messages, stopping scan</value></data>
+  <data name="LOG_ClearedOldForwards" xml:space="preserve"><value>Cleared {0} old forward records</value></data>
+  <data name="LOG_NoDeepCopyRecords" xml:space="preserve"><value>No successfully deep-copied records in database</value></data>
+  <data name="LOG_AllComplete" xml:space="preserve"><value>All complete: processed {0}, skipped {1}</value></data>
+  <data name="LOG_CannotParseFromLink" xml:space="preserve"><value>Cannot parse start link: {0}</value></data>
+  <data name="LOG_StartMessageInfo" xml:space="preserve"><value>Start message: ChatId={0}, MessageId={1}</value></data>
+  <data name="LOG_DeleteBeforeMessage" xml:space="preserve"><value>Only deleting forwards before message {0}</value></data>
+  <data name="LOG_StartScanForwards" xml:space="preserve"><value>Start scanning forwarded messages...</value></data>
+  <data name="LOG_ScanException" xml:space="preserve"><value>Exception while scanning messages: {0}</value></data>
+  <data name="LOG_NoForwardsFound" xml:space="preserve"><value>No forwarded messages found</value></data>
+  <data name="LOG_ForwardsFoundDeleting" xml:space="preserve"><value>Found {0} forwarded messages, starting deletion...</value></data>
+  <data name="LOG_MatchContent" xml:space="preserve"><value>Match content: "{0}"</value></data>
+  <data name="LOG_DeleteModeSilent" xml:space="preserve"><value>Silent</value></data>
+  <data name="LOG_DeleteModeInteractive" xml:space="preserve"><value>Interactive</value></data>
+  <data name="FMT_DeleteMode" xml:space="preserve"><value>Delete mode: {0}</value></data>
+  <data name="LOG_CleanupComplete" xml:space="preserve"><value>Cleanup complete, deleted {0} messages</value></data>
+  <data name="LOG_StartScanMessages" xml:space="preserve"><value>Start scanning messages...</value></data>
+  <data name="LOG_NoMatchingMessages" xml:space="preserve"><value>No messages containing "{0}" found</value></data>
+  <data name="LOG_MatchedMessages" xml:space="preserve"><value>Found {0} matching messages</value></data>
+  <data name="FMT_DeletedMessages" xml:space="preserve"><value>Deleted {0}/{1} messages</value></data>
+  <data name="LOG_BatchDeleteException" xml:space="preserve"><value>Exception during batch deletion: {0}</value></data>
+  <data name="LOG_ExportComplete" xml:space="preserve"><value>Export complete: {0} messages, {1} groups</value></data>
+  <data name="LOG_FileSavedTo" xml:space="preserve"><value>File saved to: {0}</value></data>
+  <data name="LOG_StartExport" xml:space="preserve"><value>Start exporting channel messages...</value></data>
+  <data name="LOG_FetchedMessages" xml:space="preserve"><value>Fetched {0} messages, current progress ID: {1}</value></data>
+  <data name="LOG_FetchException" xml:space="preserve"><value>Exception while fetching messages: {0}</value></data>
+  <data name="LOG_GetCommentsFailed" xml:space="preserve"><value>Failed to get comments: MsgId={0}, Error: {1}</value></data>
+  <data name="LOG_ProcessedGroup" xml:space="preserve"><value>Processed group {0}/{1} (messages: {2})</value></data>
+  <data name="LOG_ForwardDirection" xml:space="preserve"><value>Direction: {0}, Limit: {1}, Comments: {2}</value></data>
+  <data name="WORD_Older" xml:space="preserve"><value>Towards older</value></data>
+  <data name="WORD_Newer" xml:space="preserve"><value>Towards newer</value></data>
+  <data name="WORD_Unlimited" xml:space="preserve"><value>Unlimited</value></data>
+  <data name="WORD_Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="WORD_No" xml:space="preserve"><value>No</value></data>
+  <data name="LOG_ForwardComplete" xml:space="preserve"><value>All forwarding complete, forwarded {0} messages</value></data>
+  <data name="LOG_StartForwardOlder" xml:space="preserve"><value>Start forwarding towards older messages...</value></data>
+  <data name="LOG_SkippedForwarded" xml:space="preserve"><value>Skipped {0} already-forwarded messages</value></data>
+  <data name="LOG_CannotGetMessage" xml:space="preserve"><value>Cannot get message: ChatId={0}, MsgId={1}</value></data>
+  <data name="LOG_CollectedAlbumMessages" xml:space="preserve"><value>Collected {0} messages (including same-group media)</value></data>
+  <data name="LOG_AllAlreadyForwarded" xml:space="preserve"><value>All messages already forwarded, nothing to do</value></data>
+  <data name="FMT_AsyncFloodWait" xml:space="preserve"><value>Async send flood limit (attempt {0}), waiting {1} seconds before retry...</value></data>
+  <data name="FMT_AsyncSendFailed" xml:space="preserve"><value>Async message send failed (attempt {0}): {1}</value></data>
+  <data name="FMT_GroupLabel" xml:space="preserve"><value>Group:{0}</value></data>
+  <data name="FMT_SingleMessageLabel" xml:space="preserve"><value>Single message {0}</value></data>
+  <data name="LOG_SourceLinkNoMsg" xml:space="preserve"><value>Source link not associated with message: {0}</value></data>
+  <data name="FMT_CannotParseSourceLinkDetail" xml:space="preserve"><value>Cannot parse source link: {0} - {1}</value></data>
+  <data name="LOG_InviteLinkResolved" xml:space="preserve"><value>Invite link resolved to ChatId: {0}</value></data>
+  <data name="LOG_InviteLinkNotLinked" xml:space="preserve"><value>Invite link valid but not linked to existing chat: {0}</value></data>
+  <data name="FMT_CannotParseInviteLink" xml:space="preserve"><value>Cannot parse invite link: {0} - {1}</value></data>
+  <data name="LOG_TargetLinkNotLinked" xml:space="preserve"><value>Target link not linked to chat: {0}</value></data>
+  <data name="LOG_FoundMatchingChat" xml:space="preserve"><value>Found matching chat: [{0}] ChatId={1}</value></data>
+  <data name="LOG_SearchingChatList" xml:space="preserve"><value>Searching in chat list: {0}</value></data>
+  <data name="LOG_SkippedForwardedMsgs" xml:space="preserve"><value>Skipped already-forwarded messages: {0}</value></data>
 </root>

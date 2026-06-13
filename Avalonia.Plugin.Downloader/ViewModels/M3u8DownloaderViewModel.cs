@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Avalonia.Platform.Storage;
 using Avalonia.Plugin.Downloader.Models;
+using Avalonia.Plugin.Downloader.Resources;
 using Avalonia.Plugin.Downloader.Services;
 using Avalonia.Plugin.Shared.Attributes;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -19,15 +20,15 @@ public partial class M3u8DownloaderViewModel : DownloaderViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "m3u8-downloader",
-        Name = "M3U8 下载器",
-        Description = "下载 M3U8 视频流，支持 AES-128/AES-128-ECB/CHACHA20 加密解密及 FFmpeg 合并",
+        Name = Strings.Get("SCRIPT_M3u8_Name"),
+        Description = Strings.Get("SCRIPT_M3u8_Desc"),
         Parameters =
         [
-            ScriptParameter.Number("concurrency", "并发数", "同时下载分片数", 8),
-            ScriptParameter.Text("quality", "画质选择", "best/worst/分辨率/带宽", "best"),
-            ScriptParameter.Text("headers", "HTTP 请求头", "格式: key=value (多个用逗号分隔)"),
-            ScriptParameter.Text("ffmpegPath", "FFmpeg 路径", "ffmpeg 可执行文件路径", "ffmpeg"),
-            ScriptParameter.Number("retry", "重试次数", "失败分片重试次数", 3),
+            ScriptParameter.Number("concurrency", Strings.Get("PARAM_Concurrency"), Strings.Get("PARAM_ConcurrencyDesc"), 8),
+            ScriptParameter.Text("quality", Strings.Get("PARAM_Quality"), Strings.Get("PARAM_QualityDesc"), "best"),
+            ScriptParameter.Text("headers", Strings.Get("PARAM_Headers"), Strings.Get("PARAM_HeadersDesc")),
+            ScriptParameter.Text("ffmpegPath", Strings.Get("PARAM_FFmpegPath"), Strings.Get("PARAM_FFmpegPathDesc"), "ffmpeg"),
+            ScriptParameter.Number("retry", Strings.Get("PARAM_Retry"), Strings.Get("PARAM_RetryDesc"), 3),
         ]
     };
 
@@ -61,7 +62,7 @@ public partial class M3u8DownloaderViewModel : DownloaderViewModelBase
 
         var result = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = "选择保存路径",
+            Title = Strings.Get("DIALOG_SelectSavePath"),
             AllowMultiple = false
         });
 
@@ -88,7 +89,7 @@ public partial class M3u8DownloaderViewModel : DownloaderViewModelBase
 
         if (validEntries.Count == 0)
         {
-            logger.Log("未输入有效的 M3U8 链接");
+            logger.Log(Strings.Get("MSG_NoValidM3u8Url"));
             return;
         }
 
@@ -102,7 +103,7 @@ public partial class M3u8DownloaderViewModel : DownloaderViewModelBase
 
             if (validEntries.Count > 1)
             {
-                logger.Log($"[{i + 1}/{validEntries.Count}] 正在下载: {entry.Url}");
+                logger.Log(Strings.Get("FMT_Downloading", i + 1, validEntries.Count, entry.Url));
             }
 
             await service.DownloadAsync(

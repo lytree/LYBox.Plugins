@@ -53,11 +53,11 @@ public partial class TDLSharpPlugin : IPluginMetadata
                 GetEnvDefault("tdl_api_id"), PluginId),
             SettingDefinition.Text("TDL.ApiHash", "API Hash", "Telegram API Hash", "","TDL", 0, 1,
                 GetEnvDefault("tdl_api_hash"), PluginId),
-            SettingDefinition.Text("TDL.ProxyServer", "代理服务器", "SOCKS5 代理服务器地址", "","TDL", 1, 0,
+            SettingDefinition.Text("TDL.ProxyServer", Strings.Get("SETTING_ProxyServer"), Strings.Get("SETTING_ProxyServerDesc"), "","TDL", 1, 0,
                 "127.0.0.1", PluginId),
-            SettingDefinition.Text("TDL.ProxyPort", "代理端口", "SOCKS5 代理端口","", "TDL", 1, 1,
+            SettingDefinition.Text("TDL.ProxyPort", Strings.Get("SETTING_ProxyPort"), Strings.Get("SETTING_ProxyPortDesc"),"", "TDL", 1, 1,
                 "7897", PluginId),
-            SettingDefinition.Switch("TDL.EnableProxy", "启用代理", "是否启用 SOCKS5 代理", "TDL", 1, 2,
+            SettingDefinition.Switch("TDL.EnableProxy", Strings.Get("SETTING_EnableProxy"), Strings.Get("SETTING_EnableProxyDesc"), "TDL", 1, 2,
                 true, PluginId),
         ]);
     }

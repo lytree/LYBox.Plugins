@@ -61,14 +61,11 @@
   <data name="NAV_CustomDrawingLiveUpdates" xml:space="preserve"><value>自定义绘制实时更新</value></data>
   <data name="NAV_EditingDemo" xml:space="preserve"><value>编辑交互演示</value></data>
   <data name="BTN_AddRow" xml:space="preserve"><value>添加行</value></data>
-  <data name="BTN_DeleteSelected" xml:space="preserve"><value>删除选中</value></data>
   <data name="BTN_ResetData" xml:space="preserve"><value>重置数据</value></data>
   <data name="BTN_Export" xml:space="preserve"><value>导出</value></data>
   <data name="BTN_ClearLog" xml:space="preserve"><value>清除日志</value></data>
-  <data name="BTN_Undo" xml:space="preserve"><value>撤销 (Ctrl+Z)</value></data>
   <data name="BTN_Redo" xml:space="preserve"><value>重做 (Ctrl+Y)</value></data>
   <data name="BTN_CommitChanges" xml:space="preserve"><value>提交修改</value></data>
-  <data name="BTN_Save" xml:space="preserve"><value>保存</value></data>
   <data name="BTN_AddEmployee" xml:space="preserve"><value>添加员工</value></data>
   <data name="BTN_AddProduct" xml:space="preserve"><value>添加产品</value></data>
   <data name="BTN_AddTask" xml:space="preserve"><value>添加任务</value></data>

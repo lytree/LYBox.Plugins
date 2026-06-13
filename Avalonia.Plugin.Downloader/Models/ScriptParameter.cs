@@ -1,4 +1,5 @@
 using Avalonia.Platform.Storage;
+using Avalonia.Plugin.Downloader.Resources;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -100,7 +101,7 @@ public partial class PathScriptParameter : ScriptParameter
 
         var result = await storageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
-            Title = $"选择{DisplayName}",
+            Title = Strings.Get("FMT_SelectParam", DisplayName),
             AllowMultiple = false
         });
 

@@ -29,4 +29,10 @@ public static class Strings
 
     public static string NAV_Downloader => ResourceManager.GetString(nameof(NAV_Downloader), Culture)!;
     public static string NAV_Downloader_M3u8 => ResourceManager.GetString(nameof(NAV_Downloader_M3u8), Culture)!;
+
+    public static string Get(string key, params object[] args)
+    {
+        var value = ResourceManager.GetString(key, Culture) ?? key;
+        return args.Length > 0 ? string.Format(Culture, value, args) : value;
+    }
 }

@@ -58,7 +58,6 @@
   <data name="NAV_WaveformSpectrumTrend" xml:space="preserve"><value>Waveform / Spectrum / Trend</value></data>
   <data name="BTN_SineWave" xml:space="preserve"><value>Sine Wave</value></data>
   <data name="BTN_CosineWave" xml:space="preserve"><value>Cosine Wave</value></data>
-  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="BTN_RandomSignal" xml:space="preserve"><value>Random Signal</value></data>
   <data name="BTN_SineSignal" xml:space="preserve"><value>Sine Signal</value></data>
   <data name="BTN_RandomPoints" xml:space="preserve"><value>Random Points</value></data>

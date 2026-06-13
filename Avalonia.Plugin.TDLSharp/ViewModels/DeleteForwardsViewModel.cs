@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,13 +13,13 @@ public partial class DeleteForwardsViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "delete-forwards",
-        Name = "删除转发消息",
-        Description = "删除频道/群聊中所有转发来源的消息，可指定从某条消息链接开始往前删除",
+        Name = Strings.Get("SCRIPT_DeleteForwards_Name"),
+        Description = Strings.Get("SCRIPT_DeleteForwards_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("channel", "频道/群聊", "频道/群聊链接或用户名 (留空=收藏夹)", required: false),
-            ScriptParameter.HistoryText("fromLink", "起始消息链接", "指定消息链接，仅删除该消息之前的转发消息 (留空=从头开始)", required: false),
-            ScriptParameter.Number("limit", "最大删除数量", "0=全部", 0),
+            ScriptParameter.HistoryText("channel", Strings.Get("PARAM_Channel"), Strings.Get("PARAM_ChannelDesc"), required: false),
+            ScriptParameter.HistoryText("fromLink", Strings.Get("PARAM_FromLink"), Strings.Get("PARAM_FromLinkDesc"), required: false),
+            ScriptParameter.Number("limit", Strings.Get("PARAM_MaxDelete"), Strings.Get("PARAM_MaxDeleteDesc"), 0),
         ]
     };
 

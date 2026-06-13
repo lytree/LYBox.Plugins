@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Avalonia.Input.Platform;
 using Avalonia.Plugin.Downloader.Models;
+using Avalonia.Plugin.Downloader.Resources;
 using Avalonia.Plugin.Downloader.Services;
 using Avalonia.Plugin.Shared;
 using Avalonia.Plugin.Shared.Services;
@@ -18,7 +19,7 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
     [ObservableProperty] private ObservableCollection<ScriptParameter> _parameters = [];
     [ObservableProperty] private ObservableCollection<LogEntry> _logEntries = [];
     [ObservableProperty] private bool _isRunning;
-    [ObservableProperty] private string _statusText = "就绪";
+    [ObservableProperty] private string _statusText = Strings.Get("STATUS_Ready");
     [ObservableProperty] private double _logMaxHeight = 400;
 
     private CancellationTokenSource? _cts;
@@ -63,23 +64,23 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
         if (IsRunning) return;
 
         IsRunning = true;
-        StatusText = $"正在执行: {Script.Name}...";
+        StatusText = Strings.Get("STATUS_Running", Script.Name);
         _cts = new CancellationTokenSource();
 
         try
         {
             var paramValues = BuildParameterValues();
             await ExecuteCoreAsync(paramValues, _cts.Token);
-            StatusText = "执行完成";
+            StatusText = Strings.Get("STATUS_Completed");
         }
         catch (OperationCanceledException)
         {
-            StatusText = "已取消";
+            StatusText = Strings.Get("STATUS_Cancelled");
         }
         catch (Exception ex)
         {
-            AddLogEntry(new LogEntry { Message = $"执行失败: {ex.Message}" });
-            StatusText = "执行失败";
+            AddLogEntry(new LogEntry { Message = Strings.Get("FMT_ExecuteFailed", ex.Message) });
+            StatusText = Strings.Get("STATUS_Failed");
         }
         finally
         {
@@ -93,7 +94,7 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
     private void CancelExecution()
     {
         _cts?.Cancel();
-        StatusText = "正在取消...";
+        StatusText = Strings.Get("STATUS_Cancelling");
     }
 
     protected abstract Task ExecuteCoreAsync(Dictionary<string, string> paramValues, CancellationToken ct);

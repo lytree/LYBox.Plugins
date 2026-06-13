@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,14 +13,14 @@ public partial class ClearMessageViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "clear-message",
-        Name = "清理消息",
-        Description = "清理频道中包含指定内容的消息",
+        Name = Strings.Get("SCRIPT_ClearMessage_Name"),
+        Description = Strings.Get("SCRIPT_ClearMessage_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("channel", "频道/群聊", "频道/群聊链接或用户名 (留空=收藏夹)", required: false),
-            ScriptParameter.HistoryText("contains", "匹配文本", "匹配消息中包含的文本内容", "This channel can't be displayed"),
-            ScriptParameter.Switch("silent", "静默删除", "静默删除，不询问确认", false),
-            ScriptParameter.Number("limit", "最大处理数量", "0=全部", 0),
+            ScriptParameter.HistoryText("channel", Strings.Get("PARAM_Channel"), Strings.Get("PARAM_ChannelDesc"), required: false),
+            ScriptParameter.HistoryText("contains", Strings.Get("PARAM_Contains"), Strings.Get("PARAM_ContainsDesc"), "This channel can't be displayed"),
+            ScriptParameter.Switch("silent", Strings.Get("PARAM_Silent"), Strings.Get("PARAM_SilentDesc"), false),
+            ScriptParameter.Number("limit", Strings.Get("PARAM_Limit"), Strings.Get("PARAM_LimitDesc"), 0),
         ]
     };
 

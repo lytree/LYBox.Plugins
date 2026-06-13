@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,13 +13,13 @@ public partial class SingleForwardViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "single-forward",
-        Name = "单条深度转发",
-        Description = "将单条消息深度转发到目标频道/群聊（自动收集同组媒体消息一起转发）",
+        Name = Strings.Get("SCRIPT_SingleForward_Name"),
+        Description = Strings.Get("SCRIPT_SingleForward_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("source", "源消息链接", "源频道/群聊中的具体消息链接", required: true),
-            ScriptParameter.HistoryText("target", "目标链接", "目标频道/群聊链接或用户名", required: true),
-            ScriptParameter.Switch("comments", "转发评论", "是否同时转发该消息的评论", true),
+            ScriptParameter.HistoryText("source", Strings.Get("PARAM_Source"), Strings.Get("PARAM_SingleSourceDesc"), required: true),
+            ScriptParameter.HistoryText("target", Strings.Get("PARAM_Target"), Strings.Get("PARAM_TargetDesc"), required: true),
+            ScriptParameter.Switch("comments", Strings.Get("PARAM_ForwardComments"), Strings.Get("PARAM_ForwardCommentsDesc"), true),
         ]
     };
 

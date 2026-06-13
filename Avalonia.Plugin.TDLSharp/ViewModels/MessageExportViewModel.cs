@@ -1,5 +1,6 @@
 using Avalonia.Plugin.Shared.Attributes;
 using Avalonia.Plugin.TDLSharp.Models;
+using Avalonia.Plugin.TDLSharp.Resources;
 using Avalonia.Plugin.TDLSharp.Services;
 
 namespace Avalonia.Plugin.TDLSharp.ViewModels;
@@ -12,14 +13,14 @@ public partial class MessageExportViewModel : TdlViewModelBase
     public override ScriptDescriptor Script => new()
     {
         Id = "message-export",
-        Name = "消息导出",
-        Description = "导出频道消息为JSON (支持分组和评论)",
+        Name = Strings.Get("SCRIPT_MessageExport_Name"),
+        Description = Strings.Get("SCRIPT_MessageExport_Desc"),
         Parameters =
         [
-            ScriptParameter.HistoryText("channel", "频道/群聊", "频道/群聊链接或用户名", required: true),
-            ScriptParameter.HistoryText("output", "输出路径", "输出文件路径 (留空=自动)", required: false),
-            ScriptParameter.Switch("comments", "导出评论", "是否导出评论", false),
-            ScriptParameter.Number("limit", "最大导出数量", "0=全部", 0),
+            ScriptParameter.HistoryText("channel", Strings.Get("PARAM_Channel"), Strings.Get("PARAM_ChannelDesc"), required: true),
+            ScriptParameter.HistoryText("output", Strings.Get("PARAM_Output"), Strings.Get("PARAM_OutputDesc"), required: false),
+            ScriptParameter.Switch("comments", Strings.Get("PARAM_ExportComments"), Strings.Get("PARAM_ExportCommentsDesc"), false),
+            ScriptParameter.Number("limit", Strings.Get("PARAM_MaxExport"), Strings.Get("PARAM_MaxExportDesc"), 0),
         ]
     };
 

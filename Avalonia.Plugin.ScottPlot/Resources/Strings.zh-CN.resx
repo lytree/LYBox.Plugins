@@ -58,7 +58,6 @@
   <data name="NAV_WaveformSpectrumTrend" xml:space="preserve"><value>波形图 / 频谱图 / 趋势图</value></data>
   <data name="BTN_SineWave" xml:space="preserve"><value>正弦波</value></data>
   <data name="BTN_CosineWave" xml:space="preserve"><value>余弦波</value></data>
-  <data name="BTN_Clear" xml:space="preserve"><value>清除</value></data>
   <data name="BTN_RandomSignal" xml:space="preserve"><value>随机信号</value></data>
   <data name="BTN_SineSignal" xml:space="preserve"><value>正弦信号</value></data>
   <data name="BTN_RandomPoints" xml:space="preserve"><value>随机点</value></data>
