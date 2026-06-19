@@ -51,6 +51,7 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="NAV_TDL" xml:space="preserve"><value>TDL Sharp</value></data>
+  <data name="NAV_TDL_Login" xml:space="preserve"><value>登录 &amp; 初始化</value></data>
   <data name="NAV_TDL_BatchForward" xml:space="preserve"><value>批量深度转发</value></data>
   <data name="NAV_TDL_ClearMessage" xml:space="preserve"><value>清理消息</value></data>
   <data name="NAV_TDL_DeepCopy" xml:space="preserve"><value>深度复制转发</value></data>
@@ -257,4 +258,44 @@
   <data name="LOG_StartExportMembers" xml:space="preserve"><value>开始导出成员...</value></data>
   <data name="LOG_ExportMembersComplete" xml:space="preserve"><value>已导出 {0} 个成员</value></data>
   <data name="LOG_NoFilesToUpload" xml:space="preserve"><value>没有可上传的有效文件</value></data>
+  <data name="LOGIN_Title" xml:space="preserve"><value>Telegram 登录与初始化</value></data>
+  <data name="LOGIN_SelectMethod" xml:space="preserve"><value>选择登录方式</value></data>
+  <data name="LOGIN_PhoneNumber" xml:space="preserve"><value>手机号</value></data>
+  <data name="LOGIN_BotToken" xml:space="preserve"><value>Bot Token</value></data>
+  <data name="LOGIN_Initialize" xml:space="preserve"><value>初始化客户端</value></data>
+  <data name="LOGIN_Initialized" xml:space="preserve"><value>客户端已初始化，请继续登录。</value></data>
+  <data name="LOGIN_InitFailed" xml:space="preserve"><value>初始化失败: {0}</value></data>
+  <data name="LOGIN_PhonePlaceholder" xml:space="preserve"><value>+8613800138000</value></data>
+  <data name="LOGIN_SendCode" xml:space="preserve"><value>发送验证码</value></data>
+  <data name="LOGIN_PhoneSubmitted" xml:space="preserve"><value>手机号已提交，等待验证码...</value></data>
+  <data name="LOGIN_PhoneFailed" xml:space="preserve"><value>手机号认证失败: {0}</value></data>
+  <data name="LOGIN_CodePlaceholder" xml:space="preserve"><value>输入验证码</value></data>
+  <data name="LOGIN_SubmitCode" xml:space="preserve"><value>验证</value></data>
+  <data name="LOGIN_CodeSubmitted" xml:space="preserve"><value>验证码已提交。</value></data>
+  <data name="LOGIN_CodeFailed" xml:space="preserve"><value>验证码验证失败: {0}</value></data>
+  <data name="LOGIN_PasswordPlaceholder" xml:space="preserve"><value>输入两步验证密码</value></data>
+  <data name="LOGIN_SubmitPassword" xml:space="preserve"><value>验证</value></data>
+  <data name="LOGIN_PasswordSubmitted" xml:space="preserve"><value>密码已提交。</value></data>
+  <data name="LOGIN_PasswordFailed" xml:space="preserve"><value>密码验证失败: {0}</value></data>
+  <data name="LOGIN_BotTokenPlaceholder" xml:space="preserve"><value>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</value></data>
+  <data name="LOGIN_Login" xml:space="preserve"><value>登录</value></data>
+  <data name="LOGIN_BotTokenSubmitted" xml:space="preserve"><value>Bot Token 已提交，正在认证...</value></data>
+  <data name="LOGIN_BotTokenFailed" xml:space="preserve"><value>Bot Token 登录失败: {0}</value></data>
+  <data name="LOGIN_LoggedInAs" xml:space="preserve"><value>已登录账号</value></data>
+  <data name="LOGIN_Logout" xml:space="preserve"><value>退出登录</value></data>
+  <data name="LOGIN_LoggedOut" xml:space="preserve"><value>已成功退出登录。</value></data>
+  <data name="LOGIN_LogoutFailed" xml:space="preserve"><value>退出登录失败: {0}</value></data>
+  <data name="LOGIN_UserInfoUnavailable" xml:space="preserve"><value>无法获取用户信息</value></data>
+  <data name="LOGIN_OtherDeviceConfirmation" xml:space="preserve"><value>请在另一设备上确认</value></data>
+  <data name="LOGIN_OtherDeviceDesc" xml:space="preserve"><value>请在另一设备上的 Telegram 应用中确认登录。</value></data>
+  <data name="LOGIN_StatusIdle" xml:space="preserve"><value>未初始化</value></data>
+  <data name="LOGIN_StatusWaitPhone" xml:space="preserve"><value>等待输入手机号</value></data>
+  <data name="LOGIN_StatusWaitCode" xml:space="preserve"><value>等待输入验证码</value></data>
+  <data name="LOGIN_StatusWaitPassword" xml:space="preserve"><value>等待输入两步验证密码</value></data>
+  <data name="LOGIN_StatusWaitRegistration" xml:space="preserve"><value>等待注册</value></data>
+  <data name="LOGIN_StatusWaitOtherDevice" xml:space="preserve"><value>等待设备确认</value></data>
+  <data name="LOGIN_StatusReady" xml:space="preserve"><value>已认证</value></data>
+  <data name="LOGIN_StatusError" xml:space="preserve"><value>错误</value></data>
+  <data name="LOGIN_NotInitializedTitle" xml:space="preserve"><value>未登录</value></data>
+  <data name="LOGIN_NotInitializedWarning" xml:space="preserve"><value>Telegram 客户端尚未认证，需要先登录。是否跳转到登录页面？</value></data>
 </root>

@@ -25,11 +25,12 @@ public class TdlClientManager : IDisposable
     public bool AuthNeeded => _updateHandler?.AuthNeeded ?? false;
     public bool PasswordNeeded => _updateHandler?.PasswordNeeded ?? false;
     public bool IsReady => _ready.IsSet;
+    public bool IsAuthenticated => _updateHandler?.IsAuthenticated ?? false;
+    public string AuthState => _updateHandler?.AuthState ?? "Unknown";
     public TdClient Client => _client ?? throw new InvalidOperationException("Client not initialized. Call EnsureInitializedAsync first.");
 
-    public event Func<string, Task>? AuthCodeRequested;
-    public event Func<string, Task>? PasswordRequested;
     public event Func<TdApi.File, Task>? FileUpdated;
+    public event Action? AuthStateChanged;
 
     public DirectUiLogger? FileUpdateLogger { get; set; }
 
@@ -65,7 +66,8 @@ public class TdlClientManager : IDisposable
 
         _updateHandler = new TdlUpdateHandler(_ready, _logger)
             .OnConfigureTdlibParameters(ConfigureTdlibParameters)
-            .OnFileUpdate(HandleFileUpdate);
+            .OnFileUpdate(HandleFileUpdate)
+            .OnAuthStateChanged(() => AuthStateChanged?.Invoke());
 
         _client.UpdateReceived += async (_, update) =>
         {
@@ -102,6 +104,22 @@ public class TdlClientManager : IDisposable
     {
         if (_client == null) throw new InvalidOperationException("Client not initialized.");
         await _client.ExecuteAsync(new TdApi.CheckAuthenticationPassword { Password = password });
+    }
+
+    public async Task AuthenticateWithBotTokenAsync(string botToken)
+    {
+        if (_client == null) throw new InvalidOperationException("Client not initialized.");
+        await _client.ExecuteAsync(new TdApi.CheckAuthenticationBotToken { Token = botToken });
+    }
+
+    public async Task LogoutAsync()
+    {
+        if (_client == null) return;
+        try
+        {
+            await _client.ExecuteAsync(new TdApi.LogOut());
+        }
+        catch { }
     }
 
     public async Task<TdApi.User> GetCurrentUserAsync()

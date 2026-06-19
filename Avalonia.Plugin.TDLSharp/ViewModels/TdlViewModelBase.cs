@@ -78,7 +78,10 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         var clipboard = topLevel?.Clipboard;
         if (clipboard is not null)
         {
-            await clipboard.SetTextAsync(entry.FormattedLine);
+            var text = entry.IsProgress
+                ? $"{entry.FileName} - {entry.StatusText} ({entry.ProgressValue:F1}%)"
+                : entry.FormattedLine;
+            await clipboard.SetTextAsync(text);
         }
     }
 
@@ -86,6 +89,23 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     private async Task ExecuteScript()
     {
         if (IsRunning) return;
+
+        // Check authentication before execution
+        var clientManager = ServiceLocator.GetService<TdlClientManager>();
+        if (clientManager != null && !clientManager.IsAuthenticated)
+        {
+            var result = await OverlayMessageBox.ShowAsync(
+                Strings.Get("LOGIN_NotInitializedWarning"),
+                Strings.Get("LOGIN_NotInitializedTitle"),
+                button: MessageBoxButton.YesNo,
+                icon: MessageBoxIcon.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                WeakReferenceMessenger.Default.Send("TDL_Login", "JumpTo");
+            }
+            return;
+        }
 
         IsRunning = true;
         StatusText = Strings.Get("STATUS_Running", Script.Name);
@@ -166,7 +186,21 @@ public abstract partial class TdlViewModelBase : ViewModelBase
 
     protected DirectUiLogger CreateUiLogger()
     {
-        return new DirectUiLogger(message => AddLogEntry(new LogEntry { Message = message }));
+        return new DirectUiLogger(
+            message => AddLogEntry(new LogEntry { Message = message }),
+            entry => AddLogEntry(entry),
+            UpdateProgressEntry);
+    }
+
+    protected static void UpdateProgressEntry(LogEntry entry, double progressValue, string status, bool completed, bool failed)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            entry.ProgressValue = progressValue;
+            entry.StatusText = status;
+            entry.IsCompleted = completed;
+            entry.IsFailed = failed;
+        });
     }
 
     protected TdlService CreateTdlService()

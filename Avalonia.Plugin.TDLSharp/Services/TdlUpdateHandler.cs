@@ -16,12 +16,15 @@ public class TdlUpdateHandler
     private Action? _onAuthWaitEmailAddress;
     private Action? _onAuthWaitEmailCode;
     private Action? _onAuthReady;
+    private Action? _onAuthStateChanged;
     private Func<TdClient, string, ILogger, Task>? _onConfigureTdlibParameters;
     private Func<TdApi.File, string, ILogger, Task>? _onFileUpdate;
     private Func<TdApi.Update, ILogger, Task>? _onMessageUpdate;
 
     public bool AuthNeeded { get; private set; }
     public bool PasswordNeeded { get; private set; }
+    public bool IsAuthenticated { get; private set; }
+    public string AuthState { get; private set; } = "Unknown";
 
     public TdlUpdateHandler(ManualResetEventSlim readyToAuthenticate, ILogger logger)
     {
@@ -37,6 +40,7 @@ public class TdlUpdateHandler
     public TdlUpdateHandler OnAuthWaitEmailAddress(Action handler) { _onAuthWaitEmailAddress = handler; return this; }
     public TdlUpdateHandler OnAuthWaitEmailCode(Action handler) { _onAuthWaitEmailCode = handler; return this; }
     public TdlUpdateHandler OnAuthReady(Action handler) { _onAuthReady = handler; return this; }
+    public TdlUpdateHandler OnAuthStateChanged(Action handler) { _onAuthStateChanged = handler; return this; }
     public TdlUpdateHandler OnConfigureTdlibParameters(Func<TdClient, string, ILogger, Task> handler) { _onConfigureTdlibParameters = handler; return this; }
     public TdlUpdateHandler OnFileUpdate(Func<TdApi.File, string, ILogger, Task> handler) { _onFileUpdate = handler; return this; }
     public TdlUpdateHandler OnMessageUpdate(Func<TdApi.Update, ILogger, Task> handler) { _onMessageUpdate = handler; return this; }
@@ -49,58 +53,90 @@ public class TdlUpdateHandler
         {
             #region UpdateAuthorizationState
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitTdlibParameters }:
+                AuthState = "WaitTdlibParameters";
+                _onAuthStateChanged?.Invoke();
                 if (_onConfigureTdlibParameters != null)
                     await _onConfigureTdlibParameters(client, outputPath, logger);
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitPhoneNumber }:
                 AuthNeeded = true;
+                PasswordNeeded = false;
+                IsAuthenticated = false;
+                AuthState = "WaitPhoneNumber";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitPhoneNumber?.Invoke(client, outputPath, logger);
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitCode }:
                 AuthNeeded = true;
+                AuthState = "WaitCode";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitCode?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitPassword }:
                 AuthNeeded = true;
                 PasswordNeeded = true;
+                AuthState = "WaitPassword";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitPassword?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitRegistration }:
                 AuthNeeded = true;
+                AuthState = "WaitRegistration";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitRegistration?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitOtherDeviceConfirmation }:
+                AuthState = "WaitOtherDeviceConfirmation";
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitOtherDeviceConfirmation?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitEmailAddress }:
                 AuthNeeded = true;
+                AuthState = "WaitEmailAddress";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitEmailAddress?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitEmailCode }:
                 AuthNeeded = true;
+                AuthState = "WaitEmailCode";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthWaitEmailCode?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateWaitPremiumPurchase }:
+                AuthState = "WaitPremiumPurchase";
+                _onAuthStateChanged?.Invoke();
                 logger.LogWarning("需要购买 Premium 才能继续操作");
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateReady }:
-                logger.LogDebug("授权成功，已登录");
+                AuthNeeded = false;
+                PasswordNeeded = false;
+                IsAuthenticated = true;
+                AuthState = "Ready";
                 _readyToAuthenticate.Set();
+                _onAuthStateChanged?.Invoke();
                 _onAuthReady?.Invoke();
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateLoggingOut }:
+                AuthState = "LoggingOut";
+                IsAuthenticated = false;
+                _onAuthStateChanged?.Invoke();
                 logger.LogDebug("正在登出...");
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateClosing }:
+                AuthState = "Closing";
+                _onAuthStateChanged?.Invoke();
                 logger.LogDebug("TDLib 正在关闭...");
                 break;
             case TdApi.Update.UpdateAuthorizationState { AuthorizationState: TdApi.AuthorizationState.AuthorizationStateClosed }:
+                AuthState = "Closed";
+                IsAuthenticated = false;
+                _onAuthStateChanged?.Invoke();
                 logger.LogDebug("TDLib 已关闭");
                 break;
             #endregion

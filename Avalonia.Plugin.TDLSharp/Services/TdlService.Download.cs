@@ -1,10 +1,11 @@
-using System.Text.Json;
 using TdLib;
 
 namespace Avalonia.Plugin.TDLSharp.Services;
 
 public partial class TdlService
 {
+    const int MaxConcurrentDownloads = 5;
+
     public async Task DownloadFilesAsync(
         string linksText,
         string outputDir,
@@ -41,7 +42,8 @@ public partial class TdlService
 
         _logger.Log($"开始下载文件，共 {links.Count} 个链接，输出目录: {outputDir}");
 
-        int downloaded = 0;
+        // Phase 1: Collect all files to download (logging allowed)
+        var filesToDownload = new List<DownloadItem>();
         int skipped = 0;
 
         foreach (var link in links)
@@ -121,21 +123,102 @@ public partial class TdlService
                     }
                 }
 
-                try
+                filesToDownload.Add(new DownloadItem
                 {
-                    _logger.Log($"正在下载: {fileName} ({file.ExpectedSize} 字节)");
-                    var downloadedFile = await DownloadFileAsync(client, file.Id, destPath, ct);
-                    downloaded++;
-                    _logger.Log($"下载完成: {downloadedFile.Local.Path}");
-                }
-                catch (TdException ex)
-                {
-                    _logger.Log($"下载失败: {fileName} - {ex.Error.Message}");
-                }
+                    FileId = file.Id,
+                    FileName = fileName,
+                    FileSize = file.ExpectedSize,
+                    DestPath = destPath
+                });
             }
         }
 
-        _logger.Log($"下载完成: {downloaded} 个文件, 跳过 {skipped} 个");
+        if (filesToDownload.Count == 0)
+        {
+            _logger.Log($"下载完成: 0 个成功, 0 个失败, {skipped} 个跳过");
+            return;
+        }
+
+        _logger.Log($"收集到 {filesToDownload.Count} 个文件，开始并发下载 (最多 {MaxConcurrentDownloads} 个同时)");
+
+        // Phase 2: Download concurrently (no logging, only progress bars)
+        using var semaphore = new SemaphoreSlim(MaxConcurrentDownloads);
+        int downloaded = 0;
+        int failed = 0;
+
+        var tasks = filesToDownload.Select(async item =>
+        {
+            await semaphore.WaitAsync(ct);
+            try
+            {
+                await DownloadSingleFileWithProgressAsync(client, item, ct);
+                Interlocked.Increment(ref downloaded);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                Interlocked.Increment(ref failed);
+            }
+            finally
+            {
+                semaphore.Release();
+            }
+        }).ToList();
+
+        await Task.WhenAll(tasks);
+
+        // Phase 3: Summary
+        _logger.Log($"下载完成: {downloaded} 个成功, {failed} 个失败, {skipped} 个跳过");
+    }
+
+    async Task DownloadSingleFileWithProgressAsync(TdClient client, DownloadItem item, CancellationToken ct)
+    {
+        var progressEntry = _logger.StartProgress(item.FileName, item.FileSize, "等待中");
+
+        try
+        {
+            progressEntry.StatusText = "下载中";
+            var file = await client.DownloadFileAsync(item.FileId, 1, 0, 0, false);
+
+            while (!file.Local.IsDownloadingCompleted)
+            {
+                ct.ThrowIfCancellationRequested();
+
+                var downloadedSize = file.Local.DownloadedSize;
+                var totalSize = file.ExpectedSize > 0 ? file.ExpectedSize : item.FileSize;
+                var percentage = totalSize > 0 ? (downloadedSize * 100.0 / totalSize) : 0;
+
+                _logger.UpdateProgress(progressEntry, percentage, $"{percentage:F1}%");
+
+                await Task.Delay(200, ct);
+                file = await client.GetFileAsync(file.Id);
+            }
+
+            if (file.Local.Path != item.DestPath && File.Exists(file.Local.Path))
+            {
+                var dir = Path.GetDirectoryName(item.DestPath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                File.Copy(file.Local.Path, item.DestPath, overwrite: true);
+            }
+
+            _logger.CompleteProgress(progressEntry, "完成");
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.FailProgress(progressEntry, "已取消");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.FailProgress(progressEntry, $"失败: {ex.Message}");
+            throw;
+        }
     }
 
     TdApi.File? ExtractDownloadableFile(TdApi.MessageContent content)
@@ -198,28 +281,12 @@ public partial class TdlService
 
         return true;
     }
+}
 
-    async Task<TdApi.File> DownloadFileAsync(TdClient client, int fileId, string destPath, CancellationToken ct)
-    {
-        var file = await client.DownloadFileAsync(fileId, 1, 0, 0, false);
-
-        while (!file.Local.IsDownloadingCompleted)
-        {
-            ct.ThrowIfCancellationRequested();
-            await Task.Delay(200, ct);
-            file = await client.GetFileAsync(file.Id);
-        }
-
-        if (file.Local.Path != destPath && File.Exists(file.Local.Path))
-        {
-            var dir = Path.GetDirectoryName(destPath);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
-            File.Copy(file.Local.Path, destPath, overwrite: true);
-        }
-
-        return file;
-    }
+class DownloadItem
+{
+    public int FileId { get; set; }
+    public string FileName { get; set; } = string.Empty;
+    public long FileSize { get; set; }
+    public string DestPath { get; set; } = string.Empty;
 }

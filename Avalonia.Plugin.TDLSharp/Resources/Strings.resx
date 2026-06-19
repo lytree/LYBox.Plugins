@@ -51,6 +51,7 @@
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
   <data name="NAV_TDL" xml:space="preserve"><value>TDL Sharp</value></data>
+  <data name="NAV_TDL_Login" xml:space="preserve"><value>Login &amp; Init</value></data>
   <data name="NAV_TDL_BatchForward" xml:space="preserve"><value>Batch Deep Forward</value></data>
   <data name="NAV_TDL_ClearMessage" xml:space="preserve"><value>Clear Messages</value></data>
   <data name="NAV_TDL_DeepCopy" xml:space="preserve"><value>Deep Copy Forward</value></data>
@@ -257,4 +258,44 @@
   <data name="LOG_StartExportMembers" xml:space="preserve"><value>Start exporting members...</value></data>
   <data name="LOG_ExportMembersComplete" xml:space="preserve"><value>Exported {0} members</value></data>
   <data name="LOG_NoFilesToUpload" xml:space="preserve"><value>No valid files to upload</value></data>
+  <data name="LOGIN_Title" xml:space="preserve"><value>Telegram Login &amp; Initialization</value></data>
+  <data name="LOGIN_SelectMethod" xml:space="preserve"><value>Select Login Method</value></data>
+  <data name="LOGIN_PhoneNumber" xml:space="preserve"><value>Phone Number</value></data>
+  <data name="LOGIN_BotToken" xml:space="preserve"><value>Bot Token</value></data>
+  <data name="LOGIN_Initialize" xml:space="preserve"><value>Initialize Client</value></data>
+  <data name="LOGIN_Initialized" xml:space="preserve"><value>Client initialized. Please proceed with login.</value></data>
+  <data name="LOGIN_InitFailed" xml:space="preserve"><value>Initialization failed: {0}</value></data>
+  <data name="LOGIN_PhonePlaceholder" xml:space="preserve"><value>+1234567890</value></data>
+  <data name="LOGIN_SendCode" xml:space="preserve"><value>Send Code</value></data>
+  <data name="LOGIN_PhoneSubmitted" xml:space="preserve"><value>Phone number submitted. Waiting for auth code...</value></data>
+  <data name="LOGIN_PhoneFailed" xml:space="preserve"><value>Phone authentication failed: {0}</value></data>
+  <data name="LOGIN_CodePlaceholder" xml:space="preserve"><value>Enter auth code</value></data>
+  <data name="LOGIN_SubmitCode" xml:space="preserve"><value>Verify</value></data>
+  <data name="LOGIN_CodeSubmitted" xml:space="preserve"><value>Auth code submitted.</value></data>
+  <data name="LOGIN_CodeFailed" xml:space="preserve"><value>Code verification failed: {0}</value></data>
+  <data name="LOGIN_PasswordPlaceholder" xml:space="preserve"><value>Enter 2FA password</value></data>
+  <data name="LOGIN_SubmitPassword" xml:space="preserve"><value>Verify</value></data>
+  <data name="LOGIN_PasswordSubmitted" xml:space="preserve"><value>Password submitted.</value></data>
+  <data name="LOGIN_PasswordFailed" xml:space="preserve"><value>Password verification failed: {0}</value></data>
+  <data name="LOGIN_BotTokenPlaceholder" xml:space="preserve"><value>123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11</value></data>
+  <data name="LOGIN_Login" xml:space="preserve"><value>Login</value></data>
+  <data name="LOGIN_BotTokenSubmitted" xml:space="preserve"><value>Bot token submitted. Authenticating...</value></data>
+  <data name="LOGIN_BotTokenFailed" xml:space="preserve"><value>Bot token login failed: {0}</value></data>
+  <data name="LOGIN_LoggedInAs" xml:space="preserve"><value>Logged in as</value></data>
+  <data name="LOGIN_Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="LOGIN_LoggedOut" xml:space="preserve"><value>Logged out successfully.</value></data>
+  <data name="LOGIN_LogoutFailed" xml:space="preserve"><value>Logout failed: {0}</value></data>
+  <data name="LOGIN_UserInfoUnavailable" xml:space="preserve"><value>Unable to retrieve user info</value></data>
+  <data name="LOGIN_OtherDeviceConfirmation" xml:space="preserve"><value>Confirm on Another Device</value></data>
+  <data name="LOGIN_OtherDeviceDesc" xml:space="preserve"><value>Please confirm the login on your Telegram app on another device.</value></data>
+  <data name="LOGIN_StatusIdle" xml:space="preserve"><value>Not initialized</value></data>
+  <data name="LOGIN_StatusWaitPhone" xml:space="preserve"><value>Waiting for phone number</value></data>
+  <data name="LOGIN_StatusWaitCode" xml:space="preserve"><value>Waiting for auth code</value></data>
+  <data name="LOGIN_StatusWaitPassword" xml:space="preserve"><value>Waiting for 2FA password</value></data>
+  <data name="LOGIN_StatusWaitRegistration" xml:space="preserve"><value>Waiting for registration</value></data>
+  <data name="LOGIN_StatusWaitOtherDevice" xml:space="preserve"><value>Waiting for device confirmation</value></data>
+  <data name="LOGIN_StatusReady" xml:space="preserve"><value>Authenticated</value></data>
+  <data name="LOGIN_StatusError" xml:space="preserve"><value>Error</value></data>
+  <data name="LOGIN_NotInitializedTitle" xml:space="preserve"><value>Not Logged In</value></data>
+  <data name="LOGIN_NotInitializedWarning" xml:space="preserve"><value>Telegram client is not authenticated. You need to login first. Navigate to the login page now?</value></data>
 </root>

@@ -1,0 +1,283 @@
+using Avalonia.Plugin.Shared;
+using Avalonia.Plugin.Shared.Attributes;
+using Avalonia.Plugin.TDLSharp.Resources;
+using Avalonia.Plugin.TDLSharp.Services;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TdLib;
+using Ursa.Controls;
+
+namespace Avalonia.Plugin.TDLSharp.ViewModels;
+
+public enum LoginMethod
+{
+    PhoneNumber,
+    BotToken
+}
+
+public enum AuthStep
+{
+    Idle,
+    WaitPhoneNumber,
+    WaitCode,
+    WaitPassword,
+    WaitRegistration,
+    WaitOtherDeviceConfirmation,
+    Ready,
+    Error
+}
+
+[NavigationItem("TDL_Login")]
+[Menu("NAV_TDL_Login", "TDL_Login", ParentKey = "NAV_TDL", Order = 0)]
+[ViewMap(typeof(Pages.LoginPage))]
+public partial class LoginViewModel : ViewModelBase
+{
+    private readonly TdlClientManager _clientManager;
+
+    [ObservableProperty] private LoginMethod _selectedLoginMethod = LoginMethod.PhoneNumber;
+    [ObservableProperty] private string _phoneNumber = string.Empty;
+    [ObservableProperty] private string _authCode = string.Empty;
+    [ObservableProperty] private string _password = string.Empty;
+    [ObservableProperty] private string _botToken = string.Empty;
+    [ObservableProperty] private AuthStep _currentStep = AuthStep.Idle;
+    [ObservableProperty] private string _statusMessage = string.Empty;
+    [ObservableProperty] private string _userInfo = string.Empty;
+    [ObservableProperty] private bool _isBusy;
+
+    public bool IsPhoneLogin => SelectedLoginMethod == LoginMethod.PhoneNumber;
+    public bool IsBotLogin => SelectedLoginMethod == LoginMethod.BotToken;
+    public bool CanSubmitPhone => CurrentStep is AuthStep.Idle or AuthStep.WaitPhoneNumber;
+    public bool CanSubmitCode => CurrentStep == AuthStep.WaitCode;
+    public bool CanSubmitPassword => CurrentStep == AuthStep.WaitPassword;
+    public bool CanSubmitBotToken => CurrentStep is AuthStep.Idle or AuthStep.WaitPhoneNumber;
+    public bool IsAuthenticated => CurrentStep == AuthStep.Ready;
+
+    public LoginViewModel()
+    {
+        _clientManager = ServiceLocator.GetService<TdlClientManager>()!;
+        _clientManager.AuthStateChanged += OnAuthStateChanged;
+        UpdateStepFromClient();
+    }
+
+    partial void OnSelectedLoginMethodChanged(LoginMethod value)
+    {
+        OnPropertyChanged(nameof(IsPhoneLogin));
+        OnPropertyChanged(nameof(IsBotLogin));
+        OnPropertyChanged(nameof(CanSubmitPhone));
+        OnPropertyChanged(nameof(CanSubmitBotToken));
+    }
+
+    partial void OnCurrentStepChanged(AuthStep value)
+    {
+        OnPropertyChanged(nameof(CanSubmitPhone));
+        OnPropertyChanged(nameof(CanSubmitCode));
+        OnPropertyChanged(nameof(CanSubmitPassword));
+        OnPropertyChanged(nameof(CanSubmitBotToken));
+        OnPropertyChanged(nameof(IsAuthenticated));
+    }
+
+    private void OnAuthStateChanged()
+    {
+        Dispatcher.UIThread.Post(UpdateStepFromClient);
+    }
+
+    private void UpdateStepFromClient()
+    {
+        var state = _clientManager.AuthState;
+        CurrentStep = state switch
+        {
+            "Ready" => AuthStep.Ready,
+            "WaitPhoneNumber" => AuthStep.WaitPhoneNumber,
+            "WaitCode" => AuthStep.WaitCode,
+            "WaitPassword" => AuthStep.WaitPassword,
+            "WaitRegistration" => AuthStep.WaitRegistration,
+            "WaitOtherDeviceConfirmation" => AuthStep.WaitOtherDeviceConfirmation,
+            _ => AuthStep.Idle
+        };
+
+        StatusMessage = CurrentStep switch
+        {
+            AuthStep.Idle => Strings.Get("LOGIN_StatusIdle"),
+            AuthStep.WaitPhoneNumber => Strings.Get("LOGIN_StatusWaitPhone"),
+            AuthStep.WaitCode => Strings.Get("LOGIN_StatusWaitCode"),
+            AuthStep.WaitPassword => Strings.Get("LOGIN_StatusWaitPassword"),
+            AuthStep.WaitRegistration => Strings.Get("LOGIN_StatusWaitRegistration"),
+            AuthStep.WaitOtherDeviceConfirmation => Strings.Get("LOGIN_StatusWaitOtherDevice"),
+            AuthStep.Ready => Strings.Get("LOGIN_StatusReady"),
+            _ => Strings.Get("LOGIN_StatusError")
+        };
+
+        if (CurrentStep == AuthStep.Ready)
+        {
+            _ = LoadUserInfoAsync();
+        }
+    }
+
+    private async Task LoadUserInfoAsync()
+    {
+        try
+        {
+            var user = await _clientManager.GetCurrentUserAsync();
+            var name = string.IsNullOrWhiteSpace(user.LastName)
+                ? user.FirstName
+                : $"{user.FirstName} {user.LastName}";
+            var username = user.Usernames?.ActiveUsernames?.FirstOrDefault();
+            UserInfo = string.IsNullOrEmpty(username)
+                ? $"{name} (ID: {user.Id})"
+                : $"{name} (@{username})";
+        }
+        catch
+        {
+            UserInfo = Strings.Get("LOGIN_UserInfoUnavailable");
+        }
+    }
+
+    [RelayCommand]
+    private async Task Initialize()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.EnsureInitializedAsync();
+            StatusMessage = Strings.Get("LOGIN_Initialized");
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_InitFailed", ex.Message);
+            CurrentStep = AuthStep.Error;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task SubmitPhone()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(PhoneNumber)) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.EnsureInitializedAsync();
+            await _clientManager.AuthenticateAsync(PhoneNumber);
+            StatusMessage = Strings.Get("LOGIN_PhoneSubmitted");
+        }
+        catch (TdException ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_PhoneFailed", ex.Error.Message);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_PhoneFailed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task SubmitCode()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(AuthCode)) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.SubmitAuthCode(AuthCode);
+            AuthCode = string.Empty;
+            StatusMessage = Strings.Get("LOGIN_CodeSubmitted");
+        }
+        catch (TdException ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_CodeFailed", ex.Error.Message);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_CodeFailed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task SubmitPassword()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(Password)) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.SubmitPassword(Password);
+            Password = string.Empty;
+            StatusMessage = Strings.Get("LOGIN_PasswordSubmitted");
+        }
+        catch (TdException ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_PasswordFailed", ex.Error.Message);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_PasswordFailed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task SubmitBotToken()
+    {
+        if (IsBusy || string.IsNullOrWhiteSpace(BotToken)) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.EnsureInitializedAsync();
+            await _clientManager.AuthenticateWithBotTokenAsync(BotToken);
+            StatusMessage = Strings.Get("LOGIN_BotTokenSubmitted");
+        }
+        catch (TdException ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_BotTokenFailed", ex.Error.Message);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_BotTokenFailed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    private async Task Logout()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
+        {
+            await _clientManager.LogoutAsync();
+            UserInfo = string.Empty;
+            StatusMessage = Strings.Get("LOGIN_LoggedOut");
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = Strings.Get("LOGIN_LogoutFailed", ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public override void Dispose()
+    {
+        _clientManager.AuthStateChanged -= OnAuthStateChanged;
+        base.Dispose();
+    }
+}

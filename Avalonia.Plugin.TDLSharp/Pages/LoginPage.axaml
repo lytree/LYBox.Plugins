@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:Avalonia.Plugin.TDLSharp.ViewModels"
+			 x:Class="Avalonia.Plugin.TDLSharp.Pages.LoginPage"
+			 x:DataType="vm:LoginViewModel"
+			 mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500">
+	<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+		<Grid Margin="24" RowDefinitions="Auto,Auto,Auto,Auto" MaxWidth="500" HorizontalAlignment="Stretch">
+
+			<!-- Header -->
+			<StackPanel Grid.Row="0" Spacing="6" Margin="0 0 0 20">
+				<TextBlock Text="{DynamicResource LOGIN_Title}" Theme="{StaticResource TitleTextBlock}" Classes="H2" />
+				<TextBlock Text="{Binding StatusMessage}" Classes="Secondary" FontSize="13" />
+			</StackPanel>
+
+			<!-- Authenticated state -->
+			<Border Grid.Row="1" Theme="{DynamicResource CardBorder}" Padding="16" Margin="0 0 0 12"
+					IsVisible="{Binding IsAuthenticated}">
+				<StackPanel Spacing="8">
+					<TextBlock Text="{DynamicResource LOGIN_LoggedInAs}" FontWeight="SemiBold" />
+					<TextBlock Text="{Binding UserInfo}" FontSize="14" TextWrapping="Wrap" />
+					<Button Content="{DynamicResource LOGIN_Logout}" Command="{Binding LogoutCommand}"
+							HorizontalAlignment="Left" Margin="0 8 0 0" IsEnabled="{Binding !IsBusy}" Classes="Danger" />
+				</StackPanel>
+			</Border>
+
+			<!-- Login method selection -->
+			<Border Grid.Row="2" Theme="{DynamicResource CardBorder}" Padding="16" Margin="0 0 0 12"
+					IsVisible="{Binding !IsAuthenticated}">
+				<StackPanel Spacing="12">
+					<TextBlock Text="{DynamicResource LOGIN_SelectMethod}" Classes="SectionTitle" />
+
+					<!-- Method toggle -->
+					<StackPanel Orientation="Horizontal" Spacing="12">
+						<RadioButton Content="{DynamicResource LOGIN_PhoneNumber}" IsChecked="{Binding IsPhoneLogin}"
+									GroupName="LoginMethod" />
+						<RadioButton Content="{DynamicResource LOGIN_BotToken}" IsChecked="{Binding IsBotLogin}"
+									GroupName="LoginMethod" />
+					</StackPanel>
+
+					<!-- Initialize button -->
+					<Button Content="{DynamicResource LOGIN_Initialize}" Command="{Binding InitializeCommand}"
+							IsEnabled="{Binding !IsBusy}" HorizontalAlignment="Left" Margin="0 4 0 0" />
+
+					<!-- Phone login -->
+					<StackPanel IsVisible="{Binding IsPhoneLogin}" Spacing="8">
+						<Grid ColumnDefinitions="*,Auto" Margin="0 4">
+							<TextBox Grid.Column="0" Text="{Binding PhoneNumber}" PlaceholderText="{DynamicResource LOGIN_PhonePlaceholder}"
+									IsEnabled="{Binding CanSubmitPhone}" />
+							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SendCode}" Command="{Binding SubmitPhoneCommand}"
+									Margin="8 0 0 0" IsEnabled="{Binding CanSubmitPhone}" VerticalAlignment="Stretch" />
+						</Grid>
+
+						<!-- Code input -->
+						<Grid ColumnDefinitions="*,Auto" Margin="0 4"
+							  IsVisible="{Binding CanSubmitCode}">
+							<TextBox Grid.Column="0" Text="{Binding AuthCode}" PlaceholderText="{DynamicResource LOGIN_CodePlaceholder}" />
+							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitCode}" Command="{Binding SubmitCodeCommand}"
+									Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
+						</Grid>
+
+						<!-- Password input (2FA) -->
+						<Grid ColumnDefinitions="*,Auto" Margin="0 4"
+							  IsVisible="{Binding CanSubmitPassword}">
+							<TextBox Grid.Column="0" Text="{Binding Password}" PlaceholderText="{DynamicResource LOGIN_PasswordPlaceholder}"
+									PasswordChar="*" />
+							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitPassword}" Command="{Binding SubmitPasswordCommand}"
+									Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
+						</Grid>
+					</StackPanel>
+
+					<!-- Bot token login -->
+					<StackPanel IsVisible="{Binding IsBotLogin}" Spacing="8">
+						<Grid ColumnDefinitions="*,Auto" Margin="0 4">
+							<TextBox Grid.Column="0" Text="{Binding BotToken}" PlaceholderText="{DynamicResource LOGIN_BotTokenPlaceholder}"
+									IsEnabled="{Binding CanSubmitBotToken}" />
+							<Button Grid.Column="1" Content="{DynamicResource LOGIN_Login}" Command="{Binding SubmitBotTokenCommand}"
+									Margin="8 0 0 0" IsEnabled="{Binding CanSubmitBotToken}" VerticalAlignment="Stretch" Classes="Primary" />
+						</Grid>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+
+			<!-- Other device confirmation -->
+			<Border Grid.Row="3" Theme="{DynamicResource CardBorder}" Padding="16"
+					IsVisible="{Binding CurrentStep, Converter={x:Static vm:AuthStepToVisibilityConverter.OtherDevice}}">
+				<StackPanel Spacing="8">
+					<TextBlock Text="{DynamicResource LOGIN_OtherDeviceConfirmation}" FontWeight="SemiBold" />
+					<TextBlock Text="{DynamicResource LOGIN_OtherDeviceDesc}" Classes="Secondary" TextWrapping="Wrap" />
+				</StackPanel>
+			</Border>
+
+		</Grid>
+	</ScrollViewer>
+</UserControl>
