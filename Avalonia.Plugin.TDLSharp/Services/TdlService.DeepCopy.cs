@@ -85,14 +85,6 @@ public partial class TdlService
 
                 if (messages.Count == 0)
                 {
-                    var remainingHasShallow = await CheckRemainingShallowForwards(client, sourceChatId, history.Messages_.Last().Id, ct);
-                    if (!remainingHasShallow)
-                    {
-                        _logger.Log("后续消息中不再存在浅转发消息，停止扫描");
-                        hasMore = false;
-                        break;
-                    }
-
                     fromMessageId = history.Messages_.Last().Id;
                     continue;
                 }
@@ -136,38 +128,8 @@ public partial class TdlService
 
         _logger.Log($"全部完成: 处理 {totalForwarded} 条,  跳过 {totalSkipped} 条");
     }
-    async Task<bool> CheckRemainingShallowForwards(TdClient client, long chatId, long fromMessageId, CancellationToken ct)
-    {
-        try
-        {
-            long checkFromId = fromMessageId;
-            for (int i = 0; i < 3; i++)
-            {
-                ct.ThrowIfCancellationRequested();
-                var history = await client.GetChatHistoryAsync(chatId, checkFromId, 0, 100, false);
-                if (history.Messages_ == null || history.Messages_.Length == 0)
-                {
-                    return false;
-                }
 
-                if (history.Messages_.Any(m => m.ForwardInfo != null))
-                {
-                    return true;
-                }
-
-                checkFromId = history.Messages_.Last().Id;
-                await Task.Delay(300, ct);
-            }
-
-            return false;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    public async Task<int> DeleteShallowForwardMessagesAsync(long chatId, CancellationToken ct = default)
+    public async Task<int> DeleteShallowForwardMessagesAsync(long chatId, int maxNonShallowThreshold = 5000, CancellationToken ct = default)
     {
         await EnsureReadyAsync();
         var client = Client;
@@ -255,10 +217,10 @@ public partial class TdlService
                     consecutiveBatchesWithoutMatch++;
                 }
 
-                // 连续3批没有匹配的浅转发消息，说明剩余记录已删除，提前退出
-                if (consecutiveBatchesWithoutMatch >= 3)
+                // 连续 maxNonShallowThreshold 批没有匹配的浅转发消息，说明剩余记录已删除，提前退出
+                if (consecutiveBatchesWithoutMatch >= maxNonShallowThreshold)
                 {
-                    _logger.Log("连续多批未发现匹配的浅转发消息，停止扫描");
+                    _logger.Log($"连续 {maxNonShallowThreshold} 批未发现匹配的浅转发消息，停止扫描");
                     hasMore = false;
                     break;
                 }

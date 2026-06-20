@@ -54,7 +54,7 @@ public partial class DeepCopyViewModel : TdlViewModelBase
                 chatId = currentUser.Id;
             }
 
-            await tdlService.DeleteShallowForwardMessagesAsync(chatId, ct);
+            await tdlService.DeleteShallowForwardMessagesAsync(chatId, maxNonShallow, ct);
         }
     }
 
