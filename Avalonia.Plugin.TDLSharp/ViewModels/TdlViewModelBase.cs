@@ -244,9 +244,14 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         Dispatcher.UIThread.Post(() =>
         {
             LogEntries.Add(entry);
-            if (LogEntries.Count > 1000)
+            // 超过上限时批量裁剪，避免每条新日志都触发 O(n) 的 RemoveAt(0) 导致 UI 抖动
+            const int MaxLogEntries = 1000;
+            const int TrimBatch = 100;
+            if (LogEntries.Count > MaxLogEntries + TrimBatch)
             {
-                LogEntries.RemoveAt(0);
+                var toRemove = LogEntries.Count - MaxLogEntries;
+                for (int i = 0; i < toRemove; i++)
+                    LogEntries.RemoveAt(0);
             }
         });
     }

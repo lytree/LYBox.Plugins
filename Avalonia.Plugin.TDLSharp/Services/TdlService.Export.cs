@@ -55,7 +55,12 @@ public partial class TdlService
     {
         long fromMessageId = 0;
         bool hasMore = true;
-        var allMessages = new List<TdApi.Message>();
+        // 不再一次性将所有消息加载到 allMessages，改为流式处理：
+        // 每批拉取后立即分组并写入 export，避免大频道导出时内存峰值过高。
+        var export = new ChannelExport
+        {
+            ChatId = chatId,
+        };
         int totalCount = 0;
 
         _logger.Log("开始导出频道消息...");
@@ -63,6 +68,7 @@ public partial class TdlService
         while (hasMore)
         {
             ct.ThrowIfCancellationRequested();
+            List<TdApi.Message>? batch = null;
             try
             {
                 var history = await client.GetChatHistoryAsync(chatId, fromMessageId, 0, 100, false);
@@ -72,15 +78,21 @@ public partial class TdlService
                     break;
                 }
 
-                allMessages.AddRange(history.Messages_);
-                totalCount += history.Messages_.Length;
+                batch = [.. history.Messages_];
+                totalCount += batch.Count;
 
-                fromMessageId = history.Messages_.Last().Id;
+                fromMessageId = batch[^1].Id;
                 _logger.Log($"已拉取 {totalCount} 条消息，当前进度 ID: {fromMessageId}");
 
                 if (limit > 0 && totalCount >= limit)
                 {
                     hasMore = false;
+                    // 截断到 limit
+                    var excess = totalCount - limit;
+                    if (excess > 0 && excess < batch.Count)
+                    {
+                        batch.RemoveRange(batch.Count - excess, excess);
+                    }
                 }
 
                 await Task.Delay(300, ct);
@@ -90,74 +102,71 @@ public partial class TdlService
                 int retryAfter = ParseRetryAfter(ex);
                 _logger.Log($"触发频率限制，等待 {retryAfter} 秒后继续...");
                 await Task.Delay(retryAfter * 1000, ct);
+                continue;
             }
             catch (Exception ex)
             {
                 _logger.Log($"拉取消息时发生异常: {ex.Message}");
                 await Task.Delay(5000, ct);
+                continue;
             }
-        }
 
-        if (limit > 0 && allMessages.Count > limit)
-        {
-            allMessages = allMessages.Take(limit).ToList();
+            if (batch is null || batch.Count == 0) continue;
+
+            // 立即处理本批消息：分组并写入 export，避免跨批持有引用
+            var groups = GroupMessagesByAlbum(batch);
+
+            foreach (var group in groups)
+            {
+                ct.ThrowIfCancellationRequested();
+                var exportGroup = new MessageGroup
+                {
+                    MediaAlbumId = group[0].MediaAlbumId != 0 ? group[0].MediaAlbumId.ToString() : null,
+                    IsGrouped = group.Count > 1 && group[0].MediaAlbumId != 0
+                };
+
+                foreach (var msg in group)
+                {
+                    var msgInfo = BuildMessageInfo(msg);
+
+                    if (exportComments)
+                    {
+                        try
+                        {
+                            var comments = await client.GetMessageThreadHistoryAsync(
+                                chatId: chatId,
+                                messageId: msg.Id,
+                                fromMessageId: 0,
+                                offset: 0,
+                                limit: 50
+                            );
+
+                            if (comments.Messages_ != null && comments.Messages_.Length > 0)
+                            {
+                                msgInfo.Comments = comments.Messages_.Select(BuildMessageInfo).ToList();
+                            }
+                        }
+                        catch (TdException ex)
+                        {
+                            _logger.Log($"获取评论失败: MsgId={msg.Id}, 错误: {ex.Error.Message}");
+                        }
+
+                        await Task.Delay(200, ct);
+                    }
+
+                    exportGroup.Messages.Add(msgInfo);
+                }
+
+                export.Groups.Add(exportGroup);
+            }
+
+            _logger.Log($"已处理累计 {export.Groups.Sum(g => g.Messages.Count)} 条消息");
         }
 
         var chat = await client.GetChatAsync(chatId);
-        var export = new ChannelExport
-        {
-            ChatId = chatId,
-            ChatTitle = chat.Title,
-            ExportTime = DateTime.UtcNow,
-            TotalMessages = allMessages.Count
-        };
-
-        var groups = GroupMessagesByAlbum(allMessages);
-
-        foreach (var group in groups)
-        {
-            ct.ThrowIfCancellationRequested();
-            var exportGroup = new MessageGroup
-            {
-                MediaAlbumId = group.First().MediaAlbumId != 0 ? group.First().MediaAlbumId.ToString() : null,
-                IsGrouped = group.Count > 1 && group.First().MediaAlbumId != 0
-            };
-
-            foreach (var msg in group)
-            {
-                var msgInfo = BuildMessageInfo(msg);
-
-                if (exportComments)
-                {
-                    try
-                    {
-                        var comments = await client.GetMessageThreadHistoryAsync(
-                            chatId: chatId,
-                            messageId: msg.Id,
-                            fromMessageId: 0,
-                            offset: 0,
-                            limit: 50
-                        );
-
-                        if (comments.Messages_ != null && comments.Messages_.Length > 0)
-                        {
-                            msgInfo.Comments = comments.Messages_.Select(BuildMessageInfo).ToList();
-                        }
-                    }
-                    catch (TdException ex)
-                    {
-                        _logger.Log($"获取评论失败: MsgId={msg.Id}, 错误: {ex.Error.Message}");
-                    }
-
-                    await Task.Delay(200, ct);
-                }
-
-                exportGroup.Messages.Add(msgInfo);
-            }
-
-            export.Groups.Add(exportGroup);
-            _logger.Log($"已处理分组 {export.Groups.Count}/{groups.Count} (消息数: {group.Count})");
-        }
+        export.ChatTitle = chat.Title;
+        export.ExportTime = DateTime.UtcNow;
+        export.TotalMessages = export.Groups.Sum(g => g.Messages.Count);
 
         return export;
     }
