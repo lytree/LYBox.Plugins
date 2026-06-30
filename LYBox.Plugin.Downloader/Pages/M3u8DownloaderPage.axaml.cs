@@ -1,0 +1,41 @@
+using System.Collections.Specialized;
+using Avalonia.Controls;
+using LYBox.Plugin.Downloader.ViewModels;
+
+namespace LYBox.Plugin.Downloader.Pages;
+
+public partial class M3u8DownloaderPage : UserControl
+{
+    private M3u8DownloaderViewModel? _currentVm;
+
+    public M3u8DownloaderPage()
+    {
+        InitializeComponent();
+        DataContextChanged += OnDataContextChanged;
+    }
+
+    private void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        if (_currentVm is not null)
+        {
+            _currentVm.LogEntries.CollectionChanged -= OnLogEntriesCollectionChanged;
+        }
+
+        _currentVm = DataContext as M3u8DownloaderViewModel;
+
+        if (_currentVm is not null)
+        {
+            _currentVm.LogEntries.CollectionChanged += OnLogEntriesCollectionChanged;
+        }
+    }
+
+    private void OnLogEntriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems?.Count > 0)
+        {
+            LogListBox.ScrollIntoView(e.NewItems.Count == 1
+                ? e.NewItems[0]!
+                : e.NewItems[e.NewItems.Count - 1]!);
+        }
+    }
+}

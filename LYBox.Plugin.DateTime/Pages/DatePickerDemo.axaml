@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="LYBox.Plugin.DateTimeControls.Pages.DatePickerDemo"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:viewModels="clr-namespace:LYBox.Plugin.DateTimeControls.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="viewModels:DatePickerDemoViewModel"
+    mc:Ignorable="d">
+    <StackPanel Margin="20" HorizontalAlignment="Left">
+        <TextBox Name="format" InnerLeftContent="Display Format" Text="yyyy-MM-dd" />
+        <TextBlock Text="Default" />
+        <u:DatePicker Width="200" DisplayFormat="{Binding #format.Text}" />
+        <TextBlock Text="Binding" />
+        <u:DatePicker
+            Width="200"
+            DisplayFormat="{Binding #format.Text}"
+            SelectedDate="{Binding SelectedDate, Mode=TwoWay}" />
+        <TextBlock Text="Clear Button" />
+        <u:DatePicker
+            Name="singlePicker"
+            Width="200"
+            Classes="ClearButton" />
+    </StackPanel>
+</UserControl>
