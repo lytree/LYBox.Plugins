@@ -233,6 +233,10 @@
   <data name="PARAM_GroupDesc" xml:space="preserve"><value>Auto-detect album/grouped messages and download all</value></data>
   <data name="PARAM_SkipSame" xml:space="preserve"><value>Skip Same Files</value></data>
   <data name="PARAM_SkipSameDesc" xml:space="preserve"><value>Skip files with same name and size</value></data>
+  <data name="PARAM_DownloadComments" xml:space="preserve"><value>Download Comments</value></data>
+  <data name="PARAM_DownloadCommentsDesc" xml:space="preserve"><value>Download media files from message comments (placed in the message folder)</value></data>
+  <data name="PARAM_Sequential" xml:space="preserve"><value>Sequential Download</value></data>
+  <data name="PARAM_SequentialDesc" xml:space="preserve"><value>Download files one at a time instead of concurrently</value></data>
   <data name="PARAM_Paths" xml:space="preserve"><value>File/Directory Paths</value></data>
   <data name="PARAM_PathsDesc" xml:space="preserve"><value>One path per line</value></data>
   <data name="PARAM_Chat" xml:space="preserve"><value>Target Chat</value></data>

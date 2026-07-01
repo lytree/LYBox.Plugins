@@ -14,6 +14,8 @@ public partial class TdlService
         bool desc,
         bool group,
         bool skipSame,
+        bool downloadComments,
+        bool sequential,
         CancellationToken ct = default)
     {
         await EnsureReadyAsync();
@@ -58,6 +60,7 @@ public partial class TdlService
             }
 
             var messagesToDownload = new List<TdApi.Message>();
+            long? albumId = null;
 
             try
             {
@@ -76,7 +79,8 @@ public partial class TdlService
                         if (albumMsgs.Count > 1)
                         {
                             messagesToDownload = albumMsgs;
-                            _logger.Log($"检测到相册，共 {albumMsgs.Count} 条消息");
+                            albumId = msg.MediaAlbumId;
+                            _logger.Log($"检测到相册 (AlbumId={albumId})，共 {albumMsgs.Count} 条消息");
                         }
                     }
                 }
@@ -92,9 +96,20 @@ public partial class TdlService
                 messagesToDownload.Reverse();
             }
 
+            // Determine subfolder for this link's messages
+            string? linkSubFolder = null;
+            if (albumId.HasValue)
+            {
+                // Group download: use albumId as folder name
+                linkSubFolder = albumId.Value.ToString();
+            }
+
             foreach (var msg in messagesToDownload)
             {
                 ct.ThrowIfCancellationRequested();
+
+                // For non-album single messages, use filename (without ext) as subfolder
+                var subFolder = linkSubFolder;
 
                 var file = ExtractDownloadableFile(msg.Content);
                 if (file == null)
@@ -111,7 +126,17 @@ public partial class TdlService
                     continue;
                 }
 
-                var destPath = Path.Combine(outputDir, fileName);
+                // Single file without album: subfolder = filename without extension
+                if (subFolder == null)
+                {
+                    subFolder = Path.GetFileNameWithoutExtension(fileName);
+                    if (string.IsNullOrWhiteSpace(subFolder))
+                    {
+                        subFolder = $"file_{file.Id}";
+                    }
+                }
+
+                var destPath = Path.Combine(outputDir, subFolder, fileName);
                 if (skipSame && File.Exists(destPath))
                 {
                     var existingLen = new FileInfo(destPath).Length;
@@ -128,50 +153,160 @@ public partial class TdlService
                     FileId = file.Id,
                     FileName = fileName,
                     FileSize = file.ExpectedSize,
-                    DestPath = destPath
+                    DestPath = destPath,
+                    SubFolder = subFolder
                 });
+            }
+
+            // Download comments if requested
+            if (downloadComments)
+            {
+                foreach (var msg in messagesToDownload)
+                {
+                    ct.ThrowIfCancellationRequested();
+
+                    try
+                    {
+                        var comments = await client.GetMessageThreadHistoryAsync(
+                            chatId: chatId,
+                            messageId: msg.Id,
+                            fromMessageId: 0,
+                            offset: 0,
+                            limit: 100
+                        );
+
+                        if (comments.Messages_ == null || comments.Messages_.Length == 0)
+                            continue;
+
+                        _logger.Log($"消息 {msg.Id} 有 {comments.Messages_.Length} 条评论");
+
+                        // Comment files go in the message folder (same subfolder)
+                        var commentSubFolder = linkSubFolder ?? Path.GetFileNameWithoutExtension(GetFileName(msg, ExtractDownloadableFile(msg.Content) ?? new TdApi.File { Id = 0 })) ?? $"msg_{msg.Id}";
+                        if (string.IsNullOrWhiteSpace(commentSubFolder))
+                        {
+                            commentSubFolder = $"msg_{msg.Id}";
+                        }
+
+                        foreach (var comment in comments.Messages_)
+                        {
+                            ct.ThrowIfCancellationRequested();
+
+                            var commentFile = ExtractDownloadableFile(comment.Content);
+                            if (commentFile == null) continue;
+
+                            var commentFileName = GetFileName(comment, commentFile);
+                            if (!ShouldDownloadByExtension(commentFileName, includeSet, excludeSet))
+                            {
+                                skipped++;
+                                continue;
+                            }
+
+                            var commentDestPath = Path.Combine(outputDir, commentSubFolder, commentFileName);
+                            if (skipSame && File.Exists(commentDestPath))
+                            {
+                                var existingLen = new FileInfo(commentDestPath).Length;
+                                if (existingLen == commentFile.ExpectedSize)
+                                {
+                                    _logger.Log($"跳过评论文件 (同名同大小): {commentFileName}");
+                                    skipped++;
+                                    continue;
+                                }
+                            }
+
+                            filesToDownload.Add(new DownloadItem
+                            {
+                                FileId = commentFile.Id,
+                                FileName = commentFileName,
+                                FileSize = commentFile.ExpectedSize,
+                                DestPath = commentDestPath,
+                                SubFolder = commentSubFolder
+                            });
+                        }
+
+                        await Task.Delay(200, ct);
+                    }
+                    catch (TdException ex)
+                    {
+                        _logger.Log($"获取评论失败: MsgId={msg.Id}, 错误: {ex.Error.Message}");
+                    }
+                }
             }
         }
 
         if (filesToDownload.Count == 0)
         {
             _logger.Log($"下载完成: 0 个成功, 0 个失败, {skipped} 个跳过");
+            _logger.Log($"下载目录: {outputDir}");
             return;
         }
 
-        _logger.Log($"收集到 {filesToDownload.Count} 个文件，开始并发下载 (最多 {MaxConcurrentDownloads} 个同时)");
+        if (sequential)
+        {
+            _logger.Log($"收集到 {filesToDownload.Count} 个文件，开始同步下载");
+        }
+        else
+        {
+            _logger.Log($"收集到 {filesToDownload.Count} 个文件，开始并发下载 (最多 {MaxConcurrentDownloads} 个同时)");
+        }
 
-        // Phase 2: Download concurrently (no logging, only progress bars)
-        using var semaphore = new SemaphoreSlim(MaxConcurrentDownloads);
+        // Phase 2: Download
         int downloaded = 0;
         int failed = 0;
 
-        var tasks = filesToDownload.Select(async item =>
+        if (sequential)
         {
-            await semaphore.WaitAsync(ct);
-            try
+            // Sequential download
+            foreach (var item in filesToDownload)
             {
-                await DownloadSingleFileWithProgressAsync(client, item, ct);
-                Interlocked.Increment(ref downloaded);
+                ct.ThrowIfCancellationRequested();
+                try
+                {
+                    await DownloadSingleFileWithProgressAsync(client, item, ct);
+                    downloaded++;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    failed++;
+                }
             }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                Interlocked.Increment(ref failed);
-            }
-            finally
-            {
-                semaphore.Release();
-            }
-        }).ToList();
+        }
+        else
+        {
+            // Concurrent download (max 5)
+            using var semaphore = new SemaphoreSlim(MaxConcurrentDownloads);
 
-        await Task.WhenAll(tasks);
+            var tasks = filesToDownload.Select(async item =>
+            {
+                await semaphore.WaitAsync(ct);
+                try
+                {
+                    await DownloadSingleFileWithProgressAsync(client, item, ct);
+                    Interlocked.Increment(ref downloaded);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception)
+                {
+                    Interlocked.Increment(ref failed);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            }).ToList();
+
+            await Task.WhenAll(tasks);
+        }
 
         // Phase 3: Summary
         _logger.Log($"下载完成: {downloaded} 个成功, {failed} 个失败, {skipped} 个跳过");
+        _logger.Log($"下载目录: {outputDir}");
     }
 
     async Task DownloadSingleFileWithProgressAsync(TdClient client, DownloadItem item, CancellationToken ct)
@@ -289,4 +424,5 @@ class DownloadItem
     public string FileName { get; set; } = string.Empty;
     public long FileSize { get; set; }
     public string DestPath { get; set; } = string.Empty;
+    public string? SubFolder { get; set; }
 }

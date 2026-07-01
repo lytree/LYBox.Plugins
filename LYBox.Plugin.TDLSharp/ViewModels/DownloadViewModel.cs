@@ -24,6 +24,8 @@ public partial class DownloadViewModel : TdlViewModelBase
             ScriptParameter.Switch("desc", Strings.Get("PARAM_Desc"), Strings.Get("PARAM_DescDesc"), false),
             ScriptParameter.Switch("group", Strings.Get("PARAM_Group"), Strings.Get("PARAM_GroupDesc"), true),
             ScriptParameter.Switch("skipSame", Strings.Get("PARAM_SkipSame"), Strings.Get("PARAM_SkipSameDesc"), true),
+            ScriptParameter.Switch("downloadComments", Strings.Get("PARAM_DownloadComments"), Strings.Get("PARAM_DownloadCommentsDesc"), false),
+            ScriptParameter.Switch("sequential", Strings.Get("PARAM_Sequential"), Strings.Get("PARAM_SequentialDesc"), false),
         ]
     };
 
@@ -37,6 +39,8 @@ public partial class DownloadViewModel : TdlViewModelBase
             bool.TryParse(paramValues.GetValueOrDefault("desc", "false"), out var desc) && desc,
             bool.TryParse(paramValues.GetValueOrDefault("group", "true"), out var group) && group,
             bool.TryParse(paramValues.GetValueOrDefault("skipSame", "true"), out var skipSame) && skipSame,
+            bool.TryParse(paramValues.GetValueOrDefault("downloadComments", "false"), out var downloadComments) && downloadComments,
+            bool.TryParse(paramValues.GetValueOrDefault("sequential", "false"), out var sequential) && sequential,
             ct);
     }
 }
