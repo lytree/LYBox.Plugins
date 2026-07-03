@@ -221,7 +221,7 @@ public class TdlClientManager : IDisposable
         return Task.CompletedTask;
     }
 
-    private async void OnUpdateReceived(TdClient _, TdApi.Update update)
+    private async void OnUpdateReceived(object sender, TdApi.Update update)
     {
         try
         {

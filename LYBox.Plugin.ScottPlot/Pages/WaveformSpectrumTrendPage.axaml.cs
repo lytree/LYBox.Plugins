@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.VisualTree;
+using Avalonia;
 using LYBox.Plugin.ScottPlot.Controls;
 using LYBox.Plugin.ScottPlot.ViewModels;
 
