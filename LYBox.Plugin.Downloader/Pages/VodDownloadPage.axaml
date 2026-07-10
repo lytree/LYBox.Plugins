@@ -14,7 +14,7 @@
 
             <!-- 页面标题 -->
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding GetDisplayName}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
+                <TextBlock Text="{Binding DisplayName}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
                 <TextBlock Text="{DynamicResource DESC_VodPage}" Classes="Secondary" />
             </StackPanel>
 

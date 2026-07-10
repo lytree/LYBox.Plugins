@@ -37,7 +37,7 @@ public partial class DecryptMuxViewModel : DownloaderViewModelBase
     [ObservableProperty] private bool _muxKeep;
     [ObservableProperty] private ObservableCollection<MuxImportEntry> _muxImports = [];
 
-    protected override string GetDisplayName() => Strings.Get("NAV_Downloader_DecryptMux");
+    public override string DisplayName => Strings.Get("NAV_Downloader_DecryptMux");
 
     [RelayCommand]
     private void AddKey() => DecryptionKeys.Add(new DecryptionKeyEntry());

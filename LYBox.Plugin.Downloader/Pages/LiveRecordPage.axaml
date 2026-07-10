@@ -13,7 +13,7 @@
         <StackPanel Margin="16" Spacing="12">
 
             <StackPanel Spacing="4">
-                <TextBlock Text="{Binding GetDisplayName}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
+                <TextBlock Text="{Binding DisplayName}" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
                 <TextBlock Text="{DynamicResource DESC_LivePage}" Classes="Secondary" />
             </StackPanel>
 

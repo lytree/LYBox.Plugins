@@ -61,7 +61,7 @@ public partial class VodDownloadViewModel : DownloaderViewModelBase
     [ObservableProperty] private string _customHlsKey = string.Empty;
     [ObservableProperty] private string _customHlsIv = string.Empty;
 
-    protected override string GetDisplayName() => Strings.Get("NAV_Downloader_Vod");
+    public override string DisplayName => Strings.Get("NAV_Downloader_Vod");
 
     public VodDownloadViewModel()
     {

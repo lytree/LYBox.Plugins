@@ -43,7 +43,7 @@ public partial class LiveRecordViewModel : DownloaderViewModelBase
     [ObservableProperty] private DecryptionEngine _decryptionEngine = DecryptionEngine.Mp4Decrypt;
     [ObservableProperty] private string _customHlsKey = string.Empty;
 
-    protected override string GetDisplayName() => Strings.Get("NAV_Downloader_Live");
+    public override string DisplayName => Strings.Get("NAV_Downloader_Live");
 
     [RelayCommand]
     private void AddKey() => DecryptionKeys.Add(new DecryptionKeyEntry());

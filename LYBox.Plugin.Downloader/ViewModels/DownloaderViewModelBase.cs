@@ -82,11 +82,11 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
         if (IsRunning) return;
 
         IsRunning = true;
-        StatusText = Strings.Get("STATUS_Running", GetDisplayName());
+        StatusText = Strings.Get("STATUS_Running", DisplayName);
         _cts = new CancellationTokenSource();
 
         // 注册到 TaskRegistry，主程序退出时可取消
-        var taskScope = new TaskScope(GetDisplayName(), PluginId);
+        var taskScope = new TaskScope(DisplayName, PluginId);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, taskScope.Token.CancellationTokenSource.Token);
 
         try
@@ -119,8 +119,8 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
         StatusText = Strings.Get("STATUS_Cancelling");
     }
 
-    /// <summary>页面显示名称（用于状态文本与 TaskScope 标识）</summary>
-    protected abstract string GetDisplayName();
+    /// <summary>页面显示名称（用于 XAML 绑定、状态文本与 TaskScope 标识）</summary>
+    public abstract string DisplayName { get; }
 
     /// <summary>子类实现具体执行逻辑</summary>
     protected abstract Task ExecuteCoreAsync(CancellationToken ct);
