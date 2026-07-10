@@ -62,4 +62,11 @@
   <data name="FMT_TimeDisplay" xml:space="preserve"><value>HH:mm:ss</value></data>
   <data name="LBL_TimeStart" xml:space="preserve"><value>Start</value></data>
   <data name="LBL_TimeEnd" xml:space="preserve"><value>End</value></data>
+  <data name="NAV_DateOffsetPicker" xml:space="preserve"><value>Date Offset Picker</value></data>
+  <data name="NAV_DateOffsetRangePicker" xml:space="preserve"><value>Date Offset Range Picker</value></data>
+  <data name="NAV_DateOnlyPicker" xml:space="preserve"><value>Date Only Picker</value></data>
+  <data name="NAV_DateOnlyRangePicker" xml:space="preserve"><value>Date Only Range Picker</value></data>
+  <data name="NAV_DateTimeOffsetPicker" xml:space="preserve"><value>Date Time Offset Picker</value></data>
+  <data name="NAV_TimeOnlyPicker" xml:space="preserve"><value>Time Only Picker</value></data>
+  <data name="NAV_TimeOnlyRangePicker" xml:space="preserve"><value>Time Only Range Picker</value></data>
 </root>

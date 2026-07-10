@@ -68,4 +68,6 @@
   <data name="LBL_MountainWater" xml:space="preserve"><value>Seeing mountains not as mountains, seeing water not as water, then seeing mountains as mountains again</value></data>
   <data name="POP_ConfirmSaveHeader" xml:space="preserve"><value>Are you sure you want to save this change?</value></data>
   <data name="POP_IrreversibleChange" xml:space="preserve"><value>This change will be irreversible</value></data>
+  <data name="NAV_OverlayDialog" xml:space="preserve"><value>Overlay Dialog</value></data>
+  <data name="NAV_WindowDialog" xml:space="preserve"><value>Window Dialog</value></data>
 </root>

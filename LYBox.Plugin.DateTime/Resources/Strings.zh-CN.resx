@@ -62,4 +62,11 @@
   <data name="FMT_TimeDisplay" xml:space="preserve"><value>HH 时 mm 分 ss 秒</value></data>
   <data name="LBL_TimeStart" xml:space="preserve"><value>时刻</value></data>
   <data name="LBL_TimeEnd" xml:space="preserve"><value>截止</value></data>
+  <data name="NAV_DateOffsetPicker" xml:space="preserve"><value>日期偏移选择器</value></data>
+  <data name="NAV_DateOffsetRangePicker" xml:space="preserve"><value>日期偏移范围选择器</value></data>
+  <data name="NAV_DateOnlyPicker" xml:space="preserve"><value>仅日期选择器</value></data>
+  <data name="NAV_DateOnlyRangePicker" xml:space="preserve"><value>仅日期范围选择器</value></data>
+  <data name="NAV_DateTimeOffsetPicker" xml:space="preserve"><value>日期时间偏移选择器</value></data>
+  <data name="NAV_TimeOnlyPicker" xml:space="preserve"><value>仅时间选择器</value></data>
+  <data name="NAV_TimeOnlyRangePicker" xml:space="preserve"><value>仅时间范围选择器</value></data>
 </root>

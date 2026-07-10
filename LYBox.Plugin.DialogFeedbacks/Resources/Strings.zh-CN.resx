@@ -68,4 +68,6 @@
   <data name="LBL_MountainWater" xml:space="preserve"><value>看山不是山，看水不是水，看山还是山，看水还是水</value></data>
   <data name="POP_ConfirmSaveHeader" xml:space="preserve"><value>确定是否要保存此修改？</value></data>
   <data name="POP_IrreversibleChange" xml:space="preserve"><value>此修改将不可逆</value></data>
+  <data name="NAV_OverlayDialog" xml:space="preserve"><value>覆盖层对话框</value></data>
+  <data name="NAV_WindowDialog" xml:space="preserve"><value>窗口对话框</value></data>
 </root>

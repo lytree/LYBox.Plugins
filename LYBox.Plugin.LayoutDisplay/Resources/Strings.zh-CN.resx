@@ -81,4 +81,7 @@
   <data name="LBL_CertStatus" xml:space="preserve"><value>认证状态</value></data>
   <data name="LBL_NotCertified" xml:space="preserve"><value>未认证</value></data>
   <data name="BTN_TestSetNull" xml:space="preserve"><value>测试设置为 null</value></data>
+  <data name="NAV_GroupBox" xml:space="preserve"><value>分组框</value></data>
+  <data name="NAV_VirtualizingUniformGrid" xml:space="preserve"><value>虚拟化均匀网格</value></data>
+  <data name="NAV_ThemeVariantMapper" xml:space="preserve"><value>主题变体映射器</value></data>
 </root>

@@ -81,4 +81,7 @@
   <data name="LBL_CertStatus" xml:space="preserve"><value>Certification Status</value></data>
   <data name="LBL_NotCertified" xml:space="preserve"><value>Not Certified</value></data>
   <data name="BTN_TestSetNull" xml:space="preserve"><value>Test Set to Null</value></data>
+  <data name="NAV_GroupBox" xml:space="preserve"><value>Group Box</value></data>
+  <data name="NAV_VirtualizingUniformGrid" xml:space="preserve"><value>Virtualizing Uniform Grid</value></data>
+  <data name="NAV_ThemeVariantMapper" xml:space="preserve"><value>Theme Variant Mapper</value></data>
 </root>
