@@ -103,7 +103,7 @@ public partial class BoolScriptParameter : ScriptParameter
 {
     public bool DefaultBoolValue
     {
-        get => DefaultValue?.ToLower() == "true";
+        get => string.Equals(DefaultValue, "true", StringComparison.OrdinalIgnoreCase);
         set => DefaultValue = value ? "true" : "false";
     }
 }
