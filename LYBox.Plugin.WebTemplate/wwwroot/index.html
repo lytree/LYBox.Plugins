@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LYBox Web Template</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; padding: 24px; color: #1a1a1a; background: #fafafa; }
+        h1 { font-size: 24px; margin-bottom: 16px; }
+        h2 { font-size: 18px; margin: 20px 0 10px; color: #444; }
+        .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        input { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { padding: 6px 14px; background: #0078d4; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        button:hover { background: #106ebe; }
+        .result { margin-top: 8px; padding: 8px; background: #f0f6ff; border-radius: 4px; font-family: monospace; font-size: 13px; min-height: 20px; }
+        #sse-log { max-height: 200px; overflow-y: auto; font-size: 12px; }
+        .sse-entry { padding: 2px 0; border-bottom: 1px solid #eee; }
+        .badge { display: inline-block; padding: 2px 8px; background: #0078d4; color: #fff; border-radius: 10px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h1>LYBox Web Template <span class="badge" id="tick-badge">0</span></h1>
+    <p>WebView + HTTP + IPC + SSE 端到端演示</p>
+
+    <div class="card">
+        <h2>1. JS → C# RPC 调用</h2>
+        <div class="row">
+            <input type="text" id="name-input" value="World" placeholder="输入名字" />
+            <button onclick="callGreet()">GreetAsync</button>
+        </div>
+        <div class="result" id="greet-result">（等待调用）</div>
+
+        <div class="row" style="margin-top:12px">
+            <input type="number" id="a-input" value="3" style="width:60px" />
+            <span>+</span>
+            <input type="number" id="b-input" value="5" style="width:60px" />
+            <button onclick="callAdd()">AddAsync</button>
+        </div>
+        <div class="result" id="add-result">（等待调用）</div>
+
+        <div class="row" style="margin-top:12px">
+            <button onclick="callInfo()">GetPluginInfoAsync</button>
+        </div>
+        <div class="result" id="info-result">（等待调用）</div>
+    </div>
+
+    <div class="card">
+        <h2>2. C# → JS SSE 主动推送</h2>
+        <p>每 2 秒接收一次 <code>tick</code> 事件（经 SSE 通道）：</p>
+        <div id="sse-log" style="background:#f9f9f9;padding:8px;border-radius:4px;">
+            <div class="sse-entry" style="color:#999;">（等待推送...）</div>
+        </div>
+    </div>
+
+    <script>
+        // 等待 __lybox 运行时就绪后注册事件监听
+        (function waitForLybox() {
+            if (window.__lybox) {
+                initListener();
+            } else {
+                setTimeout(waitForLybox, 100);
+            }
+        })();
+
+        function initListener() {
+            // 订阅 C# 主动推送的 tick 事件
+            window.__lybox.on('tick', function (data) {
+                if (!data) return;
+                var badge = document.getElementById('tick-badge');
+                badge.textContent = data.count;
+
+                var log = document.getElementById('sse-log');
+                var entry = document.createElement('div');
+                entry.className = 'sse-entry';
+                entry.textContent = '[' + data.time + '] #' + data.count + ' ' + data.message;
+                log.insertBefore(entry, log.firstChild);
+            });
+        }
+
+        async function callGreet() {
+            var name = document.getElementById('name-input').value;
+            try {
+                var result = await window.__lybox.rpc('GreetAsync', name);
+                document.getElementById('greet-result').textContent = result;
+            } catch (e) {
+                document.getElementById('greet-result').textContent = '错误: ' + e.message;
+            }
+        }
+
+        async function callAdd() {
+            var a = parseInt(document.getElementById('a-input').value, 10);
+            var b = parseInt(document.getElementById('b-input').value, 10);
+            try {
+                var result = await window.__lybox.rpc('AddAsync', a, b);
+                document.getElementById('add-result').textContent = a + ' + ' + b + ' = ' + result;
+            } catch (e) {
+                document.getElementById('add-result').textContent = '错误: ' + e.message;
+            }
+        }
+
+        async function callInfo() {
+            try {
+                var result = await window.__lybox.rpc('GetPluginInfoAsync');
+                document.getElementById('info-result').textContent = JSON.stringify(result, null, 2);
+            } catch (e) {
+                document.getElementById('info-result').textContent = '错误: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

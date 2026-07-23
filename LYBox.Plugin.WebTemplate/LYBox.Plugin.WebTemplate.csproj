@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <PluginId>8a7b6c5d-4e3f-4a2b-9c1d-0e8f7a6b5c4d</PluginId>
+    <PluginName>Web Template</PluginName>
+    <PluginAuthor>AvaloniaTemplate</PluginAuthor>
+    <PluginDescription>WebView + HTTP + IPC + SSE demo plugin with vanilla HTML/JS frontend</PluginDescription>
+    <PluginVersion>1.0.0</PluginVersion>
+    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)"
+      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+  </ItemGroup>
+</Project>
