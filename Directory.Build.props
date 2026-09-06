@@ -1,0 +1,19 @@
+<Project>
+    <!--
+        插件仓库根级属性：插件 bin/obj 统一进入 artifacts/，与宿主仓库习惯一致。
+        PluginSdkVersion 即插件引用的 LYBox.Plugin.* SDK 包版本，默认取自 version.props 的 LyboxVersion。
+        优先级（高到低）：
+          1. /p:PluginSdkVersion=...（构建脚本参数 sdk-version 注入的全局属性，自动覆盖本文件）
+          2. 本文件 LyboxVersion
+    -->
+    <PropertyGroup>
+        <UseArtifactsOutput>true</UseArtifactsOutput>
+        <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+    </PropertyGroup>
+
+    <Import Project="$(MSBuildThisFileDirectory)version.props" />
+
+    <PropertyGroup>
+        <PluginSdkVersion Condition="'$(PluginSdkVersion)' == ''">$(LyboxVersion)</PluginSdkVersion>
+    </PropertyGroup>
+</Project>

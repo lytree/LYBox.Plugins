@@ -1,0 +1,15 @@
+<Project>
+    <!--
+        插件仓库版本真相源：LyboxVersion 即插件所依赖的 Plugin SDK 契约版本。
+        默认应与主题+SDK 仓库（宿主仓库）version.props 的 LyboxVersion 对齐——即最新已发布的 SDK 版本。
+
+        版本来源优先级（高到低）：
+          1. 命令行参数（build.cs 参数 sdk-version 注入全局属性）
+          2. 本文件 LyboxVersion（唯一真相源，本地 / IDE / CI 默认兜底）
+
+        插件业务版本不受此文件控制，由各插件 csproj 内 PluginVersion 独立管理。
+    -->
+    <PropertyGroup>
+        <LyboxVersion>2.3.0-preview.3</LyboxVersion>
+    </PropertyGroup>
+</Project>
