@@ -1,0 +1,193 @@
+name: Release Plugins
+
+# 插件发布工作流（独立仓库，无宿主源码；SDK 从 nuget.org 或可选本地 feed 解析）
+# 触发标签：
+#   plugin-V*                  例如 plugin-V1.0.0、plugin-V1.0.0-preview.1  → 打包全部插件
+#   plugin-<ProjectName>-V*     例如 plugin-LYBox.Plugin.DateTime-V1.2.0  → 仅打包指定插件
+# 产物：各插件 zip（含 plugin.json 清单，剥离 .pdb/.xml/.deps.json/.runtimeconfig.json）
+# SDK 来源：
+#   默认从 nuget.org 解析（需 SDK 已发布）。
+#   可选：workflow_dispatch 输入 sdk-feed=local + sdk-feed-path（指向宿主仓库 artifacts/packages/sdk）
+#         + sdk-version（注入 PluginSdkVersion），用于 SDK 刚发版尚未上 nuget.org 时的先行插件发布。
+
+on:
+  push:
+    tags:
+      - 'plugin-V*'
+      - 'plugin-*-V*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '插件版本号（例如 1.2.3、1.2.3-preview.1、1.2.3-beta.1；手动触发必填）'
+        required: true
+        type: string
+      plugin_filter:
+        description: '插件过滤器（逗号分隔 ProjectName；留空=全部插件）'
+        required: false
+        default: ''
+        type: string
+      sdk_feed:
+        description: 'SDK 来源（local|nuget；默认 nuget）'
+        required: false
+        default: 'nuget'
+        type: choice
+        options:
+          - nuget
+          - local
+      sdk_feed_path:
+        description: '本地 SDK feed 路径（sdk-feed=local 时使用，可为空走 env:LYBOX_SDK_FEED）'
+        required: false
+        default: ''
+        type: string
+      sdk_version:
+        description: 'SDK 契约版本（覆盖 PluginSdkVersion，默认取 version.props）'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-plugin-${{ github.ref_name || inputs.version }}-${{ inputs.plugin_filter }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  resolve_context:
+    name: Resolve Plugin Release Context
+    runs-on: ubuntu-latest
+    outputs:
+      plugin_filter: ${{ steps.ctx.outputs.plugin_filter }}
+      plugin_version: ${{ steps.ctx.outputs.plugin_version }}
+      tag_name: ${{ steps.ctx.outputs.tag_name }}
+      release_name: ${{ steps.ctx.outputs.release_name }}
+      sdk_feed: ${{ steps.ctx.outputs.sdk_feed }}
+      sdk_feed_path: ${{ steps.ctx.outputs.sdk_feed_path }}
+      sdk_version: ${{ steps.ctx.outputs.sdk_version }}
+    steps:
+      - name: Parse version, filter, and tag
+        id: ctx
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            FILTER="${{ inputs.plugin_filter }}"
+            if [ -n "$FILTER" ]; then
+              TAG="plugin-${FILTER}-V${VERSION}"
+              NAME="Plugin ${FILTER} V${VERSION}"
+            else
+              TAG="plugin-V${VERSION}"
+              NAME="Plugins V${VERSION}"
+            fi
+          else
+            TAG="${GITHUB_REF_NAME}"
+            if [[ "$TAG" =~ ^plugin-V([0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?)$ ]]; then
+              FILTER=""
+              VERSION="${BASH_REMATCH[1]}"
+              NAME="Plugins V${VERSION}"
+            elif [[ "$TAG" =~ ^plugin-(.+)-V([0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?)$ ]]; then
+              FILTER="${BASH_REMATCH[1]}"
+              VERSION="${BASH_REMATCH[2]}"
+              NAME="Plugin ${FILTER} V${VERSION}"
+            else
+              echo "::error::无法识别的插件标签格式: $TAG"
+              exit 1
+            fi
+          fi
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?$ ]]; then
+            echo "::error::版本号格式无效: $VERSION"
+            exit 1
+          fi
+
+          echo "plugin_filter=$FILTER" >> "$GITHUB_OUTPUT"
+          echo "plugin_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag_name=$TAG" >> "$GITHUB_OUTPUT"
+          echo "release_name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "sdk_feed=${{ inputs.sdk_feed || 'nuget' }}" >> "$GITHUB_OUTPUT"
+          echo "sdk_feed_path=${{ inputs.sdk_feed_path }}" >> "$GITHUB_OUTPUT"
+          echo "sdk_version=${{ inputs.sdk_version }}" >> "$GITHUB_OUTPUT"
+          echo "Resolved plugin release: tag=$TAG filter='$FILTER' version=$VERSION"
+
+  build_plugins:
+    name: Build Plugins
+    needs: resolve_context
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build & pack plugins
+        run: |
+          ARGS="--build=plugin --configuration=Release"
+          if [ -n "${{ needs.resolve_context.outputs.plugin_filter }}" ]; then
+            ARGS="$ARGS --plugin=${{ needs.resolve_context.outputs.plugin_filter }}"
+          fi
+          if [ "${{ needs.resolve_context.outputs.sdk_feed }}" = "local" ]; then
+            ARGS="$ARGS --sdk-feed=local"
+            if [ -n "${{ needs.resolve_context.outputs.sdk_feed_path }}" ]; then
+              ARGS="$ARGS --sdk-feed-path=${{ needs.resolve_context.outputs.sdk_feed_path }}"
+            fi
+          else
+            ARGS="$ARGS --sdk-feed=nuget"
+          fi
+          if [ -n "${{ needs.resolve_context.outputs.sdk_version }}" ]; then
+            ARGS="$ARGS --sdk-version=${{ needs.resolve_context.outputs.sdk_version }}"
+          fi
+          echo "Running: dotnet build/build.cs $ARGS"
+          dotnet build/build.cs $ARGS
+
+      - name: List plugin zips
+        run: ls -lh artifacts/packages/plugins/
+
+      - name: Upload plugin zips
+        uses: actions/upload-artifact@v7
+        with:
+          name: plugin-zips
+          path: artifacts/packages/plugins/*.zip
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: GitHub Release
+    needs: [resolve_context, build_plugins]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          fetch-depth: 0
+
+      - name: Create tag for manual release
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ needs.resolve_context.outputs.tag_name }}"
+          git push origin "${{ needs.resolve_context.outputs.tag_name }}"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: find artifacts -type f | sort
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.resolve_context.outputs.tag_name }}
+          name: ${{ needs.resolve_context.outputs.release_name }}
+          generate_release_notes: true
+          files: |
+            artifacts/plugin-zips/*.zip

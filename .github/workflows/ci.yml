@@ -1,0 +1,66 @@
+name: CI
+
+# 插件仓库持续集成：push / PR 时构建全部插件，验证编译通过，不发布产物。
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-plugins-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  build:
+    name: Build All Plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      # SDK 契约版本由 version.props 的 LyboxVersion 驱动；此处 SDK 从 nuget.org 解析。
+      - name: Build plugins (SDK from nuget.org)
+        run: |
+          dotnet build/build.cs \
+            --build=plugin \
+            --configuration=Release \
+            --sdk-feed=nuget
+
+      - name: Verify artifacts
+        run: |
+          echo "=== Plugin zips ==="
+          ls -lh artifacts/packages/plugins/*.zip 2>/dev/null || echo "(none)"
+          echo "=== zips contains manifest & no build intermediates ==="
+          for z in artifacts/packages/plugins/*.zip; do
+            echo "--- $z ---"
+            unzip -l "$z" | grep -E 'plugin.json|\.pdb$|\.deps.json$|\.runtimeconfig.json$' || true
+          done
+
+      - name: Upload plugin zip artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-plugin-zips
+          path: artifacts/packages/plugins/*.zip
+          if-no-files-found: warn
+          retention-days: 3
