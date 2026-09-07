@@ -1,6 +1,6 @@
 # LYBox.Plugins
 
-LYBox 桌面应用模板的**插件仓库**（独立于 [宿主/主题+SDK 仓库](https://github.com/lytree/LY.Tool)）。
+LYBox 桌面应用模板的**插件仓库**（独立于 [宿主/主题+SDK 仓库](https://github.com/lytree/LYBox)）。
 
 每个插件是 `net10.0` 类库，通过 `LYBox.Plugin.Generators`（Roslyn 源生成器）驱动元数据，
 引用 `LYBox.Plugin.Shared`（/ `LYBox.Plugin.Shared.Web`）SDK 包。构建产出每个插件一个 zip（含 `plugin.json` 清单），
