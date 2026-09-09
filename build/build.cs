@@ -399,6 +399,11 @@ public class BuildContext
 
         UseLocalFeed = ResolveUseLocalFeed();
 
+        // 依据设计约定：本地源路径经 %LYBOX_SDK_FEED% 环境变量注入 nuget.config。
+        // 此处在进程级设置环境变量，使 --sdk-feed / --sdk-feed-path / 默认 staging 探测真正生效。
+        if (UseLocalFeed)
+            Environment.SetEnvironmentVariable("LYBOX_SDK_FEED", ResolveLocalFeedPath());
+
         var discoveredPlugins = DiscoverPlugins(RootDir);
         PluginProjects = SelectPluginFilters(Target, PluginFilter, discoveredPlugins);
     }
