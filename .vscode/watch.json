@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "tasks": [
+    {
+      "label": "watch",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "watch",
+        "build",
+        "${workspaceFolder}/Plugins.slnx",
+        "-c", "Debug",
+        "/p:UseArtifactsOutput=true"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    }
+  ]
+}

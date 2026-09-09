@@ -1,0 +1,285 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "publish-all-plugins",
+      "command": "${workspaceFolder}/build.sh",
+      "type": "shell",
+      "args": [],
+      "windows": {
+        "command": "powershell.exe",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy", "Bypass",
+          "-File", "${workspaceFolder}/build.ps1"
+        ]
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: ButtonsInputs",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.ButtonsInputs",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: DateTime",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.DateTime",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: DialogFeedbacks",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.DialogFeedbacks",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: Downloader",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.Downloader",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: LayoutDisplay",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.LayoutDisplay",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: NavigationMenus",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.NavigationMenus",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: ProDataGrid",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.ProDataGrid",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: ScottPlot",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.ScottPlot",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: TDLSharp",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.TDLSharp",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "publish-plugin: BTSou",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.BTSou",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "build-current-plugin",
+      "command": "dotnet.exe",
+      "type": "process",
+      "args": [
+        "build",
+        "${file}",
+        "-c", "Debug",
+        "/p:UseArtifactsOutput=true"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    },
+    {
+      "label": "clean-plugin-output",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-Command", "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue '${workspaceFolder}\\artifacts\\bin\\LYBox.Plugin.${input:pluginName}\\Debug' ; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue '${workspaceFolder}\\artifacts\\obj\\LYBox.Plugin.${input:pluginName}\\Debug'"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "pluginName",
+      "type": "promptString",
+      "description": "Enter plugin name (without LYBox.Plugin. prefix)",
+      "default": "ButtonsInputs"
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+﻿{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Plugin - Buttons & Inputs",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: ButtonsInputs",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ButtonsInputs/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ButtonsInputs\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - DateTime",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: DateTime",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.DateTime/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.DateTime\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - DialogFeedbacks",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: DialogFeedbacks",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.DialogFeedbacks/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.DialogFeedbacks\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - Downloader",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: Downloader",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.Downloader/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.Downloader\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - LayoutDisplay",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: LayoutDisplay",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.LayoutDisplay/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.LayoutDisplay\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - NavigationMenus",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: NavigationMenus",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.NavigationMenus/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.NavigationMenus\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - ProDataGrid",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: ProDataGrid",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ProDataGrid/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ProDataGrid\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - ScottPlot",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: ScottPlot",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ScottPlot/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ScottPlot\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - TDLSharp",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: TDLSharp",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.TDLSharp/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.TDLSharp\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - BTSou",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+      "preLaunchTask": "publish-plugin: BTSou",
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.BTSou/publish"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
+        "env": {
+          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.BTSou\\publish"
+        }
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Attach to LYBox.Launcher.Desktop",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "LYBox.Launcher.Desktop",
+      "justMyCode": false
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All Plugins",
+      "configurations": [
+        "Debug Plugin - Buttons & Inputs",
+        "Debug Plugin - DateTime",
+        "Debug Plugin - DialogFeedbacks",
+        "Debug Plugin - Downloader",
+        "Debug Plugin - LayoutDisplay",
+        "Debug Plugin - NavigationMenus",
+        "Debug Plugin - ProDataGrid",
+        "Debug Plugin - ScottPlot",
+        "Debug Plugin - TDLSharp",
+        "Debug Plugin - BTSou"
+      ],
+      "preLaunchTask": "publish-all-plugins",
+      "stopAll": true
+    }
+  ]
+}
+
+
+
+
+
