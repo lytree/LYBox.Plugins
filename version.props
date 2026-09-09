@@ -10,6 +10,6 @@
         插件业务版本不受此文件控制，由各插件 csproj 内 PluginVersion 独立管理。
     -->
     <PropertyGroup>
-        <LyboxVersion>2.3.0-preview.3</LyboxVersion>
+        <LyboxVersion>2.3.0-preview.5</LyboxVersion>
     </PropertyGroup>
 </Project>
