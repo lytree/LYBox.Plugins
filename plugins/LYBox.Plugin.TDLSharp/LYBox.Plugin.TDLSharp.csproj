@@ -31,4 +31,8 @@
 		<PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\shared\LYBox.Plugin.Shared.UI\LYBox.Plugin.Shared.UI.csproj" />
+	</ItemGroup>
 </Project>

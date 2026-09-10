@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 
-namespace LYBox.Plugin.TDLSharp.Behaviors;
+namespace LYBox.Plugin.Shared.UI.Behaviors;
 
 /// <summary>
 /// 附加属性：使绑定了 <see cref="INotifyCollectionChanged"/> 集合的 <see cref="ListBox"/>

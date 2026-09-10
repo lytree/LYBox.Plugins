@@ -7,6 +7,8 @@ using LYBox.Plugin.Downloader.Resources;
 using LYBox.Plugin.Downloader.Services;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Services;
+using LYBox.Plugin.Shared.UI.Models;
+using LYBox.Plugin.Shared.UI.Services;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -61,19 +63,6 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
     private void ClearLog()
     {
         LogEntries.Clear();
-    }
-
-    [RelayCommand]
-    private async Task CopyLogEntry(LogEntry entry)
-    {
-        var topLevel = Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
-            ? desktop.MainWindow
-            : null;
-        var clipboard = topLevel?.Clipboard;
-        if (clipboard is not null)
-        {
-            await clipboard.SetTextAsync(entry.FormattedLine);
-        }
     }
 
     [RelayCommand]

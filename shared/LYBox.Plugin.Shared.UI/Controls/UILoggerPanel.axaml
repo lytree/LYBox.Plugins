@@ -2,20 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="clr-namespace:LYBox.Plugin.TDLSharp.Models"
-             xmlns:behaviors="clr-namespace:LYBox.Plugin.TDLSharp.Behaviors"
-             x:Class="LYBox.Plugin.TDLSharp.Controls.ScriptLogPanel"
+             xmlns:models="clr-namespace:LYBox.Plugin.Shared.UI.Models"
+             xmlns:behaviors="clr-namespace:LYBox.Plugin.Shared.UI.Behaviors"
+             x:Class="LYBox.Plugin.Shared.UI.Controls.UILoggerPanel"
              x:Name="Root"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="400">
+	<!--
+		共享 UILogger 日志面板：
+		  - 多行多选：SelectionMode="Multiple,Toggle"，单击切换行选中、可配合 Ctrl/Shift 连选；
+		  - 右键复制：右键未选中行时自动单选该行，菜单“复制”把选中多行（含时间戳）复制到剪贴板；
+		  - 需要宿主/插件提供资源键：LBL_LogOutput（标题）、BTN_Clear（清空）、MENU_COPY（复制）。
+	-->
 	<Border Theme="{DynamicResource CardBorder}" Padding="12">
 		<Grid RowDefinitions="Auto,*">
 			<Grid ColumnDefinitions="*,Auto" Margin="0 0 0 8">
 				<TextBlock Grid.Column="0" Text="{DynamicResource LBL_LogOutput}" Classes="SectionTitle" VerticalAlignment="Center" />
 				<Button Grid.Column="1" Content="{DynamicResource BTN_Clear}" Command="{Binding #Root.ClearLogCommand}" FontSize="12" Padding="8 4" />
 			</Grid>
-			<ListBox Grid.Row="1"
+			<ListBox x:Name="LogList" Grid.Row="1"
                      ItemsSource="{Binding #Root.LogEntries}"
-                     SelectionMode="Toggle"
+                     SelectionMode="Multiple,Toggle"
+                     PointerPressed="OnLogListPointerPressed"
                      behaviors:AutoScrollBehavior.AutoScrollToEnd="True"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -30,6 +37,11 @@
 						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 					</Style>
 				</ListBox.Styles>
+				<ListBox.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="{DynamicResource MENU_COPY}" Click="OnCopySelectedClick" />
+					</ContextMenu>
+				</ListBox.ContextMenu>
 				<ListBox.ItemTemplate>
 					<DataTemplate x:DataType="models:LogEntry">
 						<Grid>
@@ -40,13 +52,7 @@
 								</StackPanel>
 								<TextBlock Grid.Column="1" Text="{Binding StatusText}" FontSize="11" VerticalAlignment="Center" Margin="8 0 0 0" FontFamily="Consolas" />
 							</Grid>
-							<SelectableTextBlock IsVisible="{Binding !IsProgress}" Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap" HorizontalAlignment="Stretch">
-								<SelectableTextBlock.ContextMenu>
-									<ContextMenu x:CompileBindings="False">
-										<MenuItem Header="{DynamicResource MENU_COPY}" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
-									</ContextMenu>
-								</SelectableTextBlock.ContextMenu>
-							</SelectableTextBlock>
+							<SelectableTextBlock IsVisible="{Binding !IsProgress}" Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap" HorizontalAlignment="Stretch" />
 						</Grid>
 					</DataTemplate>
 				</ListBox.ItemTemplate>

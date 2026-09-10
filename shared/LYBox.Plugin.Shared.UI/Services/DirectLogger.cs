@@ -1,7 +1,11 @@
-using LYBox.Plugin.TDLSharp.Models;
+using LYBox.Plugin.Shared.UI.Models;
 
-namespace LYBox.Plugin.TDLSharp.Services;
+namespace LYBox.Plugin.Shared.UI.Services;
 
+/// <summary>
+/// 直连日志器：把日志与进度事件直接回调到 UI 层（由 ViewModel 决定如何写入集合）。
+/// 普通日志走 <see cref="Log"/>；下载/传输类进度走 Start/Update/Complete/Fail 系列。
+/// </summary>
 public class DirectLogger
 {
     private readonly Action<string> _onLog;
@@ -10,12 +14,12 @@ public class DirectLogger
 
     public DirectLogger(
         Action<string> onLog,
-        Action<LogEntry> onAddEntry,
-        Action<LogEntry, double, string, bool, bool> onUpdateProgress)
+        Action<LogEntry>? onAddEntry = null,
+        Action<LogEntry, double, string, bool, bool>? onUpdateProgress = null)
     {
         _onLog = onLog;
-        _onAddEntry = onAddEntry;
-        _onUpdateProgress = onUpdateProgress;
+        _onAddEntry = onAddEntry ?? (_ => { });
+        _onUpdateProgress = onUpdateProgress ?? ((_, _, _, _, _) => { });
     }
 
     public void Log(string message) => _onLog(message);

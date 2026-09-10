@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="clr-namespace:LYBox.Plugin.Shared.UI.Controls;assembly=LYBox.Plugin.Shared.UI"
              xmlns:u="https://irihi.tech/ursa"
              xmlns:vm="clr-namespace:LYBox.Plugin.Downloader.ViewModels"
              xmlns:models="clr-namespace:LYBox.Plugin.Downloader.Models"
@@ -195,37 +196,7 @@
 
 
             <!-- 日志 -->
-            <Border Theme="{DynamicResource CardBorder}" Padding="12" MaxHeight="{Binding LogMaxHeight}">
-                <Grid RowDefinitions="Auto,*">
-                    <Grid ColumnDefinitions="*,Auto" Margin="0 0 0 8">
-                        <TextBlock Grid.Column="0" Text="{DynamicResource LBL_LogOutput}" Classes="SectionTitle" VerticalAlignment="Center" />
-                        <Button Grid.Column="1" Content="{DynamicResource BTN_Clear}" Command="{Binding ClearLogCommand}" Theme="{DynamicResource SolidButton}" Classes="Small" FontSize="12" Padding="8 4" />
-                    </Grid>
-                    <ListBox x:Name="LogListBox" Grid.Row="1"
-                             ItemsSource="{Binding LogEntries}"
-                             SelectionMode="Toggle"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                        <ListBox.Styles>
-                            <Style Selector="ListBoxItem">
-                                <Setter Property="Padding" Value="2 1" />
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            </Style>
-                        </ListBox.Styles>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate x:DataType="models:LogEntry">
-                                <SelectableTextBlock Text="{Binding FormattedLine}" FontSize="12" FontFamily="Consolas" TextWrapping="Wrap">
-                                    <SelectableTextBlock.ContextMenu>
-                                        <ContextMenu x:CompileBindings="False">
-                                            <MenuItem Header="{DynamicResource MENU_COPY}" Command="{Binding $parent[ListBox].DataContext.CopyLogEntryCommand}" CommandParameter="{Binding}" />
-                                        </ContextMenu>
-                                    </SelectableTextBlock.ContextMenu>
-                                </SelectableTextBlock>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-            </Border>
+            <ui:UILoggerPanel LogEntries="{Binding LogEntries}" ClearLogCommand="{Binding ClearLogCommand}" MaxHeight="{Binding LogMaxHeight}" />
 
             </StackPanel>
         </ScrollViewer>

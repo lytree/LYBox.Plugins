@@ -6,6 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Input.Platform;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Services;
+using LYBox.Plugin.Shared.UI.Models;
+using LYBox.Plugin.Shared.UI.Services;
 using LYBox.Plugin.TDLSharp.Models;
 using LYBox.Plugin.TDLSharp.Resources;
 using LYBox.Plugin.TDLSharp.Services;
@@ -79,22 +81,6 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             VerticalAnchor = VerticalPosition.Center,
         };
         await OverlayDialog.ShowCustomAsync<Controls.ExecutionHistoryDialog, ExecutionHistoryDialogViewModel, bool>(dialogVm, options: options);
-    }
-
-    [RelayCommand]
-    private async Task CopyLogEntry(LogEntry entry)
-    {
-        var topLevel = Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
-            ? desktop.MainWindow
-            : null;
-        var clipboard = topLevel?.Clipboard;
-        if (clipboard is not null)
-        {
-            var text = entry.IsProgress
-                ? $"{entry.FileName} - {entry.StatusText} ({entry.ProgressValue:F1}%)"
-                : entry.FormattedLine;
-            await clipboard.SetTextAsync(text);
-        }
     }
 
     [RelayCommand]

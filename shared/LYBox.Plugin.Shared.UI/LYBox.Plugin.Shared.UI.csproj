@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+		<Description>Shared UI components for LYBox plugins: UILogger log panel (multi-select + right-click copy), log entry model, DirectLogger and auto-scroll behavior.</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!--
+			与插件项目一致：通过 LYBox.Plugin.Shared SDK 包传递获取 Avalonia / CommunityToolkit.Mvvm，
+			版本统一由 $(PluginSdkVersion) 锁定，避免与宿主共享程序集清单漂移。
+		-->
+		<PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+	</ItemGroup>
+</Project>

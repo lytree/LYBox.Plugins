@@ -1,4 +1,7 @@
 <Solution>
+    <Folder Name="/shared/">
+        <Project Path="shared/LYBox.Plugin.Shared.UI/LYBox.Plugin.Shared.UI.csproj" />
+    </Folder>
     <Folder Name="/plugins/">
         <Project Path="plugins/LYBox.Plugin.ButtonsInputs/LYBox.Plugin.ButtonsInputs.csproj" />
         <Project Path="plugins/LYBox.Plugin.DateTime/LYBox.Plugin.DateTime.csproj" />

@@ -1,3 +1,4 @@
+using LYBox.Plugin.Shared.UI.Models;
 using LYBox.Plugin.Shared.Attributes;
 using LYBox.Plugin.TDLSharp.Models;
 using LYBox.Plugin.TDLSharp.Resources;

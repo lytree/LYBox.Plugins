@@ -1,3 +1,4 @@
+using LYBox.Plugin.Shared.UI.Models;
 using System.Collections.ObjectModel;
 using LYBox.Plugin.Downloader.Models;
 using LYBox.Plugin.Downloader.Resources;
