@@ -2,19 +2,24 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug Host",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-host-debug",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
       "name": "Debug Plugin - Buttons & Inputs",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: ButtonsInputs",
+      "preLaunchTask": "build-plugin: ButtonsInputs",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ButtonsInputs/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ButtonsInputs\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.ButtonsInputs/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -25,16 +30,10 @@
       "name": "Debug Plugin - DateTime",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: DateTime",
+      "preLaunchTask": "build-plugin: DateTime",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.DateTime/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.DateTime\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.DateTime/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -45,16 +44,10 @@
       "name": "Debug Plugin - DialogFeedbacks",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: DialogFeedbacks",
+      "preLaunchTask": "build-plugin: DialogFeedbacks",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.DialogFeedbacks/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.DialogFeedbacks\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.DialogFeedbacks/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -65,16 +58,10 @@
       "name": "Debug Plugin - Downloader",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: Downloader",
+      "preLaunchTask": "build-plugin: Downloader",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.Downloader/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.Downloader\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.Downloader/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -85,16 +72,10 @@
       "name": "Debug Plugin - LayoutDisplay",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: LayoutDisplay",
+      "preLaunchTask": "build-plugin: LayoutDisplay",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.LayoutDisplay/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.LayoutDisplay\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.LayoutDisplay/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -105,16 +86,10 @@
       "name": "Debug Plugin - NavigationMenus",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: NavigationMenus",
+      "preLaunchTask": "build-plugin: NavigationMenus",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.NavigationMenus/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.NavigationMenus\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.NavigationMenus/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -125,16 +100,10 @@
       "name": "Debug Plugin - ProDataGrid",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: ProDataGrid",
+      "preLaunchTask": "build-plugin: ProDataGrid",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ProDataGrid/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ProDataGrid\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.ProDataGrid/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -145,16 +114,10 @@
       "name": "Debug Plugin - ScottPlot",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: ScottPlot",
+      "preLaunchTask": "build-plugin: ScottPlot",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.ScottPlot/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.ScottPlot\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.ScottPlot/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -165,16 +128,10 @@
       "name": "Debug Plugin - TDLSharp",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: TDLSharp",
+      "preLaunchTask": "build-plugin: TDLSharp",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.TDLSharp/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.TDLSharp\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.TDLSharp/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -185,16 +142,10 @@
       "name": "Debug Plugin - BTSou",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-      "preLaunchTask": "publish-plugin: BTSou",
+      "preLaunchTask": "build-plugin: BTSou",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/publish/plugins/LYBox.Plugin.BTSou/publish"
-      },
-      "windows": {
-        "program": "${workspaceFolder}/../bin/LYBox.Launcher.Desktop.exe",
-        "env": {
-          "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts\\publish\\plugins\\LYBox.Plugin.BTSou\\publish"
-        }
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.BTSou/Debug"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -224,13 +175,8 @@
         "Debug Plugin - TDLSharp",
         "Debug Plugin - BTSou"
       ],
-      "preLaunchTask": "publish-all-plugins",
+      "preLaunchTask": "build-all-plugins",
       "stopAll": true
     }
   ]
 }
-
-
-
-
-

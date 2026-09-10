@@ -26,3 +26,5 @@ artifacts/
 
 # Logs / misc (kept here; projects rely on .gitignore at repo root)
 *.log
+
+.fake

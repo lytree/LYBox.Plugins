@@ -2,6 +2,150 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "build-host-debug",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/../LYBox/src/App/LYBox.Launcher.Desktop/LYBox.Launcher.Desktop.csproj",
+        "-c", "Debug"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {"kind": "build", "isDefault": true}
+    },
+    {
+      "label": "build-plugin: ButtonsInputs",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.ButtonsInputs/LYBox.Plugin.ButtonsInputs.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: DateTime",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.DateTime/LYBox.Plugin.DateTime.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: DialogFeedbacks",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.DialogFeedbacks/LYBox.Plugin.DialogFeedbacks.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: Downloader",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.Downloader/LYBox.Plugin.Downloader.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: LayoutDisplay",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.LayoutDisplay/LYBox.Plugin.LayoutDisplay.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: NavigationMenus",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.NavigationMenus/LYBox.Plugin.NavigationMenus.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: ProDataGrid",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.ProDataGrid/LYBox.Plugin.ProDataGrid.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: ScottPlot",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.ScottPlot/LYBox.Plugin.ScottPlot.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: TDLSharp",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.TDLSharp/LYBox.Plugin.TDLSharp.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: BTSou",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.BTSou/LYBox.Plugin.BTSou.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-all-plugins",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/Plugins.slnx",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "publish-all-plugins",
       "command": "${workspaceFolder}/build.sh",
       "type": "shell",
@@ -42,8 +186,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: DateTime",
@@ -63,8 +206,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: DialogFeedbacks",
@@ -84,8 +226,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: Downloader",
@@ -105,8 +246,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: LayoutDisplay",
@@ -126,8 +266,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: NavigationMenus",
@@ -147,8 +286,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: ProDataGrid",
@@ -168,8 +306,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: ScottPlot",
@@ -189,8 +326,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: TDLSharp",
@@ -210,8 +346,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "publish-plugin: BTSou",
@@ -231,8 +366,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     },
     {
       "label": "build-current-plugin",
@@ -270,8 +404,7 @@
         "reveal": "always",
         "panel": "shared"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "problemMatcher": []
     }
   ],
   "inputs": [
