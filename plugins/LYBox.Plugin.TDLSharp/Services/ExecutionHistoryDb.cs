@@ -61,7 +61,29 @@ public sealed class ExecutionHistoryDb : DataConnection
     {
         var dataDir = TdlPaths.HistoryDir;
         var dbPath = Path.Combine(dataDir, $"history-{TdlPaths.SafeFileName(scriptId)}.db");
+        // 一次性迁移：旧位置 %APPDATA%/AvaloniaTemplate/TDLSharp/history/ 下若存在同名 db，复制到新路径。
+        MigrateLegacyHistoryDbIfNeeded(scriptId, dbPath);
         return new ExecutionHistoryDb(dbPath);
+    }
+
+    /// <summary>
+    /// 一次性迁移：把旧路径下的 history-{scriptId}.db 复制到 Data/{PluginId}/history/ 下。
+    /// 仅当目标文件不存在且旧文件存在时执行。失败忽略。
+    /// </summary>
+    private static void MigrateLegacyHistoryDbIfNeeded(string scriptId, string newPath)
+    {
+        try
+        {
+            if (File.Exists(newPath)) return;
+            var legacyRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "AvaloniaTemplate", "TDLSharp", "history");
+            var legacyPath = Path.Combine(legacyRoot, $"history-{TdlPaths.SafeFileName(scriptId)}.db");
+            if (!File.Exists(legacyPath)) return;
+            Directory.CreateDirectory(Path.GetDirectoryName(newPath)!);
+            File.Copy(legacyPath, newPath, overwrite: false);
+        }
+        catch { /* 迁移失败忽略，下次启动重试 */ }
     }
 }
 

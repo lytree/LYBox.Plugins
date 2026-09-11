@@ -88,7 +88,31 @@ public sealed class ForwardDb : DataConnection
     public static ForwardDb CreateForChat(long chatId)
     {
         Directory.CreateDirectory(TdlPaths.ForwardDbDir);
-        return new ForwardDb(Path.Combine(TdlPaths.ForwardDbDir, $"forward-{chatId}.db"));
+        // 一次性迁移：旧路径下若已存在同名 db（早期版本位于 %APPDATA%/AvaloniaTemplate/TDLSharp/data/），
+        // 且新位置还没有时，复制过来并保留旧文件以便回退。
+        var newPath = Path.Combine(TdlPaths.ForwardDbDir, $"forward-{chatId}.db");
+        MigrateLegacyForwardDbIfNeeded(chatId, newPath);
+        return new ForwardDb(newPath);
+    }
+
+    /// <summary>
+    /// 一次性迁移旧位置 %APPDATA%/AvaloniaTemplate/TDLSharp/data/forward-{chatId}.db → Data/{PluginId}/data/forward-{chatId}.db。
+    /// 仅当目标文件不存在且旧文件存在时执行。失败忽略（下一次启动重试）。
+    /// </summary>
+    private static void MigrateLegacyForwardDbIfNeeded(long chatId, string newPath)
+    {
+        try
+        {
+            if (File.Exists(newPath)) return;
+            var legacyRoot = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "AvaloniaTemplate", "TDLSharp", "data");
+            var legacyPath = Path.Combine(legacyRoot, $"forward-{chatId}.db");
+            if (!File.Exists(legacyPath)) return;
+            Directory.CreateDirectory(Path.GetDirectoryName(newPath)!);
+            File.Copy(legacyPath, newPath, overwrite: false);
+        }
+        catch { /* 迁移失败不阻塞，下次启动重试 */ }
     }
 }
 

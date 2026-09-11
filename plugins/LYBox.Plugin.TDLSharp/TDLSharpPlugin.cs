@@ -81,8 +81,8 @@ public partial class TDLSharpPlugin
 
     private static string GetDefaultTdlRoot()
     {
-        string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        return Path.Combine(userProfile, ".tdl");
+        // 默认 TDLib 数据目录：Data/{PluginId}/tdl/（由 IPluginDataDirectoryProvider 解析）。
+        return TdlPaths.DataSubdir("tdl");
     }
 
     private static string GetSettingValue(IServiceProvider serviceProvider, string settingKey, string envKey, string defaultValue)

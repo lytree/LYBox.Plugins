@@ -73,9 +73,10 @@ public partial class SearchViewModel : ViewModelBase
         {
             try
             {
-                // 还原原程序：优先读本地缓存 ResPool.ryx，无则下载并缓存
-                var cachePath = System.IO.Path.Combine(
-                    AppContext.BaseDirectory, "ResPool.ryx");
+                // 资源池缓存位于主体 Data/{PluginId}/cache/ResPool.ryx。
+                // 经 IPluginDataDirectoryProvider 解析，避免写入启动器目录（只读场景失败）。
+                // ServiceLocator 不可用时（极早期）回退到 AppContext.BaseDirectory。
+                var cachePath = ResolveResPoolCachePath();
                 await _search.LoadResourcePoolAsync(localCachePath: cachePath);
                 PoolVersion = $"资源池版本: {_search.Version ?? "未知"}";
                 StatusText = "请输入关键词开始搜索";
@@ -283,5 +284,21 @@ public partial class SearchViewModel : ViewModelBase
         _cts?.Cancel();
         _cts?.Dispose();
         base.Dispose();
+    }
+
+    /// <summary>
+    /// 解析资源池缓存路径：优先经 <see cref="LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider"/>
+    /// 拿到主体 Data/{PluginId}/cache/ 目录；不可用时回退到 AppContext.BaseDirectory（兼容早期/独立运行场景）。
+    /// </summary>
+    private static string ResolveResPoolCachePath()
+    {
+        const string fallbackPluginId = "BTSou";
+        if (ServiceLocator.TryGetService<LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider>(out var provider)
+            && provider is not null)
+        {
+            var dir = provider.GetSubDirectory(fallbackPluginId, "cache");
+            return System.IO.Path.Combine(dir, "ResPool.ryx");
+        }
+        return System.IO.Path.Combine(AppContext.BaseDirectory, "ResPool.ryx");
     }
 }

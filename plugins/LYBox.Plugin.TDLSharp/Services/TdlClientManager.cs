@@ -67,8 +67,10 @@ public class TdlClientManager : IDisposable
         ProxyPort = proxyPort;
         EnableProxy = enableProxy;
 
+        // 默认 TDLib 数据目录：Data/{PluginId}/tdl/（由 IPluginDataDirectoryProvider 解析）。
+        // 设置项 TDL.TdlRootPath 为空时使用此默认。
         TdlRoot = string.IsNullOrWhiteSpace(tdlRootPath)
-            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".tdl")
+            ? TdlPaths.DataSubdir("tdl")
             : tdlRootPath;
         if (!Directory.Exists(TdlRoot))
         {

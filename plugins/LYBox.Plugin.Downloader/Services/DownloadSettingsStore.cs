@@ -9,20 +9,33 @@ namespace LYBox.Plugin.Downloader.Services;
 /// 二进制路径与全局设置的持久化。
 /// 优先通过宿主 <see cref="ISettingsService"/>（SQLite 持久化，统一在设置页管理）；
 /// 若 <see cref="ServiceLocator"/> 尚未初始化（如插件早期初始化阶段），回退到本地 JSON 文件。
-/// JSON 路径：%LOCALAPPDATA%/LYBox/DownloaderPlugin/settings.json。
+/// JSON 路径：主体 Data/{PluginId}/settings.json（由 <see cref="IPluginDataDirectoryProvider"/> 解析）。
 /// </summary>
 public static class DownloadSettingsStore
 {
+    /// <summary>PluginId 必须与 csproj 中的 PluginId 保持一致。</summary>
+    private const string PluginId = "B2C3D4E5-F6A7-8901-BCDE-DOWNLOADER001";
+
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
+    /// <summary>
+    /// 解析 JSON 回退目录：优先经 <see cref="IPluginDataDirectoryProvider"/> 拿 Data/{PluginId}/，
+    /// 不可用时回退到 %LOCALAPPDATA%/LYBox/DownloaderPlugin（兼容早期版本残留数据）。
+    /// </summary>
     private static string SettingsDir
     {
         get
         {
+            if (ServiceLocator.TryGetService<IPluginDataDirectoryProvider>(out var provider)
+                && provider is not null)
+            {
+                return provider.GetPluginDataDirectory(PluginId);
+            }
+            // 旧版兼容路径（早期版本会把 JSON 写到这里）
             var baseDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var dir = Path.Combine(baseDir, "LYBox", "DownloaderPlugin");
             Directory.CreateDirectory(dir);
@@ -83,6 +96,10 @@ public static class DownloadSettingsStore
     {
         try
         {
+            // 首次加载：尝试从旧版位置（%LOCALAPPDATA%/LYBox/DownloaderPlugin/settings.json）
+            // 一次性迁移到主体 Data/{PluginId}/settings.json。
+            MigrateLegacyFileIfNeeded();
+
             if (File.Exists(SettingsPath))
             {
                 var json = File.ReadAllText(SettingsPath);
@@ -92,6 +109,25 @@ public static class DownloadSettingsStore
         }
         catch { /* 损坏文件回退默认 */ }
         return new BinaryPaths();
+    }
+
+    /// <summary>
+    /// 一次性迁移：把旧版 LocalAppData 路径下的 settings.json 复制到主体 Data/{PluginId}/。
+    /// 仅当目标文件不存在且旧文件存在时执行（避免覆盖新数据）。成功复制后旧文件保留以便回退。
+    /// </summary>
+    private static void MigrateLegacyFileIfNeeded()
+    {
+        try
+        {
+            if (File.Exists(SettingsPath)) return;
+            var legacyPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "LYBox", "DownloaderPlugin", "settings.json");
+            if (!File.Exists(legacyPath)) return;
+            Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
+            File.Copy(legacyPath, SettingsPath, overwrite: false);
+        }
+        catch { /* 迁移失败忽略，下次启动再尝试 */ }
     }
 
     private static void SaveToJson(BinaryPaths cfg)
