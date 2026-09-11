@@ -4,7 +4,8 @@ using LYBox.Plugin.TDLSharp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Irihi.Avalonia.Shared.Contracts;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
+using LinqToDB.Data;
 
 namespace LYBox.Plugin.TDLSharp.ViewModels;
 
@@ -39,13 +40,11 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
     {
         if (record == null) return;
 
-        using var db = ExecutionHistoryDbContext.CreateForScript(_scriptId);
-        var existing = await db.ExecutionRecords.FindAsync(record.Id);
-        if (existing != null)
-        {
-            db.ExecutionRecords.Remove(existing);
-            await db.SaveChangesAsync();
-        }
+        using var db = ExecutionHistoryDb.CreateForScript(_scriptId);
+        await db.EnsureSchemaInitializedAsync();
+        await db.ExecutionRecords
+            .Where(r => r.Id == record.Id)
+            .DeleteAsync();
 
         Records.Remove(record);
     }
@@ -55,10 +54,11 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
     {
         if (Records.Count == 0) return;
 
-        using var db = ExecutionHistoryDbContext.CreateForScript(_scriptId);
+        using var db = ExecutionHistoryDb.CreateForScript(_scriptId);
+        await db.EnsureSchemaInitializedAsync();
         await db.ExecutionRecords
             .Where(r => r.ScriptId == _scriptId)
-            .ExecuteDeleteAsync();
+            .DeleteAsync();
 
         Records.Clear();
     }

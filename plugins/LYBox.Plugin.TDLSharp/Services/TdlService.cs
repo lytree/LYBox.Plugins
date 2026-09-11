@@ -2,7 +2,6 @@ using LYBox.Plugin.Shared.UI.Services;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
@@ -445,12 +444,6 @@ public partial class TdlService
         {
             return null;
         }
-    }
-
-    ForwardDbContext CreateForwardDbContext(long chatId)
-    {
-        Directory.CreateDirectory(TdlPaths.ForwardDbDir);
-        return new ForwardDbContext(chatId, TdlPaths.ForwardDbDir);
     }
 
     /// <summary>

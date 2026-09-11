@@ -1,5 +1,6 @@
 using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
+using LinqToDB.Data;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
@@ -146,8 +147,8 @@ public partial class TdlService
                 _logger.Log($"本源标签: {effectiveTags}");
             }
 
-            using var db = CreateForwardDbContext(sourceChatId);
-            await db.Database.EnsureCreatedAsync();
+            using var db = ForwardDb.CreateForChat(sourceChatId);
+            await db.EnsureSchemaInitializedAsync();
             _logger.Log($"数据库已就绪: forward-{sourceChatId}.db");
 
             int forwarded;
@@ -167,7 +168,7 @@ public partial class TdlService
         _logger.Log($"全部源处理完成，共转发 {grandTotalForwarded} 条消息");
     }
 
-    public async Task<int> DeepCopyForward(ForwardDbContext db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0)
+    public async Task<int> DeepCopyForward(ForwardDb db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0)
     {
         int totalForwarded = 0;
         int totalSkipped = 0;
@@ -253,7 +254,7 @@ public partial class TdlService
         return totalForwarded;
     }
 
-    public async Task<int> ForwardOlderDirection(ForwardDbContext db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
+    public async Task<int> ForwardOlderDirection(ForwardDb db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
     {
         int totalForwarded = 0;
         int totalSkipped = 0;
@@ -339,7 +340,7 @@ public partial class TdlService
         return totalForwarded;
     }
 
-    public async Task<int> ForwardNewerDirection(ForwardDbContext db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
+    public async Task<int> ForwardNewerDirection(ForwardDb db, long sourceChatId, long startMessageId, long targetChatId, int limit, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
     {
         var newerMessages = new List<TdApi.Message>();
         long fromMessageId = 0;
@@ -399,7 +400,7 @@ public partial class TdlService
         return totalForwarded;
     }
 
-    async Task<(int forwarded, int skipped)> ForwardGroupedMessages(ForwardDbContext db, List<TdApi.Message> messages, long sourceChatId, long targetChatId, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
+    async Task<(int forwarded, int skipped)> ForwardGroupedMessages(ForwardDb db, List<TdApi.Message> messages, long sourceChatId, long targetChatId, bool forwardComments, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
     {
         if (messages.Count == 0) return (0, 0);
 
@@ -641,7 +642,7 @@ public partial class TdlService
         };
     }
 
-    async Task ForwardCommentsForMessages(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> sourceMessages, TdApi.Message[] forwardedMessages, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
+    async Task ForwardCommentsForMessages(ForwardDb db, long sourceChatId, long targetChatId, List<TdApi.Message> sourceMessages, TdApi.Message[] forwardedMessages, CancellationToken ct = default, long messageThreadId = 0, string? tags = null)
     {
         TdApi.MessageTopic? messageTopic = messageThreadId > 0
             ? new TdApi.MessageTopic.MessageTopicForum { ForumTopicId = (int)messageThreadId }
@@ -759,21 +760,23 @@ public partial class TdlService
         }
     }
 
-    async Task<(List<long> idsToForward, List<long> skippedIds)> FilterAlreadyForwarded(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> messages)
+    async Task<(List<long> idsToForward, List<long> skippedIds)> FilterAlreadyForwarded(ForwardDb db, long sourceChatId, long targetChatId, List<TdApi.Message> messages)
     {
         var messageIds = messages.Select(m => m.Id).ToHashSet();
 
-        var alreadyForwarded = await db.ForwardRecords
+        var alreadyForwarded = (await db.ForwardRecords
             .Where(r => r.SourceChatId == sourceChatId && r.TargetChatId == targetChatId && messageIds.Contains(r.MessageId))
             .Select(r => r.MessageId)
-            .ToHashSetAsync();
+            .ToListAsync())
+            .ToHashSet();
 
         var idsToForward = messageIds.Except(alreadyForwarded).ToList();
         return (idsToForward, alreadyForwarded.ToList());
     }
 
-    async Task RecordForwardedMessages(ForwardDbContext db, long sourceChatId, long targetChatId, List<TdApi.Message> messages, bool isSuccess, TdApi.Message[]? forwardedMessages = null, string? error = null)
+    async Task RecordForwardedMessages(ForwardDb db, long sourceChatId, long targetChatId, List<TdApi.Message> messages, bool isSuccess, TdApi.Message[]? forwardedMessages = null, string? error = null)
     {
+        var records = new List<ForwardRecord>();
         foreach (var msg in messages)
         {
             var record = new ForwardRecord
@@ -795,12 +798,16 @@ public partial class TdlService
                 }
             }
 
-            db.ForwardRecords.Add(record);
+            records.Add(record);
         }
 
         try
         {
-            await db.SaveChangesAsync();
+            // 主键为 (SourceChatId, MessageId)，InsertOrReplace 保证重复记录时以最新状态覆盖
+            foreach (var record in records)
+            {
+                await db.InsertOrReplaceAsync(record);
+            }
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlService] 保存转发记录失败: {ex.Message}"); }
     }
@@ -863,8 +870,8 @@ public partial class TdlService
             _logger.Log($"目标话题: [{topicName}] TopicId={messageThreadId}");
         }
 
-        using var db = CreateForwardDbContext(sourceChatId);
-        await db.Database.EnsureCreatedAsync();
+        using var db = ForwardDb.CreateForChat(sourceChatId);
+        await db.EnsureSchemaInitializedAsync();
         _logger.Log($"数据库已就绪: forward-{sourceChatId}.db");
 
         var message = await client.GetMessageAsync(sourceChatId, messageId);

@@ -15,7 +15,8 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
+using LinqToDB.Data;
 using Ursa.Controls;
 
 namespace LYBox.Plugin.TDLSharp.ViewModels;
@@ -247,7 +248,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     {
         try
         {
-            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
             var records = await db.ExecutionRecords
                 .Where(r => r.ScriptId == Script.Id)
@@ -290,10 +291,9 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     {
         try
         {
-            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
-            db.ExecutionRecords.Add(record);
-            await db.SaveChangesAsync();
+            record.Id = await db.InsertWithInt32IdentityAsync(record);
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 保存执行历史记录失败: {ex.Message}"); }
     }
@@ -302,10 +302,9 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     {
         try
         {
-            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
-            db.ExecutionRecords.Update(record);
-            await db.SaveChangesAsync();
+            await db.UpdateAsync(record);
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 更新执行历史记录失败: {ex.Message}"); }
     }
