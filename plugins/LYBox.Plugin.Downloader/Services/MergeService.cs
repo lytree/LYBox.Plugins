@@ -1,4 +1,4 @@
-using LYBox.Plugin.Shared.UI.Services;
+using LYBox.Plugin.Shared.Services;
 using System.Text;
 using CliWrap;
 using LYBox.Plugin.Downloader.Models;

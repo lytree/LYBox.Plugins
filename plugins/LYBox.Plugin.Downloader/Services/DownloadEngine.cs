@@ -1,4 +1,4 @@
-using LYBox.Plugin.Shared.UI.Services;
+using LYBox.Plugin.Shared.Services;
 using LYBox.Plugin.Downloader.Models;
 
 namespace LYBox.Plugin.Downloader.Services;

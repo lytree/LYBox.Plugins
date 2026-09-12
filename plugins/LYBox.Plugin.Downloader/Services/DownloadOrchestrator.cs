@@ -1,4 +1,4 @@
-using LYBox.Plugin.Shared.UI.Services;
+using LYBox.Plugin.Shared.Services;
 using System.Text.Json;
 using LYBox.Plugin.Downloader.Models;
 using LYBox.Plugin.Downloader.Services.Parsers;

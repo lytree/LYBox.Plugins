@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:LYBox.Plugin.TDLSharp.ViewModels"
              xmlns:controls="clr-namespace:LYBox.Plugin.TDLSharp.Controls"
-             xmlns:ui="clr-namespace:LYBox.Plugin.Shared.UI.Controls;assembly=LYBox.Plugin.Shared.UI"
+             xmlns:ui="clr-namespace:LYBox.Plugin.Shared.Controls;assembly=LYBox.Plugin.Shared"
              x:Class="LYBox.Plugin.TDLSharp.Pages.SingleForwardPage"
              x:DataType="vm:SingleForwardViewModel"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700">
