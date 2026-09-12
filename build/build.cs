@@ -43,7 +43,14 @@ Task("Clean")
 {
     var t = buildContext.Target;
 
-    CleanDirectoryIfExists(c, buildContext.PluginPackagesDir);
+    // 清理目标：bin / obj / publish 等构建中间产物，让 artifacts/ 仅保留压缩后的 zip 包
+    // （artifacts/packages/plugins/*.zip）。UseArtifactsOutput=true 把所有项目 bin/obj 重定向到
+    // artifacts/bin 与 artifacts/obj 下，plugins/<Project>/bin|obj 不会再单独生成。
+    CleanDirectoryIfExists(c, Path.Combine(buildContext.ArtifactsDir, "bin"));
+    CleanDirectoryIfExists(c, Path.Combine(buildContext.ArtifactsDir, "obj"));
+    CleanDirectoryIfExists(c, Path.Combine(buildContext.ArtifactsDir, "publish"));
+
+    // 保留 zip 所在的 packages 目录（仅清理其内容，不删目录本身，方便后续步骤 EnsureDirectoryExists）
     CleanDirectoryIfExists(c, buildContext.PluginZipPackagesDir);
 
     foreach (var plugin in buildContext.PluginProjects)

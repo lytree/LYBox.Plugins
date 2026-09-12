@@ -50,8 +50,29 @@ SDK 来源支持两种模式（`--sdk-feed`）：
 
 ## 产物
 
-- 插件构建中间产出：`artifacts/publish/plugins/{Name}/publish/`
-- 插件 zip 包（含 `plugin.json`，剥离 `.pdb` / `.xml` / `.deps.json` / `.runtimeconfig.json`）：`artifacts/packages/plugins/{Name}-{Version}.zip`
+- 所有项目的 `bin/`、`obj/` 统一进入根目录 `artifacts/bin/` 与 `artifacts/obj/`（由 `Directory.Build.props` 的 `UseArtifactsOutput=true` + `ArtifactsPath=artifacts` 驱动，仓库根与各插件子目录不再生成 `bin`/`obj`）。
+- 插件 zip 包（含 `plugin.json`，剥离 `.pdb` / `.xml` / `.deps.json` / `.runtimeconfig.json`）—— **唯一长期保留的产物**：`artifacts/packages/plugins/{Name}-{Version}.zip`。
+
+## 清理
+
+`build.ps1 --target=Clean`（或隐式触发：`--build=plugin`、`--build=plugin --plugin=...` 都会先跑 `Clean`）会执行以下删除：
+
+| 删除项                                          | 说明                                                       |
+| ---------------------------------------------- | ---------------------------------------------------------- |
+| `artifacts/bin/`                               | 所有项目的构建输出（dll / pdb / deps.json 等）                  |
+| `artifacts/obj/`                               | 所有项目的中间编译产物（GeneratedFiles、ref、refint、Up2Date 等） |
+| `artifacts/publish/`                           | 插件 publish 中间产物（被 zip 打包消费后即丢弃）                  |
+| `artifacts/packages/plugins/*.zip`             | 已存在的旧版本 zip（在重新打包前清空，避免残留）                  |
+
+`Clean` 之后 `artifacts/` 下只保留 `packages/` 目录框架（目录本身不删，便于后续步骤 `EnsureDirectoryExists`）。
+
+**开发期调试**请使用 `artifacts/bin/{Name}/debug/`：
+
+- 该目录由 `dotnet build`（VS Code 任务 `build-plugin: {Name}`、`build-all-plugins`）自动生成；
+- VS Code 调试配置 `Debug Plugin - {Name}` 通过 `AVALONIA_EXTRA_PLUGINS_PATH=${workspaceFolder}/artifacts/bin/{Name}/Debug` 加载；
+- `Clean` 后首次调试会自动重建（先跑 `build-plugin` preLaunchTask，再启动宿主 Launcher）。
+
+**注意**：`Clean` 在脚本自身运行时会被 Cake.Sdk 持有的 `artifacts/bin/debug/Cake.*.dll` 文件锁阻塞一次，此时 `CleanDirectoryIfExists` 会重试 4 次后跳过并打印告警（已有文件锁防御），不会中断流程。下次独立运行 `Clean` 时会清理干净。
 
 ## 版本真相源
 
