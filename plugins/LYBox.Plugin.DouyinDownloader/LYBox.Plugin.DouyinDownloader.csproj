@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Library</OutputType>
+    <PluginId>DYDL-PLUGIN-2026-0000-000000000001</PluginId>
+    <PluginName>Douyin Downloader</PluginName>
+    <PluginAuthor>jiji262 (port: LYBox)</PluginAuthor>
+    <PluginDescription>抖音批量下载 LYBox 插件：单视频/图文/合集/收藏/喜欢/用户作品批量下载,无水印优先,带签名服务接入与内置 Web 控制台。</PluginDescription>
+    <PluginVersion>1.0.0-preview.1</PluginVersion>
+    <Version>$(PluginVersion)</Version>
+    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.DouyinDownloader.ViewModels"
+             x:Class="LYBox.Plugin.DouyinDownloader.Pages.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="640">
+  <ScrollViewer>
+    <StackPanel Margin="12" Spacing="8">
+      <TextBlock Text="设置" FontSize="18" FontWeight="Bold"/>
+
+      <TextBlock Text="第三方签名服务地址 (留空使用本地 X-Bogus)" Classes="Tertiary"/>
+      <TextBox Text="{Binding SignerEndpoint, Mode=TwoWay}" Watermark="http://127.0.0.1:8888/sign"/>
+
+      <TextBlock Text="下载根目录" Classes="Tertiary"/>
+      <TextBox Text="{Binding DownloadPath, Mode=TwoWay}"/>
+
+      <TextBlock Text="HTTP 代理 (可选)" Classes="Tertiary"/>
+      <TextBox Text="{Binding Proxy, Mode=TwoWay}" Watermark="http://127.0.0.1:7890"/>
+
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <StackPanel>
+          <TextBlock Text="并发数" Classes="Tertiary"/>
+          <NumericUpDown Value="{Binding Concurrency, Mode=TwoWay}" Minimum="1" Maximum="32" Width="100"/>
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="失败重试次数" Classes="Tertiary"/>
+          <NumericUpDown Value="{Binding RetryTimes, Mode=TwoWay}" Minimum="0" Maximum="10" Width="100"/>
+        </StackPanel>
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="16">
+        <CheckBox IsChecked="{Binding EnableDatabase}" Content="启用 SQLite 历史/去重"/>
+        <CheckBox IsChecked="{Binding EnableIncremental}" Content="增量下载 (仅 post/like/mix/music)"/>
+      </StackPanel>
+
+      <TextBlock Text="文件命名模板 (默认 {date}_{title}_{id})" Classes="Tertiary"/>
+      <TextBox Text="{Binding FileTemplate, Mode=TwoWay}"/>
+      <TextBlock Text="文件夹模板" Classes="Tertiary"/>
+      <TextBox Text="{Binding FolderTemplate, Mode=TwoWay}"/>
+
+      <TextBlock Text="完成回调地址 (POST JSON)" Classes="Tertiary"/>
+      <TextBox Text="{Binding WebhookUrl, Mode=TwoWay}"/>
+
+      <CheckBox IsChecked="{Binding EnableTranscript}" Content="启用视频转写 (Whisper)"/>
+      <TextBlock Text="OpenAI API Key" Classes="Tertiary"/>
+      <TextBox Text="{Binding TranscriptApiKey, Mode=TwoWay}" PasswordChar="*"/>
+      <TextBlock Text="模型" Classes="Tertiary"/>
+      <TextBox Text="{Binding TranscriptModel, Mode=TwoWay}"/>
+
+      <CheckBox IsChecked="{Binding EnableWebConsole}" Content="启用内置 Web 控制台"/>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <TextBlock Text="Host" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding WebConsoleHost, Mode=TwoWay}" Width="160"/>
+        <TextBlock Text="Port" VerticalAlignment="Center"/>
+        <NumericUpDown Value="{Binding WebConsolePort, Mode=TwoWay}" Minimum="1" Maximum="65535" Width="120"/>
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="保存" Command="{Binding SaveCommand}"/>
+        <Button Content="启动 Web 控制台" Command="{Binding OpenWebConsoleCommand}"/>
+      </StackPanel>
+      <TextBlock Text="{Binding StatusText}" Classes="Tertiary"/>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>1.3</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Plugin_Title"><value>抖音下载器</value></data>
+  <data name="Plugin_Description"><value>抖音(TikTok China)批量下载 — 单视频/图文/合集/收藏/喜欢/用户主页批量,无水印优先,集成 Web 控制台。</value></data>
+  <data name="Nav_DouyinRoot"><value>抖音下载</value></data>
+  <data name="Nav_DouyinSubmit"><value>提交下载</value></data>
+  <data name="Nav_DouyinJobs"><value>任务中心</value></data>
+  <data name="Nav_DouyinHistory"><value>历史记录</value></data>
+  <data name="Nav_DouyinSettings"><value>设置</value></data>
+  <data name="Nav_DouyinLogin"><value>登录</value></data>
+  <data name="Submit_UrlHint"><value>粘贴抖音分享链接 / 主页链接 / 短链 (支持 https://v.douyin.com/...)</value></data>
+  <data name="Submit_Mode"><value>下载模式</value></data>
+  <data name="Submit_Number"><value>数量限制(0=不限)</value></data>
+  <data name="Submit_StartDate"><value>起始日期 (可选, YYYY-MM-DD)</value></data>
+  <data name="Submit_EndDate"><value>截止日期 (可选, YYYY-MM-DD)</value></data>
+  <data name="Submit_Button"><value>加入下载队列</value></data>
+  <data name="Status_Ready"><value>就绪</value></data>
+  <data name="Status_Running"><value>运行中...</value></data>
+  <data name="Status_Failed"><value>失败</value></data>
+  <data name="Status_Success"><value>完成</value></data>
+  <data name="Status_Skipped"><value>已跳过(去重)</value></data>
+  <data name="Login_Tip"><value>请扫码登录,登录后系统会自动写入 Cookie。</value></data>
+  <data name="Login_OpenQR"><value>打开登录页面</value></data>
+  <data name="Login_ReloadQR"><value>刷新二维码</value></data>
+  <data name="Login_Manual"><value>手动粘贴 Cookie</value></data>
+  <data name="Settings_SignerUrl"><value>第三方签名服务地址 (X-Bogus / a_bogus)</value></data>
+  <data name="Settings_DownloadPath"><value>下载根目录</value></data>
+  <data name="Settings_Concurrency"><value>并发数</value></data>
+  <data name="Settings_Proxy"><value>HTTP/HTTPS 代理 (可选)</value></data>
+  <data name="Settings_Webhook"><value>完成回调地址 (可选)</value></data>
+  <data name="Msg_NoConfig"><value>请先在设置中配置签名服务地址与下载目录</value></data>
+  <data name="Msg_DuplicateUrl"><value>该链接已存在于队列中</value></data>
+</root>

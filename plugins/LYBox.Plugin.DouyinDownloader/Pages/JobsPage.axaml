@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.DouyinDownloader.ViewModels"
+             x:Class="LYBox.Plugin.DouyinDownloader.Pages.JobsPage"
+             x:DataType="vm:JobsViewModel"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500">
+  <DockPanel Margin="12">
+    <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="任务中心" FontSize="18" FontWeight="Bold"/>
+        <Button Grid.Column="1" Content="刷新" Command="{Binding RefreshCommand}"/>
+      </Grid>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="12 6" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 1 0 0">
+      <TextBlock Text="{Binding StatusText}" Classes="Tertiary"/>
+    </Border>
+    <DataGrid ItemsSource="{Binding Jobs}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0 8 0 0">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="3*"/>
+        <DataGridTextColumn Header="模式" Binding="{Binding Mode}" Width="0.6*"/>
+        <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="0.6*"/>
+        <DataGridTextColumn Header="进度" Binding="{Binding StatusText}" Width="1.6*"/>
+        <DataGridTemplateColumn Header="操作" Width="2.6*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="打开目录" Padding="6 2" FontSize="12"
+                        Command="{Binding $parent[DataGrid].DataContext.OpenOutputDirCommand}"
+                        CommandParameter="{Binding}"/>
+                <Button Content="暂停" Padding="6 2" FontSize="12"
+                        Command="{Binding $parent[DataGrid].DataContext.PauseCommand}"
+                        CommandParameter="{Binding JobId}"/>
+                <Button Content="恢复" Padding="6 2" FontSize="12"
+                        Command="{Binding $parent[DataGrid].DataContext.ResumeCommand}"
+                        CommandParameter="{Binding JobId}"/>
+                <Button Content="移除" Padding="6 2" FontSize="12"
+                        Command="{Binding $parent[DataGrid].DataContext.RemoveCommand}"
+                        CommandParameter="{Binding JobId}"/>
+              </StackPanel>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </DockPanel>
+</UserControl>

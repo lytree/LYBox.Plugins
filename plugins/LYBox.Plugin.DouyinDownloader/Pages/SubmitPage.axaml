@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.DouyinDownloader.ViewModels"
+             x:Class="LYBox.Plugin.DouyinDownloader.Pages.SubmitPage"
+             x:DataType="vm:SubmitViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" Margin="12" RowSpacing="10">
+    <Border Grid.Row="0" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+      <TextBlock Text="提交下载" FontSize="18" FontWeight="Bold"/>
+    </Border>
+    <TextBox Grid.Row="1" Watermark="https://v.douyin.com/xxx 或 https://www.douyin.com/video/xxx"
+             Text="{Binding Url, Mode=TwoWay}"/>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+      <TextBlock Text="模式:" VerticalAlignment="Center"/>
+      <ComboBox ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode, Mode=TwoWay}"/>
+      <TextBlock Text="数量(0=不限):" VerticalAlignment="Center"/>
+      <NumericUpDown Value="{Binding Number, Mode=TwoWay}" Minimum="0" Maximum="99999" Width="100"/>
+    </StackPanel>
+    <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8">
+      <TextBlock Text="起始日期:" VerticalAlignment="Center"/>
+      <TextBox Text="{Binding StartDate, Mode=TwoWay}" Width="120"/>
+      <TextBlock Text="截止日期:" VerticalAlignment="Center"/>
+      <TextBox Text="{Binding EndDate, Mode=TwoWay}" Width="120"/>
+    </StackPanel>
+    <Grid Grid.Row="5" ColumnDefinitions="*,Auto">
+      <TextBlock Grid.Column="0" Text="{Binding StatusText}" Classes="Tertiary"/>
+      <Button Grid.Column="1" Content="加入下载队列" Command="{Binding SubmitCommand}"/>
+    </Grid>
+  </Grid>
+</UserControl>

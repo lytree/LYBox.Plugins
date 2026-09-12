@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.DouyinDownloader.ViewModels"
+             x:Class="LYBox.Plugin.DouyinDownloader.Pages.HistoryPage"
+             x:DataType="vm:HistoryViewModel"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500">
+  <DockPanel Margin="12">
+    <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0" Text="历史记录" FontSize="18" FontWeight="Bold"/>
+        <Button Grid.Column="1" Content="刷新" Command="{Binding RefreshCommand}"/>
+      </Grid>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="12 6">
+      <TextBlock Text="{Binding StatusText}" Classes="Tertiary"/>
+    </Border>
+    <DataGrid ItemsSource="{Binding History}" AutoGenerateColumns="False" IsReadOnly="True" Margin="0 8 0 0">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="作品 ID" Binding="{Binding AwemeId}" Width="*"/>
+        <DataGridTextColumn Header="标题" Binding="{Binding Title}" Width="3*"/>
+        <DataGridTextColumn Header="作者" Binding="{Binding AuthorName}" Width="*"/>
+        <DataGridTextColumn Header="模式" Binding="{Binding Mode}" Width="0.6*"/>
+        <DataGridTextColumn Header="下载时间" Binding="{Binding DownloadTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="1.2*"/>
+      </DataGrid.Columns>
+    </DataGrid>
+  </DockPanel>
+</UserControl>
