@@ -134,6 +134,42 @@
       "problemMatcher": "$msCompile"
     },
     {
+      "label": "build-plugin: Template",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.Template/LYBox.Plugin.Template.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: WebTemplate",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.WebTemplate/LYBox.Plugin.WebTemplate.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "build-plugin: DouyinDownloader",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.DouyinDownloader/LYBox.Plugin.DouyinDownloader.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": ["build-host-debug"],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "build-all-plugins",
       "command": "dotnet",
       "type": "process",
@@ -357,6 +393,66 @@
         "-ExecutionPolicy", "Bypass",
         "-File", "${workspaceFolder}/build.ps1",
         "--plugin=LYBox.Plugin.BTSou",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "publish-plugin: Template",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.Template",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "publish-plugin: WebTemplate",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.WebTemplate",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "publish-plugin: DouyinDownloader",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.DouyinDownloader",
         "--configuration=Debug"
       ],
       "options": {

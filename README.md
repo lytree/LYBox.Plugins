@@ -72,6 +72,26 @@ SDK 来源支持两种模式（`--sdk-feed`）：
 - VS Code 调试配置 `Debug Plugin - {Name}` 通过 `AVALONIA_EXTRA_PLUGINS_PATH=${workspaceFolder}/artifacts/bin/{Name}/Debug` 加载；
 - `Clean` 后首次调试会自动重建（先跑 `build-plugin` preLaunchTask，再启动宿主 Launcher）。
 
+当前已支持调试的插件（与 `.vscode/launch.json` / `.vscode/tasks.json` 一致）：
+
+| 插件                                | 调试入口                                |
+| ---------------------------------- | -------------------------------------- |
+| Buttons & Inputs                   | `Debug Plugin - Buttons & Inputs`      |
+| DateTime                           | `Debug Plugin - DateTime`              |
+| DialogFeedbacks                    | `Debug Plugin - DialogFeedbacks`       |
+| Downloader                         | `Debug Plugin - Downloader`            |
+| LayoutDisplay                      | `Debug Plugin - LayoutDisplay`         |
+| NavigationMenus                    | `Debug Plugin - NavigationMenus`       |
+| ProDataGrid                        | `Debug Plugin - ProDataGrid`           |
+| ScottPlot                          | `Debug Plugin - ScottPlot`             |
+| TDLSharp                           | `Debug Plugin - TDLSharp`              |
+| BTSou                              | `Debug Plugin - BTSou`                 |
+| Template                           | `Debug Plugin - Template`              |
+| WebTemplate                        | `Debug Plugin - WebTemplate`           |
+| DouyinDownloader                   | `Debug Plugin - DouyinDownloader`      |
+
+同时提供 `Debug All Plugins` compound（preLaunchTask=`build-all-plugins`，`stopAll=true`）一次性启动全部插件调试。`Attach to LYBox.Launcher.Desktop` 用于附加到已运行的宿主进程。
+
 **注意**：`Clean` 在脚本自身运行时会被 Cake.Sdk 持有的 `artifacts/bin/debug/Cake.*.dll` 文件锁阻塞一次，此时 `CleanDirectoryIfExists` 会重试 4 次后跳过并打印告警（已有文件锁防御），不会中断流程。下次独立运行 `Clean` 时会清理干净。
 
 ## 版本真相源
