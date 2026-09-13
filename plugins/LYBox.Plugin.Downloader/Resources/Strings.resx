@@ -211,35 +211,18 @@
   <data name="STATUS_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
   <data name="STATUS_Cancelling" xml:space="preserve"><value>Cancelling...</value></data>
   <data name="STATUS_Failed" xml:space="preserve"><value>Failed</value></data>
-  <!-- ===================== 抖音子模块（合并自 LYBox.Plugin.DouyinDownloader，统一加 DYN_ 前缀避免冲突） ===================== -->
+  <!-- ===================== 抖音子模块（Home 单页面 + Tab + Dialog） ===================== -->
   <data name="DYN_Plugin_Title" xml:space="preserve"><value>Douyin Downloader</value></data>
   <data name="DYN_Plugin_Description" xml:space="preserve"><value>Batched downloads for Douyin (TikTok China) — single video / image-text / mix / favorites / likes / user posts, watermark-free preferred, integrated web console.</value></data>
-  <data name="DYN_Nav_DouyinRoot" xml:space="preserve"><value>Douyin Download</value></data>
-  <data name="DYN_Nav_DouyinSubmit" xml:space="preserve"><value>Submit</value></data>
-  <data name="DYN_Nav_DouyinJobs" xml:space="preserve"><value>Jobs</value></data>
-  <data name="DYN_Nav_DouyinHistory" xml:space="preserve"><value>History</value></data>
-  <data name="DYN_Nav_DouyinSettings" xml:space="preserve"><value>Settings</value></data>
-  <data name="DYN_Nav_DouyinLogin" xml:space="preserve"><value>Login</value></data>
-  <data name="DYN_Submit_UrlHint" xml:space="preserve"><value>Paste a Douyin share / profile / short link (https://v.douyin.com/...)</value></data>
-  <data name="DYN_Submit_Mode" xml:space="preserve"><value>Download mode</value></data>
-  <data name="DYN_Submit_Number" xml:space="preserve"><value>Item limit (0 = unlimited)</value></data>
-  <data name="DYN_Submit_StartDate" xml:space="preserve"><value>Start date (optional, YYYY-MM-DD)</value></data>
-  <data name="DYN_Submit_EndDate" xml:space="preserve"><value>End date (optional, YYYY-MM-DD)</value></data>
-  <data name="DYN_Submit_Button" xml:space="preserve"><value>Add to queue</value></data>
-  <data name="DYN_Status_Ready" xml:space="preserve"><value>Ready</value></data>
-  <data name="DYN_Status_Running" xml:space="preserve"><value>Running...</value></data>
-  <data name="DYN_Status_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="DYN_Status_Success" xml:space="preserve"><value>Done</value></data>
-  <data name="DYN_Status_Skipped" xml:space="preserve"><value>Skipped (dedup)</value></data>
-  <data name="DYN_Login_Tip" xml:space="preserve"><value>Scan the QR code to log in; cookies are written automatically.</value></data>
-  <data name="DYN_Login_OpenQR" xml:space="preserve"><value>Open login page</value></data>
-  <data name="DYN_Login_ReloadQR" xml:space="preserve"><value>Refresh QR</value></data>
-  <data name="DYN_Login_Manual" xml:space="preserve"><value>Paste cookie manually</value></data>
-  <data name="DYN_Settings_SignerUrl" xml:space="preserve"><value>Third-party signer URL (X-Bogus / a_bogus)</value></data>
-  <data name="DYN_Settings_DownloadPath" xml:space="preserve"><value>Download root</value></data>
-  <data name="DYN_Settings_Concurrency" xml:space="preserve"><value>Concurrency</value></data>
-  <data name="DYN_Settings_Proxy" xml:space="preserve"><value>HTTP/HTTPS proxy (optional)</value></data>
-  <data name="DYN_Settings_Webhook" xml:space="preserve"><value>Completion webhook (optional)</value></data>
-  <data name="DYN_Msg_NoConfig" xml:space="preserve"><value>Configure signer URL and download directory first</value></data>
-  <data name="DYN_Msg_DuplicateUrl" xml:space="preserve"><value>This link already exists in the queue</value></data>
+  <data name="DYN_Home_Tab_Submit" xml:space="preserve"><value>Submit</value></data>
+  <data name="DYN_Home_Tab_Jobs" xml:space="preserve"><value>Jobs</value></data>
+  <data name="DYN_Home_Tab_History" xml:space="preserve"><value>History</value></data>
+  <data name="DYN_Home_Tab_Account" xml:space="preserve"><value>Account</value></data>
+  <data name="DYN_Home_Btn_Login" xml:space="preserve"><value>Login</value></data>
+  <data name="DYN_Home_Btn_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="DYN_Home_Account_Status" xml:space="preserve"><value>Account</value></data>
+  <data name="DYN_Home_Account_LastSync" xml:space="preserve"><value>Last synced: {0}</value></data>
+  <data name="DYN_Dialog_Settings_Title" xml:space="preserve"><value>Settings</value></data>
+  <data name="DYN_Dialog_Login_Title" xml:space="preserve"><value>Login</value></data>
+  <data name="DYN_Btn_Close" xml:space="preserve"><value>Close</value></data>
 </root>

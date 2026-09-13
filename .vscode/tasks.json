@@ -158,18 +158,6 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "build-plugin: DouyinDownloader",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/plugins/LYBox.Plugin.DouyinDownloader/LYBox.Plugin.DouyinDownloader.csproj",
-        "-c", "Debug"
-      ],
-      "dependsOn": [],
-      "problemMatcher": "$msCompile"
-    },
-    {
       "label": "build-all-plugins",
       "command": "dotnet",
       "type": "process",
@@ -433,26 +421,6 @@
         "-ExecutionPolicy", "Bypass",
         "-File", "${workspaceFolder}/build.ps1",
         "--plugin=LYBox.Plugin.WebTemplate",
-        "--configuration=Debug"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "publish-plugin: DouyinDownloader",
-      "command": "powershell.exe",
-      "type": "shell",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy", "Bypass",
-        "-File", "${workspaceFolder}/build.ps1",
-        "--plugin=LYBox.Plugin.DouyinDownloader",
         "--configuration=Debug"
       ],
       "options": {

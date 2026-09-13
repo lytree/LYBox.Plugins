@@ -3,13 +3,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LYBox.Plugin.Downloader.Douyin.Storage;
 using LYBox.Plugin.Shared;
-using LYBox.Plugin.Shared.Attributes;
 
 namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 
-[NavigationItem("Douyin_History")]
-[Menu("NAV_DouyinHistory", "Douyin_History", ParentKey = "NAV_DouyinRoot", Order = 3)]
-[ViewMap(typeof(Pages.HistoryPage))]
+/// <summary>
+/// 历史记录 ViewModel。作为 DouyinHomePage 的 Tab 内容使用。
+/// </summary>
 public partial class HistoryViewModel : ViewModelBase
 {
     private readonly DownloadDatabase? _db;
@@ -28,12 +27,6 @@ public partial class HistoryViewModel : ViewModelBase
         _db = svc;
         try { Refresh(); }
         catch (Exception ex) { StatusText = $"加载历史失败: {ex.Message}"; }
-    }
-
-    public void Activate()
-    {
-        if (_db is null) return;
-        Refresh();
     }
 
     [RelayCommand]

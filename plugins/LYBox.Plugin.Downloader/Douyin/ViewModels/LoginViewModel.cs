@@ -2,21 +2,16 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LYBox.Plugin.Downloader.Douyin.Auth;
-using LYBox.Plugin.Downloader.Douyin.Config;
-using LYBox.Plugin.Downloader.Douyin.WebServer;
 using LYBox.Plugin.Shared;
-using LYBox.Plugin.Shared.Attributes;
 
 namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 
-[NavigationItem("Douyin_Login")]
-[Menu("NAV_DouyinLogin", "Douyin_Login", ParentKey = "NAV_DouyinRoot", Order = 5)]
-[ViewMap(typeof(Pages.LoginPage))]
+/// <summary>
+/// 抖音登录 ViewModel。作为 DouyinHomePage 的 Dialog 弹窗内容使用。
+/// </summary>
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly CookieManager? _cookies;
-    private readonly WebConsoleServer? _web;
-    private readonly DownloaderSettingsStore? _settings;
 
     [ObservableProperty] private string _qrHint = "";
     [ObservableProperty] private string _statusText = "未登录";
@@ -26,8 +21,6 @@ public partial class LoginViewModel : ViewModelBase
     public LoginViewModel()
     {
         _cookies = ServiceLocator.TryGetService<CookieManager>(out var c) ? c : null;
-        _web = ServiceLocator.TryGetService<WebConsoleServer>(out var w) ? w : null;
-        _settings = ServiceLocator.TryGetService<DownloaderSettingsStore>(out var s) ? s : null;
         if (_cookies is null)
         {
             StatusText = "CookieManager 服务解析失败 — 请查看应用日志";

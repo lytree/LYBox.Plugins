@@ -34,7 +34,6 @@ public sealed class LiveSessionRegistry
     public void Register(Session s) => _sessions[s.JobId] = s;
     public void Unregister(Guid jobId) => _sessions.TryRemove(jobId, out _);
     public Session? Get(Guid jobId) => _sessions.TryGetValue(jobId, out var s) ? s : null;
-    public IEnumerable<Session> All() => _sessions.Values.OrderBy(s => s.StartedAt);
     public void Update(Guid jobId, Action<Session> update)
     {
         if (_sessions.TryGetValue(jobId, out var s)) update(s);

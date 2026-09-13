@@ -5,6 +5,7 @@ using LYBox.Plugin.Downloader.Douyin.Core;
 using LYBox.Plugin.Downloader.Douyin.Services;
 using LYBox.Plugin.Downloader.Douyin.Storage;
 using LYBox.Plugin.Downloader.Douyin.Utils;
+using LYBox.Plugin.Downloader.Douyin.ViewModels;
 using LYBox.Plugin.Downloader.Resources;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Attributes;
@@ -24,7 +25,6 @@ public partial class DownloaderPlugin
         services.AddSingleton<PluginConfigStore>();
         services.AddSingleton<DownloaderSettingsStore>();
         services.AddSingleton<RateLimiter>(sp => new RateLimiter(sp.GetRequiredService<DownloaderSettingsStore>().Current.Concurrency));
-        services.AddSingleton<RetryHandler>();
         services.AddSingleton<CookieManager>();
         services.AddSingleton<MsTokenManager>();
         services.AddSingleton<SignatureClient>();
@@ -36,6 +36,14 @@ public partial class DownloaderPlugin
         services.AddSingleton<DownloaderFactory>();
         services.AddSingleton<DownloadOrchestrator>();
         services.AddSingleton<DownloadCoordinator>();
+
+        // Home 单页面聚合 4 Tab + 2 Dialog。注册 Home VM 与 5 个子 VM（Home 通过 IServiceProvider 懒加载子 VM）。
+        services.AddSingleton<SubmitViewModel>();
+        services.AddSingleton<JobsViewModel>();
+        services.AddSingleton<HistoryViewModel>();
+        services.AddSingleton<LoginViewModel>();
+        services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<DouyinHomeViewModel>();
 
         // ================ 原有 Downloader 设置（保留） ================
         return Task.CompletedTask;

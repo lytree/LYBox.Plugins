@@ -181,20 +181,6 @@
       "justMyCode": false
     },
     {
-      "name": "Debug Plugin - DouyinDownloader",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build-plugin: DouyinDownloader",
-      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
-      "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.DouyinDownloader/Debug"
-      },
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "stopAtEntry": false,
-      "justMyCode": false
-    },
-    {
       "name": "Attach to LYBox.Launcher.Desktop",
       "type": "coreclr",
       "request": "attach",
@@ -217,8 +203,7 @@
         "Debug Plugin - TDLSharp",
         "Debug Plugin - BTSou",
         "Debug Plugin - Template",
-        "Debug Plugin - WebTemplate",
-        "Debug Plugin - DouyinDownloader"
+        "Debug Plugin - WebTemplate"
       ],
       "preLaunchTask": "build-all-plugins",
       "stopAll": true

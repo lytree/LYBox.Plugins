@@ -1,16 +1,14 @@
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LYBox.Plugin.Downloader.Douyin.Models;
 using LYBox.Plugin.Downloader.Douyin.Services;
 using LYBox.Plugin.Shared;
-using LYBox.Plugin.Shared.Attributes;
 
 namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 
-[NavigationItem("Douyin_Submit")]
-[Menu("NAV_DouyinSubmit", "Douyin_Submit", ParentKey = "NAV_DouyinRoot", Order = 1)]
-[ViewMap(typeof(Pages.SubmitPage))]
+/// <summary>
+/// 提交下载 ViewModel。作为 DouyinHomePage 的 Tab 内容使用。
+/// </summary>
 public partial class SubmitViewModel : ViewModelBase
 {
     private readonly DownloadCoordinator? _coord;

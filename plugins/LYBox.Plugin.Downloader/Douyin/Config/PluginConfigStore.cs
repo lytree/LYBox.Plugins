@@ -6,7 +6,7 @@ namespace LYBox.Plugin.Downloader.Douyin.Config;
 /// <summary>插件数据目录解析（统一入口）。</summary>
 public sealed class PluginConfigStore
 {
-    /// <summary>为避免与 Douyin 子模块外部 const 冲突,改用实例属性。</summary>
+    /// <summary>抖音子模块 ID（必须与历史 LYBox.Plugin.DouyinDownloader 的 csproj PluginId 保持一致,用于复用旧数据目录）。</summary>
     public const string DouyinSubId = "DouyinDownloader";
 
     private readonly IPluginDataDirectoryProvider? _provider;

@@ -89,7 +89,8 @@ SDK 来源支持两种模式（`--sdk-feed`）：
 | BTSou                              | `Debug Plugin - BTSou`                 |
 | Template                           | `Debug Plugin - Template`              |
 | WebTemplate                        | `Debug Plugin - WebTemplate`           |
-| DouyinDownloader                   | `Debug Plugin - DouyinDownloader`      |
+
+> 注：抖音下载（[DouyinDownloader](https://github.com/lytree/LYBox) 已并入 `LYBox.Plugin.Downloader`，提供 VOD/Live/Decrypt 三大功能 + 抖音下载（提交/任务/历史/登录/设置）子模块，所有页面通过同一插件入口进入）。
 
 同时提供 `Debug All Plugins` compound（preLaunchTask=`build-all-plugins`，`stopAll=true`）一次性启动全部插件调试。`Attach to LYBox.Launcher.Desktop` 用于附加到已运行的宿主进程。
 

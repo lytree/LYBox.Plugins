@@ -182,8 +182,6 @@ public sealed class DownloadOrchestrator : IHostedServiceLite
     {
         var session = _liveRegistry.Get(jobId);
         if (session == null) return null;
-        // 重置暂停标记,允许新任务执行
-        session.Recorder.Pause(session.ResumeKey); // ensure state
         session.Status = JobStatus.Running;
         session.Paused = false;
         return await session.Recorder.ResumeAsync(session.StreamUrl, session.TargetPath,

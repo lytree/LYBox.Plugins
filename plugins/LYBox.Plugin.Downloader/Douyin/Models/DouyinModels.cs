@@ -41,20 +41,6 @@ public sealed class ParsedUrl
     public string? ReplayId { get; init; }
 }
 
-/// <summary>统一下载任务描述（页面/队列/数据库 通用）。</summary>
-public sealed class DownloadJobSpec
-{
-    public required Guid JobId { get; init; } = Guid.NewGuid();
-    public required string OriginalUrl { get; init; }
-    public required ParsedUrl Parsed { get; init; }
-    public DownloadMode Mode { get; init; } = DownloadMode.Post;
-    public int Number { get; init; }       // 0 = 不限
-    public DateTimeOffset? StartDate { get; init; }
-    public DateTimeOffset? EndDate { get; init; }
-    public string? AuthorName { get; init; }
-    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.Now;
-}
-
 public enum JobStatus
 {
     Queued,
@@ -85,9 +71,6 @@ public sealed class DownloadJobRow
     public DateTimeOffset? FinishedAt { get; set; }
     public string? AuthorName { get; set; }
     public string OutputDir { get; set; } = "";
-    public long BytesDownloaded { get; set; }
-    public double ElapsedSeconds { get; set; }
-    public double SpeedBytesPerSec { get; set; }
 }
 
 /// <summary>作品详情统一结构（API/UI 共用）。</summary>

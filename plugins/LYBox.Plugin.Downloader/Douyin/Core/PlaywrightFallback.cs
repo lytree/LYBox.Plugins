@@ -344,16 +344,4 @@ public sealed class PlaywrightFallback
         }
         Logger.Warn($"等待手动验证超时 ({timeoutSec}s)");
     }
-
-    public void SetSettingsHolder(DownloaderSettingsStore settings)
-    {
-        _settingsHolder = settings;
-    }
-
-    // 在 CollectUserPostIdsAsync 入口设置 holder
-    public async Task<BrowserResult> CollectAsync(string secUid, int expectedCount, CancellationToken ct)
-    {
-        SetSettingsHolder(_settings);
-        return await CollectUserPostIdsAsync(secUid, expectedCount, ct);
-    }
 }

@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.Downloader.Douyin.ViewModels"
+             xmlns:pages="clr-namespace:LYBox.Plugin.Downloader.Douyin.Pages"
+             x:Class="LYBox.Plugin.Downloader.Douyin.Pages.DouyinHomePage"
+             x:DataType="vm:DouyinHomeViewModel"
+             mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640">
+  <Grid>
+    <!-- 底层：主页面（标题栏 + TabControl） -->
+    <DockPanel Margin="12">
+      <!-- 顶部：标题 + 登录 / 设置 按钮 -->
+      <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+        <Grid ColumnDefinitions="*,Auto,Auto">
+          <TextBlock Grid.Column="0" Text="{Binding TitleText}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
+          <Button Grid.Column="1" Content="{Binding LoginButtonText}" Command="{Binding OpenLoginCommand}" Margin="0,0,8,0"
+                  Theme="{DynamicResource SolidButton}" Classes="Small"/>
+          <Button Grid.Column="2" Content="{Binding SettingsButtonText}" Command="{Binding OpenSettingsCommand}"
+                  Theme="{DynamicResource SolidButton}" Classes="Small"/>
+        </Grid>
+      </Border>
+
+      <!-- 底部：TabControl 嵌入 3 个子 Page + Account 占位 -->
+      <TabControl SelectedIndex="{Binding SelectedTabIndex}" Margin="0 8 0 0">
+        <TabItem Header="{Binding SubmitTabHeader}">
+          <pages:SubmitPage DataContext="{Binding Submit}"/>
+        </TabItem>
+        <TabItem Header="{Binding JobsTabHeader}">
+          <pages:JobsPage DataContext="{Binding Jobs}"/>
+        </TabItem>
+        <TabItem Header="{Binding HistoryTabHeader}">
+          <pages:HistoryPage DataContext="{Binding History}"/>
+        </TabItem>
+        <TabItem Header="{Binding AccountTabHeader}">
+          <Grid Margin="16" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="12">
+            <TextBlock Grid.Row="0" Text="{Binding AccountStatusText}" FontSize="16" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Text="{Binding Login.StatusText}" Classes="Secondary"/>
+            <TextBlock Grid.Row="2" Text="{Binding Login.IsLoggedIn, StringFormat=已登录: {0}}" Classes="Tertiary"/>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8">
+              <Button Content="{Binding LoginButtonText}" Command="{Binding OpenLoginCommand}"
+                      Theme="{DynamicResource SolidButton}" Classes="Primary"/>
+            </StackPanel>
+          </Grid>
+        </TabItem>
+      </TabControl>
+    </DockPanel>
+
+    <!-- =============== 模态弹层（半透明背景 + 居中卡片） =============== -->
+    <!-- 登录弹窗 -->
+    <Border Background="#80000000"
+            IsVisible="{Binding IsLoginDialogOpen}"
+            IsHitTestVisible="{Binding IsLoginDialogOpen}">
+      <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+              Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseHighBrush}"
+              BorderThickness="1" CornerRadius="8" Padding="0"
+              MinWidth="600" MaxWidth="800" MaxHeight="640">
+        <DockPanel>
+          <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Text="{Binding LoginDialogTitle}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+              <Button Grid.Column="1" Content="{Binding CloseButtonText}" Command="{Binding CloseLoginCommand}" Classes="Small"/>
+            </Grid>
+          </Border>
+          <pages:LoginPage DataContext="{Binding Login}"/>
+        </DockPanel>
+      </Border>
+    </Border>
+
+    <!-- 设置弹窗 -->
+    <Border Background="#80000000"
+            IsVisible="{Binding IsSettingsDialogOpen}"
+            IsHitTestVisible="{Binding IsSettingsDialogOpen}">
+      <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+              Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
+              BorderBrush="{DynamicResource SystemControlForegroundBaseHighBrush}"
+              BorderThickness="1" CornerRadius="8" Padding="0"
+              MinWidth="700" MaxWidth="900" MaxHeight="700">
+        <DockPanel>
+          <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0" Text="{Binding SettingsDialogTitle}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+              <Button Grid.Column="1" Content="{Binding CloseButtonText}" Command="{Binding CloseSettingsCommand}" Classes="Small"/>
+            </Grid>
+          </Border>
+          <pages:SettingsPage DataContext="{Binding Settings}"/>
+        </DockPanel>
+      </Border>
+    </Border>
+  </Grid>
+</UserControl>

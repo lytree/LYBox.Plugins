@@ -3,13 +3,12 @@ using CommunityToolkit.Mvvm.Input;
 using LYBox.Plugin.Downloader.Douyin.Config;
 using LYBox.Plugin.Downloader.Douyin.WebServer;
 using LYBox.Plugin.Shared;
-using LYBox.Plugin.Shared.Attributes;
 
 namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 
-[NavigationItem("Douyin_Settings")]
-[Menu("NAV_DouyinSettings", "Douyin_Settings", ParentKey = "NAV_DouyinRoot", Order = 4)]
-[ViewMap(typeof(Pages.SettingsPage))]
+/// <summary>
+/// 抖音下载设置 ViewModel。作为 DouyinHomePage 的 Dialog 弹窗内容使用。
+/// </summary>
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly DownloaderSettingsStore? _store;

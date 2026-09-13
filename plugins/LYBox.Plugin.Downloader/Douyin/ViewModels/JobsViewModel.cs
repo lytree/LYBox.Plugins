@@ -5,13 +5,12 @@ using CommunityToolkit.Mvvm.Input;
 using LYBox.Plugin.Downloader.Douyin.Models;
 using LYBox.Plugin.Downloader.Douyin.Services;
 using LYBox.Plugin.Shared;
-using LYBox.Plugin.Shared.Attributes;
 
 namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 
-[NavigationItem("Douyin_Jobs")]
-[Menu("NAV_DouyinJobs", "Douyin_Jobs", ParentKey = "NAV_DouyinRoot", Order = 2)]
-[ViewMap(typeof(Pages.JobsPage))]
+/// <summary>
+/// 任务中心 ViewModel。作为 DouyinHomePage 的 Tab 内容使用。
+/// </summary>
 public partial class JobsViewModel : ViewModelBase
 {
     private readonly DownloadCoordinator? _coord;
@@ -46,12 +45,6 @@ public partial class JobsViewModel : ViewModelBase
         ResumeCommand = new RelayCommand<Guid>(async j => await ResumeAsync(j), j => CanResume(j));
         Refresh();
         _ = PollLoop();
-    }
-
-    public void Activate()
-    {
-        if (_coord is null) return;
-        Refresh();
     }
 
     /// <summary>后台 1s 轮询刷新进度（仅 UI 触发,可被宿主管控）。</summary>
@@ -133,13 +126,5 @@ public partial class JobsViewModel : ViewModelBase
             });
         }
         catch { }
-    }
-
-    private bool _isDisposed;
-    private new bool IsDisposed => _isDisposed;
-    public override void Dispose()
-    {
-        _isDisposed = true;
-        base.Dispose();
     }
 }
