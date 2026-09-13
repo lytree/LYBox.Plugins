@@ -25,13 +25,7 @@ public sealed class DownloadCoordinator
         _settings = settings;
     }
 
-    public DouyinDownloadOrchestrator Orchestrator => _orchestrator;
-
-    public DouyinSettingsStore Settings => _settings;
-    public DownloadQueue Queue => _queue;
-    public DouyinApiClient Api => _api;
-
-    public async Task<(bool ok, string? message, Guid? jobId)> SubmitAsync(string url, DownloadMode mode = DownloadMode.Post, int number = 0, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null)
+    public async Task<(bool ok, string? message, Guid? jobId)> SubmitAsync(string url, DownloadMode mode = DownloadMode.Post, int number = 0)
     {
         if (string.IsNullOrEmpty(_settings.Current.DownloadPath))
             return (false, "请先在设置中配置下载目录", null);

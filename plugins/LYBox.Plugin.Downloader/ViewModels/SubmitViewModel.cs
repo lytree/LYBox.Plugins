@@ -46,15 +46,7 @@ public partial class SubmitViewModel : ViewModelBase
         }
         StatusText = "提交中…";
         var mode = Enum.TryParse<DownloadMode>(SelectedMode, true, out var m) ? m : DownloadMode.Post;
-        var (ok, msg, jobId) = await _coord.SubmitAsync(Url.Trim(), mode, Number,
-            TryParseDate(StartDate), TryParseDate(EndDate));
+        var (ok, msg, jobId) = await _coord.SubmitAsync(Url.Trim(), mode, Number);
         StatusText = ok ? $"已入队: {jobId?.ToString().Substring(0, 8)}…" : (msg ?? "失败");
-    }
-
-    private static DateTimeOffset? TryParseDate(string s)
-    {
-        if (string.IsNullOrWhiteSpace(s)) return null;
-        if (DateTimeOffset.TryParse(s, out var d)) return d;
-        return null;
     }
 }
