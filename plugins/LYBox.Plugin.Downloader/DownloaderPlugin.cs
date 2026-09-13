@@ -26,7 +26,6 @@ public partial class DownloaderPlugin
         services.AddSingleton<DownloaderSettingsStore>();
         services.AddSingleton<RateLimiter>(sp => new RateLimiter(sp.GetRequiredService<DownloaderSettingsStore>().Current.Concurrency));
         services.AddSingleton<CookieManager>();
-        services.AddSingleton<MsTokenManager>();
         services.AddSingleton<SignatureClient>();
         services.AddSingleton<MediaDownloader>();
         services.AddSingleton<DownloadDatabase>();

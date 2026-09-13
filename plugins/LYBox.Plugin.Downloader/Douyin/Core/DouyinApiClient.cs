@@ -65,7 +65,7 @@ public sealed class DouyinApiClient
     {
         if (string.IsNullOrEmpty(_msToken))
         {
-            var mgr = new MsTokenManager(_ua);
+            var mgr = new MsTokenManager();
             _msToken = mgr.EnsureMsToken(_cookies.Cookies.ToDictionary(kv => kv.Key, kv => kv.Value));
         }
 

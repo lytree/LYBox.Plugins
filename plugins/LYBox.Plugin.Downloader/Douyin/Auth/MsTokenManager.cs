@@ -6,13 +6,6 @@ namespace LYBox.Plugin.Downloader.Douyin.Auth;
 /// </summary>
 public sealed class MsTokenManager
 {
-    public string UserAgent { get; }
-
-    public MsTokenManager(string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36")
-    {
-        UserAgent = userAgent;
-    }
-
     /// <summary>确保 msToken 存在（已有则沿用,否则随机生成 128 字符）。</summary>
     public string EnsureMsToken(IDictionary<string, string> cookies)
     {

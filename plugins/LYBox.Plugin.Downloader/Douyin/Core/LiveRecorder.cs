@@ -55,7 +55,6 @@ public sealed class LiveRecorder
     private sealed class PauseState
     {
         public volatile bool IsPaused;
-        public long ExpectedStartBytes;
     }
 
     public void Pause(string resumeKey)
@@ -64,9 +63,6 @@ public sealed class LiveRecorder
         s.IsPaused = true;
         Utils.Logger.Info($"[LiveRecorder] 请求暂停 (key={resumeKey})");
     }
-
-    public bool IsPaused(string resumeKey) =>
-        _pauseStates.TryGetValue(resumeKey, out var s) && s.IsPaused;
 
     public async Task<LiveResult> RecordAsync(string streamUrl, string targetPath, LiveOptions? opts = null, CancellationToken ct = default)
     {
@@ -85,8 +81,8 @@ public sealed class LiveRecorder
         var lastReportTs = start;
 
         _pauseStates.AddOrUpdate(resumeKey,
-            _ => new PauseState { ExpectedStartBytes = resumeFrom },
-            (_, s) => { s.IsPaused = false; s.ExpectedStartBytes = resumeFrom; return s; });
+            _ => new PauseState(),
+            (_, s) => { s.IsPaused = false; return s; });
 
         try
         {
@@ -111,7 +107,7 @@ public sealed class LiveRecorder
                 if (_pauseStates.TryGetValue(resumeKey, out var ps) && ps.IsPaused)
                 {
                     o.OnPauseChanged?.Invoke(true, null);
-                    var partialPath = PromoteAndPause(tmp, targetPath, bytesWritten, start, wasHls);
+                    var partialPath = PromoteAndPause(tmp, targetPath, bytesWritten);
                     Utils.Logger.Info($"[LiveRecorder] 已暂停,保留 {partialPath}");
                     return new LiveResult
                     {
@@ -187,7 +183,7 @@ public sealed class LiveRecorder
         return await RecordAsync(streamUrl, targetPath, o, ct);
     }
 
-    private string PromoteAndPause(string tmp, string target, long bytes, DateTimeOffset start, bool wasHls)
+    private string PromoteAndPause(string tmp, string target, long bytes)
     {
         try
         {
