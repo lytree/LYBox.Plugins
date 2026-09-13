@@ -172,7 +172,7 @@ public sealed class LiveReplayStrategy : IDownloadStrategy
         var dir = Path.Combine(authorDir, stem);
         Directory.CreateDirectory(dir);
 
-        var videoExt = info.VideoUrl.Contains(".mp4") ? ".mp4" : ".mp4";
+        var videoExt = ".mp4";
         var videoPath = Path.Combine(dir, stem + "_video" + videoExt);
         var ok = true;
         var r1 = await ctx.Media.DownloadAsync(info.VideoUrl, videoPath, ct);

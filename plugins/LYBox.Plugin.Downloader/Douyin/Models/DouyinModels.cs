@@ -127,5 +127,4 @@ public sealed class PagedResult<T>
     public List<T> Items { get; set; } = new();
     public bool HasMore { get; set; }
     public long MaxCursor { get; set; }
-    public int StatusCode { get; set; }
 }

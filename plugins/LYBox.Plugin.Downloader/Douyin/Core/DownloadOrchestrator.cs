@@ -74,7 +74,6 @@ public sealed class DownloadOrchestrator : IHostedServiceLite
         row.Status = JobStatus.Running;
         row.StartedAt = DateTimeOffset.Now;
         row.StatusText = "运行中";
-        _queue.Update(row.JobId, _ => { });
         var url = row.Url;
         // 解析短链
         if (UrlParser.IsShortUrl(url))

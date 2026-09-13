@@ -21,7 +21,7 @@
         </Grid>
       </Border>
 
-      <!-- 底部：TabControl 嵌入 3 个子 Page + Account 占位 -->
+      <!-- 底部：TabControl 嵌入 4 个子 Page（Submit / Jobs / History / Account） -->
       <TabControl SelectedIndex="{Binding SelectedTabIndex}" Margin="0 8 0 0">
         <TabItem Header="{Binding SubmitTabHeader}">
           <pages:SubmitPage DataContext="{Binding Submit}"/>

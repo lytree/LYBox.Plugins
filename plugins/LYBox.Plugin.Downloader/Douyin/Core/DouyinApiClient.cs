@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json;
 using LYBox.Plugin.Downloader.Douyin.Auth;
-using LYBox.Plugin.Downloader.Douyin.Config;
 using LYBox.Plugin.Downloader.Douyin.Models;
 using LYBox.Plugin.Downloader.Douyin.Utils;
 
@@ -41,16 +40,14 @@ public sealed class DouyinApiClient
 
     private readonly CookieManager _cookies;
     private readonly SignatureClient _signer;
-    private readonly DownloaderSettingsStore _settings;
     private readonly HttpClient _http;
     private readonly string _ua;
     private string _msToken;
 
-    public DouyinApiClient(CookieManager cookies, SignatureClient signer, DownloaderSettingsStore settings, HttpClient? http = null)
+    public DouyinApiClient(CookieManager cookies, SignatureClient signer, HttpClient? http = null)
     {
         _cookies = cookies;
         _signer = signer;
-        _settings = settings;
         _http = http ?? new HttpClient(new HttpClientHandler
         {
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
@@ -318,7 +315,7 @@ public sealed class DouyinApiClient
         q["count"] = count.ToString();
         var data = await RequestJsonAsync("/aweme/v1/web/music/aweme/", q, ct: ct);
         var page = ParsePaged(data, "aweme_list", ParseAwemeListItem);
-        return new PagedResult<MusicInfo> { HasMore = page.HasMore, MaxCursor = page.MaxCursor, StatusCode = page.StatusCode };
+        return new PagedResult<MusicInfo> { HasMore = page.HasMore, MaxCursor = page.MaxCursor };
     }
 
     public async Task<JsonElement> SearchAsync(string keyword, int offset = 0, int count = 10, int sortType = 0, int publishTime = 0, CancellationToken ct = default)
@@ -578,7 +575,6 @@ public sealed class DouyinApiClient
             page.HasMore = hm.ValueKind == JsonValueKind.Number ? hm.GetInt32() != 0 : (hm.ValueKind == JsonValueKind.True || (hm.ValueKind == JsonValueKind.String && bool.TryParse(hm.GetString(), out var b) && b));
         }
         if (data.TryGetProperty("max_cursor", out var mc) && mc.ValueKind == JsonValueKind.Number) page.MaxCursor = mc.GetInt64();
-        if (data.TryGetProperty("status_code", out var sc) && sc.ValueKind == JsonValueKind.Number) page.StatusCode = sc.GetInt32();
         return page;
     }
 

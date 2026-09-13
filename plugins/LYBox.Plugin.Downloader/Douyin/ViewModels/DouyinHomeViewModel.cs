@@ -13,7 +13,7 @@ namespace LYBox.Plugin.Downloader.Douyin.ViewModels;
 ///
 /// 设计说明：为了与 [GenerateMetadata] 生成的"无参构造"工厂兼容（生成器对每个 [ViewMap] VM 生成
 /// <c>services.GetService(typeof(T)) ?? new T()</c>），本 VM 仅持有一个 IServiceProvider，
-/// 子 VM 在首次访问各属性时通过 ServiceLocator 解析（懒加载）。
+/// 子 VM 在首次访问各属性时通过它解析（懒加载）。
 ///
 /// 本地化策略：XAML 不直接引用 <c>{x:Static resources:Strings.DYN_xxx}</c>
 /// （因为 Strings 仅暴露通用的 <c>Get(key)</c> 方法，没有逐 key 静态属性），

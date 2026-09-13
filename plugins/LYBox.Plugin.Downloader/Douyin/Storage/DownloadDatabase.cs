@@ -4,7 +4,7 @@ using LYBox.Plugin.Downloader.Douyin.Config;
 namespace LYBox.Plugin.Downloader.Douyin.Storage;
 
 /// <summary>
-/// SQLite 历史/去重（与 storage/database.py 的 aweme 表对齐 + 增量模式 latest_time 查询）。
+/// SQLite 历史/去重（与 storage/database.py 的 aweme 表对齐）。
 /// </summary>
 public sealed class DownloadDatabase
 {
@@ -86,17 +86,6 @@ public sealed class DownloadDatabase
         cmd.Parameters.AddWithValue("$mode", r.Mode ?? "");
         cmd.Parameters.AddWithValue("$meta", r.Metadata ?? "");
         cmd.ExecuteNonQuery();
-    }
-
-    public long? LatestAwemeTime(string authorName)
-    {
-        Initialize();
-        using var conn = new SqliteConnection(_connStr); conn.Open();
-        using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT MAX(create_time) FROM aweme WHERE author_name=$aname";
-        cmd.Parameters.AddWithValue("$aname", authorName);
-        var v = cmd.ExecuteScalar();
-        return v == null || v == DBNull.Value ? null : Convert.ToInt64(v);
     }
 
     public IEnumerable<HistoryRow> ListHistory(int limit = 200)

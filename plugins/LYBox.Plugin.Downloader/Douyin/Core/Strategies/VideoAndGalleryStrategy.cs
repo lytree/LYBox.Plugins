@@ -67,7 +67,7 @@ public sealed class VideoAndGalleryStrategy : IDownloadStrategy
                 ctx.Log?.Invoke($"无视频 URL: {a.AwemeId}");
                 return false;
             }
-            var ext = url.Contains(".mp4") ? ".mp4" : ".mp4";
+            var ext = ".mp4";
             var fp = Path.Combine(dir, itemName + ext);
             ctx.Log?.Invoke($"视频: {url}");
             var r = await ctx.Media.DownloadAsync(url, fp, ct);
