@@ -12,8 +12,8 @@ namespace LYBox.Plugin.DouyinDownloader.ViewModels;
 [ViewMap(typeof(Pages.SettingsPage))]
 public partial class SettingsViewModel : ViewModelBase
 {
-    private readonly DownloaderSettingsStore _store;
-    private readonly WebConsoleServer _web;
+    private readonly DownloaderSettingsStore? _store;
+    private readonly WebConsoleServer? _web;
 
     [ObservableProperty] private string _signerEndpoint = "";
     [ObservableProperty] private string _downloadPath = "";
@@ -35,8 +35,13 @@ public partial class SettingsViewModel : ViewModelBase
 
     public SettingsViewModel()
     {
-        _store = ServiceLocator.TryGetService<DownloaderSettingsStore>(out var s) ? s! : throw new InvalidOperationException();
-        _web = ServiceLocator.TryGetService<WebConsoleServer>(out var w) ? w! : throw new InvalidOperationException();
+        _store = ServiceLocator.TryGetService<DownloaderSettingsStore>(out var s) ? s : null;
+        _web = ServiceLocator.TryGetService<WebConsoleServer>(out var w) ? w : null;
+        if (_store is null)
+        {
+            StatusText = "DownloaderSettingsStore 服务解析失败 — 请查看应用日志";
+            return;
+        }
         var cur = _store.Current;
         SignerEndpoint = cur.SignerEndpoint;
         DownloadPath = cur.DownloadPath;
@@ -59,6 +64,7 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     private void Save()
     {
+        if (_store is null) { StatusText = "DownloaderSettingsStore 未就绪,无法保存"; return; }
         var cur = _store.Current;
         cur.SignerEndpoint = SignerEndpoint;
         cur.DownloadPath = DownloadPath;
@@ -84,7 +90,7 @@ public partial class SettingsViewModel : ViewModelBase
     private void OpenWebConsole()
     {
         if (!EnableWebConsole) { StatusText = "Web 控制台未启用"; return; }
-        try { _web.Start(); } catch { }
+        try { _web?.Start(); } catch { }
         try
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo

@@ -93,7 +93,7 @@ public sealed class DownloaderSettingsStore
     {
         const string pid = "DouyinDownloader";
         if (ServiceLocator.TryGetService<IPluginDataDirectoryProvider>(out var provider) && provider != null)
-            return Path.Combine(provider.GetSubDirectory(pid, ""), "settings.json");
+            return Path.Combine(provider.GetPluginDataDirectory(pid), "settings.json");
         return Path.Combine(AppContext.BaseDirectory, "dy_settings.json");
     }
 }

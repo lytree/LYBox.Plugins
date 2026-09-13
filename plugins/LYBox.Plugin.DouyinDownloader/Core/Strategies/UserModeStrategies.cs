@@ -17,16 +17,15 @@ public abstract class UserModeStrategyBase : IDownloadStrategy
 
         var fetched = 0;
         var limit = ctx.Row.Number; // 0 = 不限
-        var stop = false;
         var (s, f, sk) = await StrategyHelpers.DownloadAllItemsAsync(ctx,
             shouldStop: res =>
             {
-                if (limit > 0 && fetched >= limit) { stop = true; return Task.FromResult(true); }
+                if (limit > 0 && fetched >= limit) return Task.FromResult(true);
                 return Task.FromResult(false);
             },
             onItem: async item =>
             {
-                if (limit > 0 && fetched >= limit) { stop = true; return (false, true); }
+                if (limit > 0 && fetched >= limit) return (false, true);
                 fetched++;
                 if (ctx.Settings.Current.Database && ctx.Db.Exists(item.AwemeId))
                 {

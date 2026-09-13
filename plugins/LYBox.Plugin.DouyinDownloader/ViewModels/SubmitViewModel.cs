@@ -14,7 +14,7 @@ namespace LYBox.Plugin.DouyinDownloader.ViewModels;
 [ViewMap(typeof(Pages.SubmitPage))]
 public partial class SubmitViewModel : ViewModelBase
 {
-    private readonly DownloadCoordinator _coord;
+    private readonly DownloadCoordinator? _coord;
 
     [ObservableProperty] private string _url = "";
     [ObservableProperty] private string _selectedMode = "post";
@@ -27,12 +27,22 @@ public partial class SubmitViewModel : ViewModelBase
 
     public SubmitViewModel()
     {
-        _coord = ServiceLocator.TryGetService<DownloadCoordinator>(out var svc) ? svc! : throw new InvalidOperationException("DownloadCoordinator not registered");
+        if (!ServiceLocator.TryGetService<DownloadCoordinator>(out var svc) || svc is null)
+        {
+            StatusText = "DownloadCoordinator 服务解析失败 — 请查看应用日志";
+            return;
+        }
+        _coord = svc;
     }
 
     [RelayCommand]
     private async Task SubmitAsync()
     {
+        if (_coord is null)
+        {
+            StatusText = "服务未就绪，无法提交";
+            return;
+        }
         if (string.IsNullOrWhiteSpace(Url))
         {
             StatusText = "URL 不能为空"; return;

@@ -70,7 +70,8 @@ SDK 来源支持两种模式（`--sdk-feed`）：
 
 - 该目录由 `dotnet build`（VS Code 任务 `build-plugin: {Name}`、`build-all-plugins`）自动生成；
 - VS Code 调试配置 `Debug Plugin - {Name}` 通过 `AVALONIA_EXTRA_PLUGINS_PATH=${workspaceFolder}/artifacts/bin/{Name}/Debug` 加载；
-- `Clean` 后首次调试会自动重建（先跑 `build-plugin` preLaunchTask，再启动宿主 Launcher）。
+- `Clean` 后首次调试会自动重建（先跑 `build-plugin` preLaunchTask，再启动宿主 Launcher）；
+- **调试插件不会自动构建宿主**：`build-plugin: {Name}` / `build-all-plugins` 任务的 `dependsOn` 已设为空数组，避免每次调试插件都重复编译宿主 LYBox.Launcher.Desktop。宿主需手动构建一次：先跑 `build-host-debug` 任务（或 `Debug Host` 调试配置），或在该仓库直接 `dotnet build LYBox.Launcher.Desktop`；之后仅当宿主源码变更时才需要重新构建宿主。
 
 当前已支持调试的插件（与 `.vscode/launch.json` / `.vscode/tasks.json` 一致）：
 

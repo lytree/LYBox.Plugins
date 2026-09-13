@@ -657,12 +657,10 @@ public sealed class DouyinApiClient
                     {
                         var rate = r.GetInt64();
                         if (rate <= best) continue;
-                        var noWm = false;
                         if (brItem.TryGetProperty("play_addr", out var pa2) && pa2.ValueKind == JsonValueKind.Object
                             && pa2.TryGetProperty("url_list", out var ul2) && ul2.ValueKind == JsonValueKind.Array && ul2.GetArrayLength() > 0)
                         {
                             var url = ul2[0].GetString();
-                            if (url != null && url.Contains("playwm")) noWm = true;
                             best = rate; bestUrl = url;
                         }
                     }

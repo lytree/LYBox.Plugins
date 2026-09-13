@@ -10,7 +10,7 @@
     <Border Grid.Row="0" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
       <TextBlock Text="提交下载" FontSize="18" FontWeight="Bold"/>
     </Border>
-    <TextBox Grid.Row="1" Watermark="https://v.douyin.com/xxx 或 https://www.douyin.com/video/xxx"
+    <TextBox Grid.Row="1" PlaceholderText="https://v.douyin.com/xxx 或 https://www.douyin.com/video/xxx"
              Text="{Binding Url, Mode=TwoWay}"/>
     <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
       <TextBlock Text="模式:" VerticalAlignment="Center"/>

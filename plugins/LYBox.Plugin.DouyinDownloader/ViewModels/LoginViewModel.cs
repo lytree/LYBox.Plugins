@@ -15,9 +15,9 @@ namespace LYBox.Plugin.DouyinDownloader.ViewModels;
 [ViewMap(typeof(Pages.LoginPage))]
 public partial class LoginViewModel : ViewModelBase
 {
-    private readonly CookieManager _cookies;
-    private readonly WebConsoleServer _web;
-    private readonly DownloaderSettingsStore _settings;
+    private readonly CookieManager? _cookies;
+    private readonly WebConsoleServer? _web;
+    private readonly DownloaderSettingsStore? _settings;
 
     [ObservableProperty] private string _qrHint = "";
     [ObservableProperty] private string _statusText = "未登录";
@@ -26,9 +26,14 @@ public partial class LoginViewModel : ViewModelBase
 
     public LoginViewModel()
     {
-        _cookies = ServiceLocator.TryGetService<CookieManager>(out var c) ? c! : throw new InvalidOperationException();
-        _web = ServiceLocator.TryGetService<WebConsoleServer>(out var w) ? w! : throw new InvalidOperationException();
-        _settings = ServiceLocator.TryGetService<DownloaderSettingsStore>(out var s) ? s! : throw new InvalidOperationException();
+        _cookies = ServiceLocator.TryGetService<CookieManager>(out var c) ? c : null;
+        _web = ServiceLocator.TryGetService<WebConsoleServer>(out var w) ? w : null;
+        _settings = ServiceLocator.TryGetService<DownloaderSettingsStore>(out var s) ? s : null;
+        if (_cookies is null)
+        {
+            StatusText = "CookieManager 服务解析失败 — 请查看应用日志";
+            return;
+        }
         IsLoggedIn = _cookies.Validate();
         StatusText = IsLoggedIn ? "已登录" : "未登录";
     }
@@ -52,6 +57,7 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private void ImportManualCookie()
     {
+        if (_cookies is null) { StatusText = "CookieManager 未就绪"; return; }
         if (string.IsNullOrWhiteSpace(ManualCookie)) { StatusText = "请粘贴 Cookie"; return; }
         var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var part in ManualCookie.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -71,6 +77,7 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private void Recheck()
     {
+        if (_cookies is null) { StatusText = "CookieManager 未就绪"; return; }
         IsLoggedIn = _cookies.Validate();
         StatusText = IsLoggedIn ? "Cookie 有效" : "Cookie 缺失必要字段,请重新登录";
     }
@@ -78,6 +85,7 @@ public partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private void Clear()
     {
+        if (_cookies is null) { StatusText = "CookieManager 未就绪"; return; }
         _cookies.Clear();
         IsLoggedIn = false;
         StatusText = "已清空 Cookie";

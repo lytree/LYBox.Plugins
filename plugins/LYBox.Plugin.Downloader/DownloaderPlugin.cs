@@ -1,8 +1,15 @@
+using LYBox.Plugin.Downloader.Douyin.Auth;
+using LYBox.Plugin.Downloader.Douyin.Config;
+using LYBox.Plugin.Downloader.Douyin.Control;
+using LYBox.Plugin.Downloader.Douyin.Core;
+using LYBox.Plugin.Downloader.Douyin.Services;
+using LYBox.Plugin.Downloader.Douyin.Storage;
+using LYBox.Plugin.Downloader.Douyin.Utils;
+using LYBox.Plugin.Downloader.Resources;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Attributes;
 using LYBox.Plugin.Shared.Models;
 using LYBox.Plugin.Shared.Services;
-using LYBox.Plugin.Downloader.Resources;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LYBox.Plugin.Downloader;
@@ -10,9 +17,37 @@ namespace LYBox.Plugin.Downloader;
 [GenerateMetadata]
 public partial class DownloaderPlugin
 {
+    public Task InitializeAsync(IServiceCollection services)
+    {
+        // ================ 抖音子模块（合并自 LYBox.Plugin.DouyinDownloader） ================
+        // 顺序敏感：底层工具在前，依赖项引用其后。
+        services.AddSingleton<PluginConfigStore>();
+        services.AddSingleton<DownloaderSettingsStore>();
+        services.AddSingleton<RateLimiter>(sp => new RateLimiter(sp.GetRequiredService<DownloaderSettingsStore>().Current.Concurrency));
+        services.AddSingleton<RetryHandler>();
+        services.AddSingleton<CookieManager>();
+        services.AddSingleton<MsTokenManager>();
+        services.AddSingleton<SignatureClient>();
+        services.AddSingleton<MediaDownloader>();
+        services.AddSingleton<DownloadDatabase>();
+        services.AddSingleton<DownloadQueue>();
+        services.AddSingleton<DouyinApiClient>();
+        services.AddSingleton<LiveSessionRegistry>();
+        services.AddSingleton<DownloaderFactory>();
+        services.AddSingleton<DownloadOrchestrator>();
+        services.AddSingleton<DownloadCoordinator>();
+
+        // ================ 原有 Downloader 设置（保留） ================
+        return Task.CompletedTask;
+    }
+
     public Task RegisterAsync(IServiceProvider serviceProvider)
     {
         RegisterSettings(serviceProvider);
+
+        // 主动解析抖音 DI：让 DI 异常在启动期就抛出，避免运行期点击菜单时崩溃
+        _ = serviceProvider.GetRequiredService<DownloadDatabase>();
+
         return Task.CompletedTask;
     }
 

@@ -13,7 +13,7 @@ public sealed class PluginConfigStore
         LYBox.Plugin.Shared.ServiceLocator.TryGetService<IPluginDataDirectoryProvider>(out _provider);
     }
 
-    public string DataDir => _provider?.GetSubDirectory(PluginId, "") ?? Path.Combine(AppContext.BaseDirectory, "PluginData", PluginId);
+    public string DataDir => _provider?.GetPluginDataDirectory(PluginId) ?? Path.Combine(AppContext.BaseDirectory, "PluginData", PluginId);
 
     public string ResolvePath(string sub) => Path.Combine(DataDir, sub);
 }

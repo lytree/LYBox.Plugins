@@ -14,7 +14,7 @@ namespace LYBox.Plugin.DouyinDownloader.ViewModels;
 [ViewMap(typeof(Pages.JobsPage))]
 public partial class JobsViewModel : ViewModelBase
 {
-    private readonly DownloadCoordinator _coord;
+    private readonly DownloadCoordinator? _coord;
     public ObservableCollection<DownloadJobRow> Jobs { get; } = new();
 
     [ObservableProperty] private string _statusText = "暂无任务";
@@ -27,7 +27,18 @@ public partial class JobsViewModel : ViewModelBase
 
     public JobsViewModel()
     {
-        _coord = ServiceLocator.TryGetService<DownloadCoordinator>(out var svc) ? svc! : throw new InvalidOperationException();
+        _coord = ServiceLocator.TryGetService<DownloadCoordinator>(out var svc) ? svc : null;
+        if (_coord is null)
+        {
+            StatusText = "DownloadCoordinator 服务解析失败 — 请查看应用日志";
+            // 仍然初始化 RelayCommand,但 CanExecute 永远返回 false,避免 XAML 绑定空属性触发 NRE
+            RefreshCommand = new RelayCommand(() => { }, () => false);
+            RemoveCommand = new RelayCommand<Guid>(_ => { }, _ => false);
+            OpenOutputDirCommand = new RelayCommand<DownloadJobRow>(_ => { }, _ => false);
+            PauseCommand = new RelayCommand<Guid>(_ => { }, _ => false);
+            ResumeCommand = new RelayCommand<Guid>(async _ => { }, _ => false);
+            return;
+        }
         RefreshCommand = new RelayCommand(Refresh);
         RemoveCommand = new RelayCommand<Guid>(Remove);
         OpenOutputDirCommand = new RelayCommand<DownloadJobRow>(OpenOutputDir);
@@ -37,7 +48,11 @@ public partial class JobsViewModel : ViewModelBase
         _ = PollLoop();
     }
 
-    public void Activate() => Refresh();
+    public void Activate()
+    {
+        if (_coord is null) return;
+        Refresh();
+    }
 
     /// <summary>后台 1s 轮询刷新进度（仅 UI 触发,可被宿主管控）。</summary>
     private async Task PollLoop()
@@ -45,6 +60,7 @@ public partial class JobsViewModel : ViewModelBase
         while (!IsDisposed)
         {
             try { await Task.Delay(1000); } catch { return; }
+            if (_coord is null) return;
             try
             {
                 foreach (var j in _coord.ListJobs())
@@ -62,6 +78,7 @@ public partial class JobsViewModel : ViewModelBase
 
     public void Refresh()
     {
+        if (_coord is null) return;
         Jobs.Clear();
         foreach (var j in _coord.ListJobs()) Jobs.Add(j);
         StatusText = $"任务总数: {Jobs.Count}";
@@ -69,24 +86,28 @@ public partial class JobsViewModel : ViewModelBase
 
     private bool CanPause(Guid jobId)
     {
+        if (_coord is null) return false;
         var row = _coord.GetJob(jobId);
         return row != null && row.Status == JobStatus.Running && row.UrlKind == UrlKind.Live;
     }
 
     private bool CanResume(Guid jobId)
     {
+        if (_coord is null) return false;
         var row = _coord.GetJob(jobId);
         return row != null && row.Status == JobStatus.Paused && row.UrlKind == UrlKind.Live;
     }
 
     private void Pause(Guid jobId)
     {
+        if (_coord is null) return;
         if (_coord.Pause(jobId)) StatusText = "已请求暂停";
         Refresh();
     }
 
     private async Task ResumeAsync(Guid jobId)
     {
+        if (_coord is null) return;
         var result = await _coord.ResumeAsync(jobId);
         if (result != null) StatusText = $"已恢复 ({result.Bytes} 字节, stop_reason={result.StopReason})";
         Refresh();
@@ -94,6 +115,7 @@ public partial class JobsViewModel : ViewModelBase
 
     private void Remove(Guid jobId)
     {
+        if (_coord is null) return;
         _coord.Remove(jobId);
         Refresh();
     }

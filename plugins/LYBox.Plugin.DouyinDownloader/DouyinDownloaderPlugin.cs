@@ -60,4 +60,17 @@ public partial class DouyinDownloaderPlugin
 
         return Task.CompletedTask;
     }
+
+    /// <summary>
+    /// 阶段3：宿主构建 ServiceProvider 之后调用。
+    /// 此处主动拉一次 <see cref="DownloadDatabase"/>，触发 Sqlite / 路径校验等构造期副作用。
+    /// 让 SQLite 文件路径非法、目录权限不足等错误在启动期就显式抛出 + 进入插件 Error 状态，
+    /// 避免用户点击「历史记录」菜单时由 NavigationService → VM ctor → ServiceLocator.TryGetService
+    /// 静默吞 DI 异常、返回 false 后 VM 抛无消息 InvalidOperationException 导致整个宿主崩溃。
+    /// </summary>
+    public Task RegisterAsync(IServiceProvider serviceProvider)
+    {
+        _ = serviceProvider.GetRequiredService<DownloadDatabase>();
+        return Task.CompletedTask;
+    }
 }
