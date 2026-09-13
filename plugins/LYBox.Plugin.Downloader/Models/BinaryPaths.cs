@@ -3,7 +3,7 @@ namespace LYBox.Plugin.Downloader.Models;
 /// <summary>
 /// 外部二进制路径与全局设置（对应设置页）。
 /// N_m3u8DL-RE 本身不依赖；ffmpeg / mp4decrypt / mkvmerge / shaka-packager 为外部工具。
-/// 持久化为 JSON（见 DownloadSettingsStore）。
+/// 持久化为 JSON（见 BinaryPathsStore）。
 /// </summary>
 public class BinaryPaths
 {

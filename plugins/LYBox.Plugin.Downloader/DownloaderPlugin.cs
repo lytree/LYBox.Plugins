@@ -1,11 +1,11 @@
-using LYBox.Plugin.Downloader.Douyin.Auth;
-using LYBox.Plugin.Downloader.Douyin.Config;
-using LYBox.Plugin.Downloader.Douyin.Control;
-using LYBox.Plugin.Downloader.Douyin.Core;
-using LYBox.Plugin.Downloader.Douyin.Services;
-using LYBox.Plugin.Downloader.Douyin.Storage;
-using LYBox.Plugin.Downloader.Douyin.Utils;
-using LYBox.Plugin.Downloader.Douyin.ViewModels;
+using LYBox.Plugin.Downloader.Auth;
+using LYBox.Plugin.Downloader.Config;
+using LYBox.Plugin.Downloader.Control;
+using LYBox.Plugin.Downloader.Core;
+using LYBox.Plugin.Downloader.Services;
+using LYBox.Plugin.Downloader.Storage;
+using LYBox.Plugin.Downloader.Utils;
+using LYBox.Plugin.Downloader.ViewModels;
 using LYBox.Plugin.Downloader.Resources;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Attributes;
@@ -23,8 +23,8 @@ public partial class DownloaderPlugin
         // ================ 抖音子模块（合并自 LYBox.Plugin.DouyinDownloader） ================
         // 顺序敏感：底层工具在前，依赖项引用其后。
         services.AddSingleton<PluginConfigStore>();
-        services.AddSingleton<DownloaderSettingsStore>();
-        services.AddSingleton<RateLimiter>(sp => new RateLimiter(sp.GetRequiredService<DownloaderSettingsStore>().Current.Concurrency));
+        services.AddSingleton<DouyinSettingsStore>();
+        services.AddSingleton<RateLimiter>(sp => new RateLimiter(sp.GetRequiredService<DouyinSettingsStore>().Current.Concurrency));
         services.AddSingleton<CookieManager>();
         services.AddSingleton<SignatureClient>();
         services.AddSingleton<MediaDownloader>();
@@ -33,7 +33,7 @@ public partial class DownloaderPlugin
         services.AddSingleton<DouyinApiClient>();
         services.AddSingleton<LiveSessionRegistry>();
         services.AddSingleton<DownloaderFactory>();
-        services.AddSingleton<DownloadOrchestrator>();
+        services.AddSingleton<DouyinDownloadOrchestrator>();
         services.AddSingleton<DownloadCoordinator>();
 
         // Home 单页面聚合 4 Tab + 2 Dialog。注册 Home VM 与 5 个子 VM（Home 通过 IServiceProvider 懒加载子 VM）。
@@ -50,6 +50,12 @@ public partial class DownloaderPlugin
 
     public Task RegisterAsync(IServiceProvider serviceProvider)
     {
+        // 一次性数据迁移：必须排在所有组件之前 —— DouyinSettingsStore / DownloadDatabase / CookieManager
+        // 都是首次解析时按新路径读取数据目录，迁移晚于它们就会读到空目录并写出默认值。
+        var dataProvider = serviceProvider.GetService<IPluginDataDirectoryProvider>()
+                           ?? PluginConfigStore.CurrentProvider;
+        PluginDataMigration.MigrateLegacyDouyinData(dataProvider);
+
         RegisterSettings(serviceProvider);
 
         // 主动解析抖音 DI：让 DI 异常在启动期就抛出，避免运行期点击菜单时崩溃

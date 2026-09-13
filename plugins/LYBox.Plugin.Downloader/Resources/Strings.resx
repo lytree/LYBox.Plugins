@@ -56,6 +56,7 @@
   <data name="NAV_Downloader_Live" xml:space="preserve"><value>Live Record</value></data>
   <data name="NAV_Downloader_DecryptMux" xml:space="preserve"><value>Decrypt &amp; Mux</value></data>
   <data name="NAV_Downloader_Settings" xml:space="preserve"><value>Tool Settings</value></data>
+  <data name="NAV_Downloader_Douyin" xml:space="preserve"><value>Douyin Download</value></data>
   <data name="DESC_VodPage" xml:space="preserve"><value>Download HLS/DASH/MSS VOD streams with concurrent segments, decryption, merge and muxing.</value></data>
   <data name="DESC_LivePage" xml:space="preserve"><value>Record live HLS/DASH streams with real-time merge, pipe-mux and recording duration limit.</value></data>
   <data name="DESC_DecryptMuxPage" xml:space="preserve"><value>Decrypt encrypted playlists or mux local media files into mp4/mkv with external imports.</value></data>

@@ -43,7 +43,7 @@ public abstract partial class DownloaderViewModelBase : ViewModelBase
     }
 
     /// <summary>共享的二进制路径配置（来自设置页持久化）</summary>
-    protected static BinaryPaths BinaryConfig => DownloadSettingsStore.Current;
+    protected static BinaryPaths BinaryConfig => BinaryPathsStore.Current;
 
     /// <summary>把 BinaryPaths 应用到 DownloadOptions（ffmpeg / mp4decrypt / mkvmerge / 代理 / 日志级别）</summary>
     protected static void ApplyBinaryConfig(DownloadOptions opts)
