@@ -65,12 +65,10 @@ public sealed class LiveStrategy : IDownloadStrategy
         var session = new LiveSessionRegistry.Session
         {
             JobId = ctx.Row.JobId,
-            RoomId = roomId,
             StreamUrl = info.StreamUrl,
             TargetPath = target,
             ResumeKey = resumeKey,
             Recorder = recorder,
-            WasHls = info.IsHls,
         };
         _registry.Register(session);
 
@@ -85,17 +83,11 @@ public sealed class LiveStrategy : IDownloadStrategy
                 _registry.Update(ctx.Row.JobId, s =>
                 {
                     s.Bytes += bytesDelta;
-                    s.ElapsedSec = elapsed;
-                    s.IdleSec = idle;
-                    s.StatusText = $"录制中 {FormatBytes(s.Bytes)} / {elapsed:F0}s / 空闲 {idle:F1}s";
-                    ctx.Row.StatusText = s.StatusText;
+                    ctx.Row.StatusText = $"录制中 {FormatBytes(s.Bytes)} / {elapsed:F0}s / 空闲 {idle:F1}s";
                 });
             },
             OnPauseChanged = (paused, _) =>
-            {
-                _registry.Update(ctx.Row.JobId, s => { s.Paused = paused; s.Status = paused ? JobStatus.Paused : JobStatus.Running; });
-                ctx.Row.StatusText = paused ? "已暂停 (已保存已录字节)" : "已恢复录制";
-            },
+                ctx.Row.StatusText = paused ? "已暂停 (已保存已录字节)" : "已恢复录制",
         };
 
         var result = await recorder.RecordAsync(info.StreamUrl, target, options, ct);

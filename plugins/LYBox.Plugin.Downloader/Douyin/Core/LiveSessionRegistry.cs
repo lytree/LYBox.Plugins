@@ -9,19 +9,11 @@ public sealed class LiveSessionRegistry
     public sealed class Session
     {
         public required Guid JobId { get; init; }
-        public required string RoomId { get; init; }
         public required string StreamUrl { get; init; }
         public required string TargetPath { get; init; }
         public required string ResumeKey { get; init; }
         public required LiveRecorder Recorder { get; init; }
-        public DateTimeOffset StartedAt { get; set; } = DateTimeOffset.Now;
         public long Bytes { get; set; }
-        public double ElapsedSec { get; set; }
-        public double IdleSec { get; set; }
-        public JobStatus Status { get; set; } = JobStatus.Running;
-        public string? StatusText { get; set; }
-        public bool WasHls { get; set; }
-        public bool Paused { get; set; }
     }
 
     private readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, Session> _sessions = new();

@@ -21,8 +21,6 @@ public sealed class SignatureClient
         _localXbogus = new XBogus("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36");
     }
 
-    public string UserAgent => _localXbogus.UserAgent;
-
     /// <summary>对 URL 追加 X-Bogus。第三方不可用时回退到本地。</summary>
     public async Task<(string SignedUrl, string XBogus, string UserAgent)> SignAsync(string url, CancellationToken ct = default)
     {

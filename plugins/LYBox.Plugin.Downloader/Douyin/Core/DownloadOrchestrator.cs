@@ -36,8 +36,6 @@ public sealed class DownloadOrchestrator : IHostedServiceLite
         _liveRegistry = liveRegistry;
     }
 
-    public LiveSessionRegistry LiveRegistry => _liveRegistry;
-
     public void Start()
     {
         if (_loop != null) return;
@@ -181,8 +179,6 @@ public sealed class DownloadOrchestrator : IHostedServiceLite
     {
         var session = _liveRegistry.Get(jobId);
         if (session == null) return null;
-        session.Status = JobStatus.Running;
-        session.Paused = false;
         return await session.Recorder.ResumeAsync(session.StreamUrl, session.TargetPath,
             new LiveRecorder.LiveOptions
             {
