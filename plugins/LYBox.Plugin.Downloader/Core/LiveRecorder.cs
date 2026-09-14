@@ -14,13 +14,11 @@ namespace LYBox.Plugin.Downloader.Core;
 /// </summary>
 public sealed class LiveRecorder
 {
-    private readonly DouyinSettingsStore _settings;
     private readonly HttpClient _http;
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, PauseState> _pauseStates = new();
 
-    public LiveRecorder(DouyinSettingsStore settings, HttpClient? http = null)
+    public LiveRecorder(HttpClient? http = null)
     {
-        _settings = settings;
         _http = http ?? new HttpClient(new HttpClientHandler { AutomaticDecompression = System.Net.DecompressionMethods.None })
         {
             Timeout = Timeout.InfiniteTimeSpan,

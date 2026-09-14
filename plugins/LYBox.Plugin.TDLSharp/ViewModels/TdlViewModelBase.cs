@@ -169,6 +169,44 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         StatusText = Strings.Get("STATUS_Cancelling");
     }
 
+    /// <summary>
+    /// 打开登录对话框：默认进入二维码登录方式。
+    /// 任何页面顶部都可以调用，方便用户在未登录时随时扫码登录。
+    /// </summary>
+    [RelayCommand]
+    private async Task ShowQrLogin()
+    {
+        if (IsRunning) return;
+        await LoginDialogService.ShowLoginDialogAsync(preferredMethod: LoginMethod.QrCode);
+    }
+
+    /// <summary>
+    /// 仅初始化 TDLib 客户端（不弹出登录窗口）。当目录为空时手动触发初始化。
+    /// </summary>
+    [RelayCommand]
+    private async Task InitializeClient()
+    {
+        if (IsRunning) return;
+        var clientManager = ServiceLocator.GetService<TdlClientManager>();
+        if (clientManager == null || !clientManager.HasTdlRoot)
+        {
+            StatusText = Strings.Get("LOGIN_TdlRootNotSet");
+            return;
+        }
+
+        try
+        {
+            await clientManager.EnsureInitializedAsync();
+            await clientManager.WaitReadyAsync();
+            StatusText = Strings.Get("LOGIN_Initialized");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[TdlViewModel] 初始化失败: {ex}");
+            StatusText = Strings.Get("LOGIN_InitFailed", ex.Message);
+        }
+    }
+
     /// <summary>由子类实现：执行具体脚本逻辑。</summary>
     protected abstract Task ExecuteCoreAsync(TdlService tdlService, Dictionary<string, string> paramValues, CancellationToken ct);
 

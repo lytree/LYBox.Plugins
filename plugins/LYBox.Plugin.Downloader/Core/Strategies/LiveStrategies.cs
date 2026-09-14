@@ -166,9 +166,12 @@ public sealed class LiveReplayStrategy : IDownloadStrategy
 
         var videoExt = ".mp4";
         var videoPath = Path.Combine(dir, stem + "_video" + videoExt);
-        var ok = true;
         var r1 = await ctx.Media.DownloadAsync(info.VideoUrl, videoPath, ct);
-        if (!r1.Success) { ok = false; ctx.Log?.Invoke($"视频轨下载失败: {info.VideoUrl}"); }
+        if (!r1.Success)
+        {
+            ctx.Log?.Invoke($"视频轨下载失败: {info.VideoUrl}");
+            return (0, 1, 0);
+        }
 
         if (!string.IsNullOrEmpty(info.AudioUrl))
         {
@@ -176,8 +179,6 @@ public sealed class LiveReplayStrategy : IDownloadStrategy
             var r2 = await ctx.Media.DownloadAsync(info.AudioUrl, audioPath, ct);
             if (!r2.Success) ctx.Log?.Invoke($"音轨下载失败 (保留视频轨): {info.AudioUrl}");
         }
-
-        if (!ok) return (0, 1, 0);
 
         if (ctx.Settings.Current.Database)
         {

@@ -1,4 +1,3 @@
-using LYBox.Plugin.Downloader.Config;
 using LYBox.Plugin.Downloader.Models;
 
 namespace LYBox.Plugin.Downloader.Core;
@@ -17,11 +16,8 @@ public sealed class LiveSessionRegistry
     }
 
     private readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, Session> _sessions = new();
-    private readonly DouyinSettingsStore _settings;
 
-    public LiveSessionRegistry(DouyinSettingsStore settings) { _settings = settings; }
-
-    public LiveRecorder Recorder => new(_settings);
+    public LiveRecorder Recorder => new();
 
     public void Register(Session s) => _sessions[s.JobId] = s;
     public void Unregister(Guid jobId) => _sessions.TryRemove(jobId, out _);

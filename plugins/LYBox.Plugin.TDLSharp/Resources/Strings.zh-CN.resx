@@ -331,4 +331,8 @@
   <data name="LOGIN_StatusError" xml:space="preserve"><value>错误</value></data>
   <data name="LOGIN_NotInitializedTitle" xml:space="preserve"><value>未登录</value></data>
   <data name="LOGIN_NotInitializedWarning" xml:space="preserve"><value>Telegram 客户端尚未认证，需要先登录。是否跳转到登录页面？</value></data>
+  <data name="BTN_QrLogin" xml:space="preserve"><value>扫码登录</value></data>
+  <data name="BTN_QrLogin_Tip" xml:space="preserve"><value>打开登录对话框并切换到二维码登录方式</value></data>
+  <data name="BTN_InitializeClient" xml:space="preserve"><value>初始化</value></data>
+  <data name="BTN_InitializeClient_Tip" xml:space="preserve"><value>初始化 TDLib 客户端（不弹出登录窗口）</value></data>
 </root>

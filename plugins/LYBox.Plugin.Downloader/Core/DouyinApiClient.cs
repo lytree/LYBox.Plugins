@@ -13,7 +13,7 @@ namespace LYBox.Plugin.Downloader.Core;
 /// - 风险控制 (403/429) + 空 200 重试
 /// - login_required 检测 (status_code==2483 / 请先登录)
 /// - 短链 302 跟随
-/// - 详情 / 用户作品 / 喜欢 / 合集 / 收藏 / 音乐 / 评论 / 热搜 / 搜索
+/// - 详情 / 用户作品 / 喜欢 / 合集 / 收藏 / 音乐
 /// </summary>
 public sealed class DouyinApiClient
 {
@@ -318,29 +318,6 @@ public sealed class DouyinApiClient
         return new PagedResult<MusicInfo> { HasMore = page.HasMore, MaxCursor = page.MaxCursor };
     }
 
-    public async Task<JsonElement> SearchAsync(string keyword, int offset = 0, int count = 10, int sortType = 0, int publishTime = 0, CancellationToken ct = default)
-    {
-        var q = await DefaultQueryAsync(ct);
-        q["keyword"] = keyword;
-        q["search_channel"] = "aweme_video_web";
-        q["sort_type"] = sortType.ToString();
-        q["publish_time"] = publishTime.ToString();
-        q["search_source"] = "normal_search";
-        q["query_correct_type"] = "1";
-        q["is_filter_search"] = (sortType != 0 || publishTime != 0) ? "1" : "0";
-        q["offset"] = offset.ToString();
-        q["count"] = count.ToString();
-        return await RequestJsonAsync("/aweme/v1/web/general/search/single/", q, maxRetries: 1, ct: ct);
-    }
-
-    public async Task<JsonElement> GetHotBoardAsync(CancellationToken ct = default)
-    {
-        var q = await DefaultQueryAsync(ct);
-        q["detail_list"] = "1";
-        q["source"] = "6";
-        return await RequestJsonAsync("/aweme/v1/web/hot/search/list/", q, maxRetries: 1, ct: ct);
-    }
-
     // ================ 直播 ================
 
     public sealed class LiveRoomInfo
@@ -350,7 +327,6 @@ public sealed class DouyinApiClient
         public string AuthorName { get; set; } = "";
         public string AuthorSecUid { get; set; } = "";
         public string StreamUrl { get; set; } = "";
-        public string Quality { get; set; } = "";
         public bool IsHls { get; set; }
         public int Status { get; set; }       // 2 = live, 4 = offline
         public JsonElement Raw { get; set; }
@@ -473,16 +449,15 @@ public sealed class DouyinApiClient
         }
         if (rr2.TryGetProperty("stream_url", out var su) && su.ValueKind == JsonValueKind.Object)
         {
-            string? bestUrl = null; string bestQuality = "";
+            string? bestUrl = null;
             // FLV first
             if (su.TryGetProperty("flv_pull_url", out var flv) && flv.ValueKind == JsonValueKind.Object)
                 foreach (var prop in flv.EnumerateObject())
-                    if (prop.Value.ValueKind == JsonValueKind.String) { bestUrl = prop.Value.GetString(); bestQuality = prop.Name; break; }
+                    if (prop.Value.ValueKind == JsonValueKind.String) { bestUrl = prop.Value.GetString(); break; }
             if (bestUrl == null && su.TryGetProperty("hls_pull_url_map", out var hls) && hls.ValueKind == JsonValueKind.Object)
                 foreach (var prop in hls.EnumerateObject())
-                    if (prop.Value.ValueKind == JsonValueKind.String) { bestUrl = prop.Value.GetString(); bestQuality = prop.Name; break; }
+                    if (prop.Value.ValueKind == JsonValueKind.String) { bestUrl = prop.Value.GetString(); break; }
             info.StreamUrl = bestUrl ?? "";
-            info.Quality = bestQuality;
             info.IsHls = info.StreamUrl.Contains(".m3u8");
         }
         return info;
@@ -630,12 +605,9 @@ public sealed class DouyinApiClient
             if (auth.TryGetProperty("nickname", out var n)) a.AuthorName = n.GetString() ?? "";
             if (auth.TryGetProperty("uid", out var uid)) a.AuthorId = uid.ToString();
             if (auth.TryGetProperty("sec_uid", out var suid)) a.AuthorSecUid = suid.ToString() ?? "";
-            if (auth.TryGetProperty("avatar_thumb", out var av) && av.ValueKind == JsonValueKind.Object && av.TryGetProperty("url_list", out var aul) && aul.ValueKind == JsonValueKind.Array && aul.GetArrayLength() > 0)
-                a.AuthorAvatar = aul[0].GetString() ?? "";
         }
         if (e.TryGetProperty("video", out var v) && v.ValueKind == JsonValueKind.Object)
         {
-            ExtractUrlsFromCoverLike(v, "cover", a.CoverUrls);
             if (v.TryGetProperty("play_addr", out var pa) && pa.ValueKind == JsonValueKind.Object
                 && pa.TryGetProperty("url_list", out var ul) && ul.ValueKind == JsonValueKind.Array)
                 foreach (var s in ul.EnumerateArray()) if (s.ValueKind == JsonValueKind.String) a.VideoUrls.Add(s.GetString()!);
@@ -657,7 +629,6 @@ public sealed class DouyinApiClient
                         }
                     }
                 }
-                a.BitRate = best;
                 a.BestVideoUrl = bestUrl ?? "";
             }
         }
@@ -705,12 +676,6 @@ public sealed class DouyinApiClient
     {
         if (e.TryGetProperty("url_list", out var ul) && ul.ValueKind == JsonValueKind.Array)
             foreach (var s in ul.EnumerateArray()) if (s.ValueKind == JsonValueKind.String) list.Add(s.GetString()!);
-    }
-
-    private static void ExtractUrlsFromCoverLike(JsonElement parent, string key, List<string> list)
-    {
-        if (parent.TryGetProperty(key, out var c) && c.ValueKind == JsonValueKind.Object)
-            FillUrls(c, list);
     }
 
 }

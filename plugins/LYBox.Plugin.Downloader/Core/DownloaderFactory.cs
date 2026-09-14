@@ -41,10 +41,6 @@ public sealed class DownloaderFactory
     public IDownloadStrategy? Resolve(UrlKind kind, DownloadMode mode) =>
         _map.TryGetValue((kind, mode), out var s) ? s : null;
 
-    public IDownloadStrategy ResolveOrFallback(UrlKind kind, DownloadMode mode)
-    {
-        if (Resolve(kind, mode) is { } s) return s;
-        if (kind == UrlKind.User) return _video;
-        return _video;
-    }
+    public IDownloadStrategy ResolveOrFallback(UrlKind kind, DownloadMode mode) =>
+        Resolve(kind, mode) ?? _video;
 }

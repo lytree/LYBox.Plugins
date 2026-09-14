@@ -12,9 +12,15 @@ public static class LoginDialogService
     /// <summary>
     /// Show the login dialog. Returns true if authentication succeeded, false otherwise.
     /// </summary>
-    public static async Task<bool> ShowLoginDialogAsync()
+    /// <param name="preferredMethod">Optional preferred login method. When provided, the dialog opens
+    /// with the specified tab selected (e.g. <see cref="LoginMethod.QrCode"/> when triggered from a page-level QR button).</param>
+    public static async Task<bool> ShowLoginDialogAsync(LoginMethod? preferredMethod = null)
     {
         var vm = new LoginViewModel();
+        if (preferredMethod.HasValue)
+        {
+            vm.SelectedLoginMethod = preferredMethod.Value;
+        }
         var options = new OverlayDialogOptions
         {
             Title = Strings.Get("LOGIN_Title"),

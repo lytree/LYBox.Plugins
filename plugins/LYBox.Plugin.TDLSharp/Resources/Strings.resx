@@ -331,4 +331,8 @@
   <data name="LOGIN_StatusError" xml:space="preserve"><value>Error</value></data>
   <data name="LOGIN_NotInitializedTitle" xml:space="preserve"><value>Not Logged In</value></data>
   <data name="LOGIN_NotInitializedWarning" xml:space="preserve"><value>Telegram client is not authenticated. You need to login first. Navigate to the login page now?</value></data>
+  <data name="BTN_QrLogin" xml:space="preserve"><value>QR Login</value></data>
+  <data name="BTN_QrLogin_Tip" xml:space="preserve"><value>Open the login dialog and switch to QR code login</value></data>
+  <data name="BTN_InitializeClient" xml:space="preserve"><value>Initialize</value></data>
+  <data name="BTN_InitializeClient_Tip" xml:space="preserve"><value>Initialize the TDLib client without opening the login dialog</value></data>
 </root>

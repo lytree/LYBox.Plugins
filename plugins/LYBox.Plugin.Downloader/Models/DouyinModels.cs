@@ -83,13 +83,10 @@ public sealed class AwemeDetail
     public string AuthorId { get; set; } = "";
     public string AuthorSecUid { get; set; } = "";
     public string AuthorName { get; set; } = "";
-    public string AuthorAvatar { get; set; } = "";
-    public List<string> CoverUrls { get; set; } = new();
     public List<string> VideoUrls { get; set; } = new();      // 全部清晰度,带水印
     public List<string> NoWatermarkUrls { get; set; } = new();
     public List<ImageAsset> Images { get; set; } = new();
     public MusicAsset? Music { get; set; }
-    public long BitRate { get; set; }              // 已选最高码率
     public string BestVideoUrl { get; set; } = "";
     public string BestNoWatermarkUrl { get; set; } = "";
 }
