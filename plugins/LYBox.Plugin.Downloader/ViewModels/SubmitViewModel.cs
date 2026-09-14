@@ -17,8 +17,6 @@ public partial class SubmitViewModel : ViewModelBase
     [ObservableProperty] private string _selectedMode = "post";
     [ObservableProperty] private int _number = 0;
     [ObservableProperty] private string _statusText = "请粘贴抖音链接";
-    [ObservableProperty] private string _startDate = "";
-    [ObservableProperty] private string _endDate = "";
 
     public string[] Modes { get; } = { "post", "like", "mix", "collect", "collectmix" };
 

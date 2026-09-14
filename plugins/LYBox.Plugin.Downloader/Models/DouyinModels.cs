@@ -69,7 +69,6 @@ public sealed class DownloadJobRow
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
     public DateTimeOffset? StartedAt { get; set; }
     public DateTimeOffset? FinishedAt { get; set; }
-    public string? AuthorName { get; set; }
     public string OutputDir { get; set; } = "";
 }
 
