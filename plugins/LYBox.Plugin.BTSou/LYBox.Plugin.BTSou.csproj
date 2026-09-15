@@ -12,6 +12,9 @@
     <PluginVersion>1.1.0-preview.1</PluginVersion>
     <Version>$(PluginVersion)</Version>
     <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+    <!-- BTSou 依赖迅雷 COM 互操作（Interop.ThunderAgentLib.dll），仅 Windows 可用。
+         分隔符用 ','（Roslyn 源生成器从 .editorconfig 读取 MSBuild 属性时会把 ';' 视为段分隔符并截断）。-->
+    <PluginSupportedPlatforms>windows</PluginSupportedPlatforms>
   </PropertyGroup>
 
   <ItemGroup>

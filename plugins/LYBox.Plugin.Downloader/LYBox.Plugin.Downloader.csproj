@@ -12,6 +12,10 @@
 		<PluginVersion>1.0.0-preview.1</PluginVersion>
 		<Version>$(PluginVersion)</Version>
 		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+		<!-- Downloader 仅在 Windows + Linux 上验证过；macOS 上抖音/B 站签名路径尚未覆盖，宿主据此跳过加载。
+		     使用 ',' 而不是 ';' 作为分隔符：Roslyn 源生成器从 .editorconfig 读取
+		     MSBuild 属性时会把 ';' 视为段分隔符并截断；',' 在两端均兼容。 -->
+		<PluginSupportedPlatforms>windows,linux</PluginSupportedPlatforms>
 	</PropertyGroup>
 
 	<ItemGroup>
