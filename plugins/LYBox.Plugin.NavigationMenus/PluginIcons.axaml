@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- NavigationMenus: 导航/菜单/面包屑。用「汉堡 + 列表」表示导航族。 -->
+    <StreamGeometry x:Key="Plugin.NavigationMenus.Hamburger">M3 5h18v2H3Zm0 6h18v2H3Zm0 6h18v2H3Z</StreamGeometry>
+</ResourceDictionary>

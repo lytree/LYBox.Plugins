@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- ProDataGrid: 表格控件族。用「表格 + 单元格高亮」表示数据网格。 -->
+    <StreamGeometry x:Key="Plugin.ProDataGrid.Table">M3 4h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm1 6h7V6H4Zm0 5h7v-3H4Zm0 4h7v-2H4Zm9-9h7V6h-7Zm0 5h7v-3h-7Zm0 4h7v-2h-7Z</StreamGeometry>
+</ResourceDictionary>

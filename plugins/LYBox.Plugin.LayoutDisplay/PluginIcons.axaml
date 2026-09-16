@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- LayoutDisplay: 布局与展示类控件族。用「四个矩形拼图」表示容器布局。 -->
+    <StreamGeometry x:Key="Plugin.LayoutDisplay.Grid">M3 3h8v8H3Zm10 0h8v5h-8Zm0 7h8v11h-8ZM3 13h8v8H3Zm10-2h2v2h-2Zm0 4h2v2h-2Zm0 4h2v2h-2ZM5 5h4v4H5Zm0 10h4v4H5Z</StreamGeometry>
+</ResourceDictionary>

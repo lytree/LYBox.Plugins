@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- ScottPlot: 折线图 / 柱状图 / 散点图控件。用「折线 + 坐标轴」表示。 -->
+    <StreamGeometry x:Key="Plugin.ScottPlot.ChartLine">M3 3v18h18v-2H5V3Zm4 13 4-4 3 3 6-7-1.4-1.4-4.6 5.4-3-3-5 5Z</StreamGeometry>
+</ResourceDictionary>

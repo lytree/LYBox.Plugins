@@ -12,6 +12,8 @@
 		<PluginVersion>1.0.0-preview.1</PluginVersion>
 		<Version>$(PluginVersion)</Version>
 		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+		<PluginIconResources>PluginIcons.axaml</PluginIconResources>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Update="Resources\Strings.Designer.cs">
@@ -19,6 +21,10 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Strings.resx</DependentUpon>
 		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="PluginIcons.axaml" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- TDLSharp: 基于 TDLib 的 Telegram 工具集。用「纸飞机」表示 Telegram 消息/转发。 -->
+    <StreamGeometry x:Key="Plugin.TDLSharp.PaperPlane">M2 3l20 9-20 9 4-9Zm2.4 2L18.6 11 8 16.6 6.6 13l8.6-1.5L6.6 9.6Z</StreamGeometry>
+</ResourceDictionary>

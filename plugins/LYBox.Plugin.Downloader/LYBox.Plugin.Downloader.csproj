@@ -16,6 +16,8 @@
 		     使用 ',' 而不是 ';' 作为分隔符：Roslyn 源生成器从 .editorconfig 读取
 		     MSBuild 属性时会把 ';' 视为段分隔符并截断；',' 在两端均兼容。 -->
 		<PluginSupportedPlatforms>windows,linux</PluginSupportedPlatforms>
+		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+		<PluginIconResources>PluginIcons.axaml</PluginIconResources>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -24,6 +26,10 @@
 			<AutoGen>True</AutoGen>
 			<DependentUpon>Strings.resx</DependentUpon>
 		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="PluginIcons.axaml" />
 	</ItemGroup>
 
 	<ItemGroup>

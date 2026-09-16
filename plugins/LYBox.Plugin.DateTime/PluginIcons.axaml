@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- DateTime: 日历 + 时钟语义。直接复用日历意象作为插件「主题图标」。 -->
+    <StreamGeometry x:Key="Plugin.DateTime.Calendar">M7 3v2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2V3h-2v2H9V3Zm-2 6h14v10H5Zm2 2v2h2v-2Zm4 0v2h2v-2Zm4 0v2h2v-2Zm-8 4v2h2v-2Zm4 0v2h2v-2Z</StreamGeometry>
+</ResourceDictionary>

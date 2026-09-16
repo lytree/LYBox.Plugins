@@ -16,7 +16,12 @@
     <PluginKind>Web</PluginKind>
     <PluginWwwroot>wwwroot</PluginWwwroot>
     <PluginEntryPage>index.html</PluginEntryPage>
+    <!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+    <PluginIconResources>PluginIcons.axaml</PluginIconResources>
   </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="PluginIcons.axaml" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)"
       OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

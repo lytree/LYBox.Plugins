@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- BTSou: BT 资源搜索 + 磁力下载链接。用一个抽象的「搜索 + 链接节点」图标表示。 -->
+    <StreamGeometry x:Key="Plugin.BTSou.Magnet">M11 3a8 8 0 1 0 5.66 13.66l3.78 3.78a1 1 0 0 0 1.42-1.42l-3.78-3.78A8 8 0 0 0 11 3Zm0 2a6 6 0 1 1 0 12A6 6 0 0 1 11 5Zm-1 2v3.5L8.5 11.5l1.06 1.06L11 11.12l1.44 1.44 1.06-1.06L12 10.06V7h-2Z</StreamGeometry>
+</ResourceDictionary>

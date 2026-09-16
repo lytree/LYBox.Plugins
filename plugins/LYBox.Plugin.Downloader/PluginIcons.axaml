@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Downloader: 抖音/视频下载。用「箭头向下 + 横条」表示下载进度。 -->
+    <StreamGeometry x:Key="Plugin.Downloader.ArrowDown">M11 3v9.59L7.7 9.3 6.3 10.7l5 5 5-5-1.4-1.4L13 12.59V3Zm-7 16h16v2H4Z</StreamGeometry>
+</ResourceDictionary>

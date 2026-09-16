@@ -18,6 +18,8 @@
     <PluginCliDescription>Create a greeting from the template plugin.</PluginCliDescription>
     <PluginCliRuntimeProfile>selected</PluginCliRuntimeProfile>
     <PluginCliOutputModes>text;json</PluginCliOutputModes>
+    <!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+    <PluginIconResources>PluginIcons.axaml</PluginIconResources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +28,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="PluginIcons.axaml" />
   </ItemGroup>
 
   <ItemGroup>
