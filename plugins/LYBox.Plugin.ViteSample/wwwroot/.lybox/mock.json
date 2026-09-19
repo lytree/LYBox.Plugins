@@ -1,0 +1,29 @@
+{
+  "GreetAsync": {
+    "delay": 100,
+    "result": "Hello, Mock! 这是来自 lybox-mock 的问候。"
+  },
+  "AddAsync": {
+    "delay": 50,
+    "result": 42
+  },
+  "GetSampleInfoAsync": {
+    "delay": 80,
+    "result": {
+      "pluginId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+      "name": "Vite Sample (Mock)",
+      "version": "1.0.0-mock",
+      "serverTime": "2026-09-19T00:00:00.000Z"
+    }
+  },
+  "_sseEvents": {
+    "tick": {
+      "intervalMs": 2000,
+      "data": {
+        "count": 1,
+        "time": "00:00:00",
+        "message": "Mock 推送（来自 lybox-mock）"
+      }
+    }
+  }
+}

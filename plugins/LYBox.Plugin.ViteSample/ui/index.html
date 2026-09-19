@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LYBox.Plugin.ViteSample</title>
+
+    <!--
+      LYBox 宿主嵌入式 SDK（dev 经 Vite proxy，prod 直连宿主 /sdk/）。
+      见 LYBox.Plugin.Shared.Web/Assets/lybox-plugin-sdk.js。
+    -->
+    <script type="module" src="/sdk/lybox-plugin-sdk.js"></script>
+  </head>
+  <body>
+    <main style="font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 16px">
+      <h1>LYBox.Plugin.ViteSample 端到端演示</h1>
+      <p id="env">检测运行环境…</p>
+      <p id="ver">SDK 版本：检测中…</p>
+
+      <h2>RPC 调用（生成器强类型客户端）</h2>
+      <p>
+        <input id="name" value="World" style="padding:6px 10px;border:1px solid #ccc;border-radius:4px;" />
+        <button id="btn-greet">GreetAsync</button>
+        <span id="greet-result" style="margin-left: 12px"></span>
+      </p>
+      <p>
+        <input id="a" type="number" value="3" style="width:60px" />
+        +
+        <input id="b" type="number" value="5" style="width:60px" />
+        <button id="btn-add">AddAsync</button>
+        <span id="add-result" style="margin-left: 12px"></span>
+      </p>
+      <p>
+        <button id="btn-info">GetSampleInfoAsync</button>
+      </p>
+      <pre id="info-result" style="background:#f0f6ff;padding:8px;border-radius:4px;font-size:12px;"></pre>
+
+      <h2>事件（C# → 前端 SSE）</h2>
+      <ul id="events"></ul>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

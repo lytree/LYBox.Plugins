@@ -87,8 +87,15 @@ SDK 来源支持两种模式（`--sdk-feed`）：
 | ScottPlot                          | `Debug Plugin - ScottPlot`             |
 | TDLSharp                           | `Debug Plugin - TDLSharp`              |
 | BTSou                              | `Debug Plugin - BTSou`                 |
-| Template                           | `Debug Plugin - Template`              |
+| ViteSample（Vite dev）              | `Debug Plugin - ViteSample (Vite dev + C# break)` |
+| ViteSample（WebView prod）          | `Debug Plugin - ViteSample (WebView prod)` |
 | WebTemplate                        | `Debug Plugin - WebTemplate`           |
+
+> 原生 / Vanilla Web 模板已迁移到 `templates/`：
+> - `templates/plugin-template-aot/`：原 `LYBox.Plugin.Template`（原生 Avalonia 插件模板，含 CLI 注册示例）
+> - `templates/web-plugin-vanilla/`：原 `LYBox.Plugin.WebTemplate/wwwroot/` 脚手架（vanilla HTML/JS WebView 模板）
+>
+> 这些目录**不参与** `build.cs` 打包，也不进 `Plugins.slnx`；开发者复制为自己的插件后即可使用。
 
 > 注：抖音下载（[DouyinDownloader](https://github.com/lytree/LYBox) 已并入 `LYBox.Plugin.Downloader`，提供 VOD/Live/Decrypt 三大功能 + 抖音下载（提交/任务/历史/登录/设置）子模块，所有页面通过同一插件入口进入）。
 

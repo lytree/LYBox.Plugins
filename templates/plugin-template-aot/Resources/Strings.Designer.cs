@@ -27,5 +27,5 @@ public static class Strings
         set => _culture = value;
     }
 
-    public static string NAV_TemplateDemo => ResourceManager.GetString(nameof(NAV_TemplateDemo), Culture)!;
+    public static string NAV_TemplateAotDemo => ResourceManager.GetString(nameof(NAV_TemplateAotDemo), Culture)!;
 }

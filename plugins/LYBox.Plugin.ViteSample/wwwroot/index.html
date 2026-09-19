@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LYBox ViteSample — WebView 兜底页</title>
+    <link rel="stylesheet" href="/sdk/lybox-plugin-theme.css" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--lybox-font-family, -apple-system, "Segoe UI", Roboto, sans-serif);
+            padding: var(--lybox-space-5, 24px);
+            color: var(--lybox-color-text, #1a1a1a);
+            background: var(--lybox-color-background, #fafafa);
+        }
+        h1 { font-size: 22px; margin-bottom: var(--lybox-space-3, 12px); }
+        .card {
+            background: var(--lybox-color-surface, #fff);
+            border: 1px solid var(--lybox-color-border, #e0e0e0);
+            border-radius: var(--lybox-radius-card, 8px);
+            padding: var(--lybox-space-4, 16px);
+            margin-bottom: var(--lybox-space-4, 16px);
+        }
+        .row { display: flex; gap: var(--lybox-space-2, 8px); align-items: center; margin-bottom: var(--lybox-space-2, 8px); }
+        input {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            padding: 6px 14px;
+            background: var(--lybox-color-primary, #0078d4);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .result {
+            margin-top: 8px;
+            padding: 8px;
+            background: var(--lybox-color-surface-alt, #f0f6ff);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            min-height: 20px;
+        }
+        #events { max-height: 200px; overflow-y: auto; font-size: 12px; }
+        .hint { color: #666; font-size: 13px; line-height: 1.7; }
+    </style>
+</head>
+<body>
+    <h1>LYBox.Plugin.ViteSample 兜底页</h1>
+    <p class="hint">
+        这份页面是 <code>wwwroot/index.html</code>，由宿主静态服务直接托管，仅作为
+        <strong>Vite 工程 dist/ 尚未注入时的兜底</strong>。
+        日常开发请用 <code>ui/</code> Vite 工程（<code>npm run dev</code>），Vite dev server 经同源代理访问宿主 RPC/SSE。
+        生产打包时 <code>ui/dist/</code> 由 build.cs 拷入这里覆盖本文件。
+    </p>
+
+    <div class="card">
+        <h2 style="font-size: 16px; margin-bottom: 12px;">快速验证 RPC + SSE</h2>
+        <div class="row">
+            <input id="name" value="World" />
+            <button onclick="callGreet()">GreetAsync</button>
+        </div>
+        <div class="result" id="greet-result">（等待）</div>
+
+        <div class="row" style="margin-top: 10px;">
+            <input id="a" value="3" style="width:60px" />
+            <span>+</span>
+            <input id="b" value="5" style="width:60px" />
+            <button onclick="callAdd()">AddAsync</button>
+        </div>
+        <div class="result" id="add-result">（等待）</div>
+
+        <div class="row" style="margin-top: 10px;">
+            <button onclick="callInfo()">GetSampleInfoAsync</button>
+        </div>
+        <div class="result" id="info-result">（等待）</div>
+    </div>
+
+    <div class="card">
+        <h2 style="font-size: 16px; margin-bottom: 12px;">SSE 事件（tick）</h2>
+        <div id="events" style="background:#f9f9f9; padding:8px; border-radius:4px;">（等待推送...）</div>
+    </div>
+
+    <script type="module">
+        import { createLyboxClient } from "/sdk/lybox-plugin-sdk.js";
+
+        const client = createLyboxClient();
+
+        // 订阅 tick 事件
+        client.on?.('tick', null) /* placeholder */ ;
+        // 注：上句仅占位以保留 lint 安静；真实订阅由下方脚本（默认导出）兜底
+    </script>
+    <script type="module">
+        import { invoke, on } from "/sdk/lybox-plugin-sdk.js";
+
+        on('tick', (data) => {
+            const list = document.getElementById('events');
+            const entry = document.createElement('div');
+            entry.style.padding = '2px 0';
+            entry.style.borderBottom = '1px solid #eee';
+            entry.textContent = `[${data?.time ?? '??'}] #${data?.count} ${data?.message ?? ''}`;
+            list.insertBefore(entry, list.firstChild);
+        });
+
+        window.callGreet = async () => {
+            const name = document.getElementById('name').value;
+            const el = document.getElementById('greet-result');
+            try {
+                const result = await invoke('GreetAsync', { Name: name });
+                el.textContent = `✓ ${result}`;
+            } catch (e) {
+                el.textContent = `✗ ${e?.message ?? e}`;
+            }
+        };
+
+        window.callAdd = async () => {
+            const left = Number(document.getElementById('a').value);
+            const right = Number(document.getElementById('b').value);
+            const el = document.getElementById('add-result');
+            try {
+                const result = await invoke('AddAsync', { Left: left, Right: right });
+                el.textContent = `${left} + ${right} = ${result}`;
+            } catch (e) {
+                el.textContent = `✗ ${e?.message ?? e}`;
+            }
+        };
+
+        window.callInfo = async () => {
+            const el = document.getElementById('info-result');
+            try {
+                const result = await invoke('GetSampleInfoAsync');
+                el.textContent = JSON.stringify(result, null, 2);
+            } catch (e) {
+                el.textContent = `✗ ${e?.message ?? e}`;
+            }
+        };
+    </script>
+</body>
+</html>

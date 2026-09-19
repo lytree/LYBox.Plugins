@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    LYBox.Plugin.ViteSample
+    端到端示例：Vite + TypeScript 前端 + 强类型 RPC + 双形态（Vite dev / WebView prod）。
+
+    关键设计：
+    - 后端：net10.0 类库，[RpcCommand] 由源生成器产出 .client.{js,d.ts}（构建期注入 wwwroot/）。
+    - 前端：ui/ 是 Vite 工程（vanilla TS），src/api/samples.ts 消费生成器 .d.ts 拿 IDE 提示。
+    - 联调：Vite dev server (5173) 经同源代理访问宿主 WebHostService (58080)；详见 README。
+    - 生产：ui/ 的 dist/ 由 build.cs 在打包阶段拷入 publish/wwwroot/。
+
+    @version 2.3.0-preview.7   ← 与 LYBox/version.props 的 <LyboxVersion> 同步。
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+
+    <!-- ↓↓↓ 替换为你的插件信息 ↓↓↓ -->
+    <PluginId>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</PluginId>
+    <PluginName>Vite Sample</PluginName>
+    <PluginAuthor>LYBox</PluginAuthor>
+    <PluginDescription>End-to-end Vite + TypeScript + RPC + SSE sample plugin</PluginDescription>
+    <PluginVersion>1.0.0-preview.1</PluginVersion>
+    <Version>$(PluginVersion)</Version>
+    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+
+    <!-- S1/S2：声明 Web 插件类别，构建期写入 plugin.json（kind/web），宿主据此统一注册 -->
+    <IsPluginProject>true</IsPluginProject>
+    <PluginKind>Web</PluginKind>
+    <PluginWwwroot>wwwroot</PluginWwwroot>
+    <PluginEntryPage>index.html</PluginEntryPage>
+
+    <!--
+      平台支持列表：本插件不约束特定平台（windows/linux/osx 均可运行）。
+      SDK 修复：src/Plugin/LYBox.Plugin.Shared/buildTransitive/LYBox.Plugin.Shared.targets
+      中 FormatSupportedPlatformsJson 任务的 Raw 参数已从 Required="true" 改为 Required="false"，
+      因此本属性可省略；保留仅为说明意图。
+    -->
+    <!-- <PluginSupportedPlatforms></PluginSupportedPlatforms> -->
+
+    <!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+    <PluginIconResources>PluginIcons.axaml</PluginIconResources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="PluginIcons.axaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+    <PackageReference Include="LYBox.Plugin.Shared.Web" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

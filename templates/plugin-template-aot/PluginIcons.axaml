@@ -1,5 +1,5 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!-- Template: 插件模板。用「剪贴板/页面」表示新建模板。 -->
+    <!-- Template: 原生 Avalonia 插件模板。用「剪贴板/页面」表示新建模板。 -->
     <StreamGeometry x:Key="Plugin.Template.Page">M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm8 1.5V9h4.5ZM8 12h8v2H8Zm0 4h8v2H8Zm0-8h3v2H8Z</StreamGeometry>
 </ResourceDictionary>

@@ -5,8 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace LYBox.Plugin.Template.ViewModels;
 
-[NavigationItem("TemplateDemo")]
-[Menu("NAV_TemplateDemo", "TemplateDemo", ParentKey = null, Status = "New", Order = 999)]
+[NavigationItem("TemplateAotDemo")]
+[Menu("NAV_TemplateAotDemo", "TemplateAotDemo", ParentKey = null, Status = "New", Order = 999)]
 [ViewMap(typeof(Pages.TemplatePage))]
 public partial class TemplatePageViewModel : ViewModelBase
 {

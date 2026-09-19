@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Debug Plugin - Launcher (Vite dev)": {
+      "commandName": "Executable",
+      "executablePath": "$(SolutionDir)artifacts\\publish\\launcher\\desktop\\LYBox.Launcher.Desktop.exe",
+      "environmentVariables": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "$(TargetDir)",
+        "LYBOX_WEB_PORT": "58080",
+        "LYBOX_VITE_DIR": "$(SolutionDir)plugins\\LYBox.Plugin.ViteSample\\ui"
+      }
+    },
+    "Debug Plugin - Launcher (WebView prod)": {
+      "commandName": "Executable",
+      "executablePath": "$(SolutionDir)artifacts\\publish\\launcher\\desktop\\LYBox.Launcher.Desktop.exe",
+      "environmentVariables": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "$(TargetDir)",
+        "LYBOX_WEB_PORT": "58080"
+      }
+    }
+  }
+}

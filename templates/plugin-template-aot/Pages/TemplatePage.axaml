@@ -7,20 +7,20 @@
              x:DataType="vm:TemplatePageViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450">
     <Grid Margin="16" RowDefinitions="Auto,*">
-        
+
         <StackPanel Grid.Row="0" Spacing="4" Margin="0 0 0 24">
             <TextBlock Text="Template Plugin Demo" Theme="{StaticResource TitleTextBlock}" Classes="H3" />
             <TextBlock Text="A minimal plugin example demonstrating the plugin system" Classes="Secondary" />
         </StackPanel>
 
         <StackPanel Grid.Row="1" Spacing="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-            
+
             <Border Theme="{DynamicResource CardBorder}" CornerRadius="12" Padding="32" MinWidth="400">
                 <StackPanel Spacing="16" HorizontalAlignment="Center">
-                    
+
                     <TextBlock Text="{Binding WelcomeMessage}" Theme="{StaticResource TitleTextBlock}" Classes="H4"
                                HorizontalAlignment="Center" TextAlignment="Center"/>
-                    
+
                     <TextBlock Classes="Tertiary" HorizontalAlignment="Center">
                         <Run Text="Click count: "/><Run Text="{Binding ClickCount}"/>
                     </TextBlock>

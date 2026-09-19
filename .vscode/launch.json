@@ -153,13 +153,31 @@
       "justMyCode": false
     },
     {
-      "name": "Debug Plugin - Template",
+      "name": "Debug Plugin - ViteSample (Vite dev + C# break)",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build-plugin: Template",
+      "preLaunchTask": "build-plugin: ViteSample",
+      "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
+      "args": ["--web-devtools=9222"],
+      "env": {
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.ViteSample/Debug",
+        "LYBOX_WEB_PORT": "58080",
+        "LYBOX_VITE_DIR": "${workspaceFolder}/plugins/LYBox.Plugin.ViteSample/ui"
+      },
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "stopAtEntry": false,
+      "justMyCode": false
+    },
+    {
+      "name": "Debug Plugin - ViteSample (WebView prod)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-plugin: ViteSample",
       "program": "${workspaceFolder}/../LYBox/artifacts/bin/LYBox.Launcher.Desktop/Debug/LYBox.Launcher.Desktop.dll",
       "env": {
-        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.Template/Debug"
+        "AVALONIA_EXTRA_PLUGINS_PATH": "${workspaceFolder}/artifacts/bin/LYBox.Plugin.ViteSample/Debug",
+        "LYBOX_WEB_PORT": "58080"
       },
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
@@ -202,7 +220,7 @@
         "Debug Plugin - ScottPlot",
         "Debug Plugin - TDLSharp",
         "Debug Plugin - BTSou",
-        "Debug Plugin - Template",
+        "Debug Plugin - ViteSample (Vite dev + C# break)",
         "Debug Plugin - WebTemplate"
       ],
       "preLaunchTask": "build-all-plugins",

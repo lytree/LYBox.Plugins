@@ -134,12 +134,12 @@
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "build-plugin: Template",
+      "label": "build-plugin: ViteSample",
       "command": "dotnet",
       "type": "process",
       "args": [
         "build",
-        "${workspaceFolder}/plugins/LYBox.Plugin.Template/LYBox.Plugin.Template.csproj",
+        "${workspaceFolder}/plugins/LYBox.Plugin.ViteSample/LYBox.Plugin.ViteSample.csproj",
         "-c", "Debug"
       ],
       "dependsOn": [],
@@ -393,14 +393,14 @@
       "problemMatcher": []
     },
     {
-      "label": "publish-plugin: Template",
+      "label": "publish-plugin: ViteSample",
       "command": "powershell.exe",
       "type": "shell",
       "args": [
         "-NoProfile",
         "-ExecutionPolicy", "Bypass",
         "-File", "${workspaceFolder}/build.ps1",
-        "--plugin=LYBox.Plugin.Template",
+        "--plugin=LYBox.Plugin.ViteSample",
         "--configuration=Debug"
       ],
       "options": {

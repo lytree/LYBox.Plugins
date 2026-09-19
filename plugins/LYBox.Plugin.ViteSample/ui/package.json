@@ -1,0 +1,16 @@
+{
+  "name": "lybox-plugin-vite-sample-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "LYBox.Plugin.ViteSample 前端：Vite dev (HMR + 同源代理联调宿主) → dist 拷入 wwwroot/",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build --mode production",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}
