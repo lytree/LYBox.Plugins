@@ -36,11 +36,12 @@
 
     <!--
       平台支持列表：本插件不约束特定平台（windows/linux/osx 均可运行）。
-      SDK 修复：src/Plugin/LYBox.Plugin.Shared/buildTransitive/LYBox.Plugin.Shared.targets
-      中 FormatSupportedPlatformsJson 任务的 Raw 参数已从 Required="true" 改为 Required="false"，
-      因此本属性可省略；保留仅为说明意图。
+      通配项 "*" 表示无平台约束；宿主 PluginHostService 在 Register 时按当前 OS 与该项比对，
+      不匹配则在 UI 中禁用入口或运行时拒绝加载（取决于宿主策略）。
+      SDK 约定详见 src/Plugin/LYBox.Plugin.Shared/buildTransitive/LYBox.Plugin.Shared.targets
+      中 S1 清单 v3 与 FormatSupportedPlatformsJson 任务的注释。
     -->
-    <!-- <PluginSupportedPlatforms></PluginSupportedPlatforms> -->
+    <PluginSupportedPlatforms>*</PluginSupportedPlatforms>
 
     <!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
     <PluginIconResources>PluginIcons.axaml</PluginIconResources>
