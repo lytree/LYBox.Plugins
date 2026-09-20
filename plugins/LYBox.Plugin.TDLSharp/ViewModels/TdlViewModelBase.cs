@@ -7,7 +7,6 @@ using Avalonia.Input.Platform;
 using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Services;
 using LYBox.Plugin.Shared.Models;
-using LYBox.Plugin.Shared.Services;
 using LYBox.Plugin.TDLSharp.Models;
 using LYBox.Plugin.TDLSharp.Resources;
 using LYBox.Plugin.TDLSharp.Services;
@@ -102,7 +101,8 @@ public abstract partial class TdlViewModelBase : ViewModelBase
 
             if (result == MessageBoxResult.Yes)
             {
-                await LoginDialogService.ShowLoginDialogAsync();
+                // 二维码登录作为默认/推荐方式
+                await LoginDialogService.ShowLoginDialogAsync(LoginMethod.QrCode);
             }
             return;
         }
@@ -111,7 +111,17 @@ public abstract partial class TdlViewModelBase : ViewModelBase
 
         if (clientManager.NeedsLogin)
         {
-            await LoginDialogService.ShowLoginDialogAsync();
+            // 未登录：弹框提示用户登录（默认二维码）
+            var promptResult = await OverlayMessageBox.ShowAsync(
+                Strings.Get("LOGIN_NotInitializedWarning"),
+                Strings.Get("LOGIN_NotInitializedTitle"),
+                button: MessageBoxButton.YesNo,
+                icon: MessageBoxIcon.Warning);
+
+            if (promptResult == MessageBoxResult.Yes)
+            {
+                await LoginDialogService.ShowLoginDialogAsync(LoginMethod.QrCode);
+            }
             return;
         }
 

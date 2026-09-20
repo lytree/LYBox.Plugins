@@ -16,18 +16,6 @@
 				<TextBlock Text="{Binding Script.Description}" Classes="Secondary" FontSize="11" />
 			</StackPanel>
 			<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-				<Button Command="{Binding ShowQrLoginCommand}" ToolTip.Tip="{DynamicResource BTN_QrLogin_Tip}" Theme="{DynamicResource SolidButton}" Classes="Small" IsEnabled="{Binding !IsRunning}" Padding="6">
-					<StackPanel Orientation="Horizontal" Spacing="6">
-						<PathIcon Data="{DynamicResource FluentIconPhone}" Width="14" Height="14" />
-						<TextBlock Text="{DynamicResource BTN_QrLogin}" />
-					</StackPanel>
-				</Button>
-				<Button Command="{Binding InitializeClientCommand}" ToolTip.Tip="{DynamicResource BTN_InitializeClient_Tip}" Theme="{DynamicResource SolidButton}" Classes="Small" IsEnabled="{Binding !IsRunning}" Padding="6">
-					<StackPanel Orientation="Horizontal" Spacing="6">
-						<PathIcon Data="{DynamicResource FluentIconConnected}" Width="14" Height="14" />
-						<TextBlock Text="{DynamicResource BTN_InitializeClient}" />
-					</StackPanel>
-				</Button>
 				<Button Content="{DynamicResource BTN_Execute}" Command="{Binding ExecuteScriptCommand}" Theme="{DynamicResource SolidButton}" Classes="Primary Small" MinWidth="80" IsEnabled="{Binding !IsRunning}" />
 				<Button Content="{DynamicResource BTN_Cancel}" Command="{Binding CancelExecutionCommand}" Theme="{DynamicResource SolidButton}" Classes="Small" MinWidth="72" IsVisible="{Binding IsRunning}" />
 				<TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Classes="Tertiary" FontSize="12" Margin="4 0 0 0" />

@@ -38,7 +38,7 @@ public partial class LoginViewModel : ViewModelBase, IDialogContext
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPhoneLogin), nameof(IsBotLogin), nameof(IsQrCodeLogin),
                               nameof(CanSubmitPhone), nameof(CanSubmitBotToken), nameof(CanRequestQrCode))]
-    private LoginMethod _selectedLoginMethod = LoginMethod.PhoneNumber;
+    private LoginMethod _selectedLoginMethod = LoginMethod.QrCode;
 
     [ObservableProperty] private string _phoneNumber = string.Empty;
     [ObservableProperty] private string _authCode = string.Empty;
@@ -56,6 +56,7 @@ public partial class LoginViewModel : ViewModelBase, IDialogContext
     [ObservableProperty] private string _userInfo = string.Empty;
     [ObservableProperty] private bool _isBusy;
     [ObservableProperty] private string _tdlRootPath = string.Empty;
+    [ObservableProperty] private bool _showAdvancedLogin;
 
     public bool HasTdlRoot => _clientManager.HasTdlRoot;
     public bool NeedsTdlRoot => !HasTdlRoot;

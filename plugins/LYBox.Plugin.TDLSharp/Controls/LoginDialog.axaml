@@ -3,11 +3,12 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="clr-namespace:LYBox.Plugin.TDLSharp.ViewModels"
+			 xmlns:u="https://irihi.tech/ursa"
 			 x:Class="LYBox.Plugin.TDLSharp.Controls.LoginDialog"
 			 x:DataType="vm:LoginViewModel"
-			 mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="560">
+			 mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="640">
 	<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-		<Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto" MaxWidth="440" HorizontalAlignment="Stretch">
+		<Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto" MaxWidth="440" HorizontalAlignment="Stretch">
 
 			<!-- Header -->
 			<StackPanel Grid.Row="0" Spacing="6" Margin="0 0 0 16">
@@ -35,90 +36,100 @@
 				</StackPanel>
 			</Border>
 
-			<!-- Login method selection -->
+			<!-- QR code (default & recommended) -->
 			<Border Grid.Row="2" Theme="{DynamicResource CardBorder}" Padding="12" Margin="0 0 0 12">
 				<StackPanel Spacing="10">
-					<TextBlock Text="{DynamicResource LOGIN_SelectMethod}" Classes="SectionTitle" />
+					<TextBlock Text="{DynamicResource LOGIN_QrCodeScanPrompt}" FontWeight="SemiBold" />
 
-					<!-- Method toggle -->
-					<StackPanel Orientation="Horizontal" Spacing="12">
-						<RadioButton Content="{DynamicResource LOGIN_PhoneNumber}" IsChecked="{Binding IsPhoneLogin}"
-									GroupName="LoginMethod" />
-						<RadioButton Content="{DynamicResource LOGIN_BotToken}" IsChecked="{Binding IsBotLogin}"
-									GroupName="LoginMethod" />
-						<RadioButton Content="{DynamicResource LOGIN_QrCode}" IsChecked="{Binding IsQrCodeLogin}"
-									GroupName="LoginMethod" />
-					</StackPanel>
-
-					<!-- Initialize button -->
-					<Button Content="{DynamicResource LOGIN_Initialize}" Command="{Binding InitializeCommand}"
-							IsEnabled="{Binding !IsBusy}" HorizontalAlignment="Left" Margin="0 2 0 0" />
-
-					<!-- Phone login -->
-					<StackPanel IsVisible="{Binding IsPhoneLogin}" Spacing="8">
-						<Grid ColumnDefinitions="*,Auto" Margin="0 2">
-							<TextBox Grid.Column="0" Text="{Binding PhoneNumber}" PlaceholderText="{DynamicResource LOGIN_PhonePlaceholder}"
-									IsEnabled="{Binding CanSubmitPhone}" />
-							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SendCode}" Command="{Binding SubmitPhoneCommand}"
-									Margin="8 0 0 0" IsEnabled="{Binding CanSubmitPhone}" VerticalAlignment="Stretch" />
+					<!-- QR rendering area: shows image when link available, otherwise placeholder. -->
+					<Border Background="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+							CornerRadius="6" Padding="12" HorizontalAlignment="Center">
+						<Grid Width="240" Height="240">
+							<u:QRCode Data="{Binding QrCodeLink}"
+									  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+									  IsVisible="{Binding QrCodeLink, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+							<TextBlock Text="{DynamicResource LOGIN_QrCodeNotGenerated}" TextWrapping="Wrap"
+									   Classes="Secondary" HorizontalAlignment="Center" VerticalAlignment="Center"
+									   IsVisible="{Binding QrCodeLink, Converter={x:Static StringConverters.IsNullOrEmpty}}" />
 						</Grid>
+					</Border>
 
-						<!-- Code input -->
-						<Grid ColumnDefinitions="*,Auto" Margin="0 2"
-							  IsVisible="{Binding CanSubmitCode}">
-							<TextBox Grid.Column="0" Text="{Binding AuthCode}" PlaceholderText="{DynamicResource LOGIN_CodePlaceholder}" />
-							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitCode}" Command="{Binding SubmitCodeCommand}"
-									Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
-						</Grid>
+					<TextBlock Text="{Binding QrCodeLink}" TextWrapping="Wrap"
+							   FontFamily="Cascadia Mono,Consolas,Courier New"
+							   FontSize="10" MaxWidth="360" HorizontalAlignment="Center"
+							   IsVisible="{Binding QrCodeLink, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+					<TextBlock Text="{DynamicResource LOGIN_QrCodeConfirmWait}" Classes="Secondary"
+							   HorizontalAlignment="Center" FontSize="11"
+							   IsVisible="{Binding QrCodeLink, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-						<!-- Password input (2FA) -->
-						<Grid ColumnDefinitions="*,Auto" Margin="0 2"
-							  IsVisible="{Binding CanSubmitPassword}">
-							<TextBox Grid.Column="0" Text="{Binding Password}" PlaceholderText="{DynamicResource LOGIN_PasswordPlaceholder}"
-									PasswordChar="*" />
-							<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitPassword}" Command="{Binding SubmitPasswordCommand}"
-									Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
-						</Grid>
-					</StackPanel>
-
-					<!-- Bot token login -->
-					<StackPanel IsVisible="{Binding IsBotLogin}" Spacing="8">
-						<Grid ColumnDefinitions="*,Auto" Margin="0 2">
-							<TextBox Grid.Column="0" Text="{Binding BotToken}" PlaceholderText="{DynamicResource LOGIN_BotTokenPlaceholder}"
-									IsEnabled="{Binding CanSubmitBotToken}" />
-							<Button Grid.Column="1" Content="{DynamicResource LOGIN_Login}" Command="{Binding SubmitBotTokenCommand}"
-									Margin="8 0 0 0" IsEnabled="{Binding CanSubmitBotToken}" VerticalAlignment="Stretch" Classes="Primary" />
-						</Grid>
-					</StackPanel>
-
-					<!-- QR code login -->
-					<StackPanel IsVisible="{Binding IsQrCodeLogin}" Spacing="10">
-						<TextBlock Text="{DynamicResource LOGIN_QrCodeDesc}" Classes="Secondary" TextWrapping="Wrap" />
+					<StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
 						<Button Content="{DynamicResource LOGIN_RequestQrCode}" Command="{Binding RequestQrCodeCommand}"
-								IsEnabled="{Binding CanRequestQrCode}" HorizontalAlignment="Left" Classes="Primary" />
-
-						<!-- QR code link display -->
-						<Border IsVisible="{Binding QrCodeLink, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-								Theme="{DynamicResource CardBorder}" Padding="12">
-							<StackPanel Spacing="6" HorizontalAlignment="Center">
-								<TextBlock Text="{DynamicResource LOGIN_QrCodeScanPrompt}" FontWeight="SemiBold"
-											HorizontalAlignment="Center" />
-								<TextBlock Text="{Binding QrCodeLink}" TextWrapping="Wrap" FontFamily="Cascadia Mono,Consolas,Courier New"
-											FontSize="10" MaxWidth="360" HorizontalAlignment="Center" />
-								<TextBlock Text="{DynamicResource LOGIN_QrCodeConfirmWait}" Classes="Secondary"
-											HorizontalAlignment="Center" FontSize="11" />
-							</StackPanel>
-						</Border>
+								IsEnabled="{Binding CanRequestQrCode}" Classes="Primary" />
+						<Button Content="{DynamicResource LOGIN_Initialize}" Command="{Binding InitializeCommand}"
+								IsEnabled="{Binding !IsBusy}" />
 					</StackPanel>
 				</StackPanel>
 			</Border>
 
 			<!-- Other device confirmation -->
-			<Border Grid.Row="3" Theme="{DynamicResource CardBorder}" Padding="12"
+			<Border Grid.Row="3" Theme="{DynamicResource CardBorder}" Padding="12" Margin="0 0 0 12"
 					IsVisible="{Binding CurrentStep, Converter={x:Static vm:AuthStepToVisibilityConverter.OtherDevice}}">
 				<StackPanel Spacing="6">
 					<TextBlock Text="{DynamicResource LOGIN_OtherDeviceConfirmation}" FontWeight="SemiBold" />
 					<TextBlock Text="{DynamicResource LOGIN_OtherDeviceDesc}" Classes="Secondary" TextWrapping="Wrap" />
+				</StackPanel>
+			</Border>
+
+			<!-- Advanced: phone / bot token (collapsed by default) -->
+			<Border Grid.Row="4" Theme="{DynamicResource CardBorder}" Padding="12">
+				<StackPanel Spacing="10">
+					<ToggleSwitch Content="{DynamicResource LOGIN_AdvancedLogin}"
+								  IsChecked="{Binding ShowAdvancedLogin, Mode=TwoWay}" />
+
+					<StackPanel IsVisible="{Binding ShowAdvancedLogin}" Spacing="10">
+						<TextBlock Text="{DynamicResource LOGIN_SelectMethod}" Classes="SectionTitle" />
+						<StackPanel Orientation="Horizontal" Spacing="12">
+							<RadioButton Content="{DynamicResource LOGIN_PhoneNumber}" IsChecked="{Binding IsPhoneLogin}"
+										GroupName="LoginMethod" />
+							<RadioButton Content="{DynamicResource LOGIN_BotToken}" IsChecked="{Binding IsBotLogin}"
+										GroupName="LoginMethod" />
+						</StackPanel>
+
+						<!-- Phone login -->
+						<StackPanel IsVisible="{Binding IsPhoneLogin}" Spacing="8">
+							<Grid ColumnDefinitions="*,Auto" Margin="0 2">
+								<TextBox Grid.Column="0" Text="{Binding PhoneNumber}" PlaceholderText="{DynamicResource LOGIN_PhonePlaceholder}"
+										IsEnabled="{Binding CanSubmitPhone}" />
+								<Button Grid.Column="1" Content="{DynamicResource LOGIN_SendCode}" Command="{Binding SubmitPhoneCommand}"
+										Margin="8 0 0 0" IsEnabled="{Binding CanSubmitPhone}" VerticalAlignment="Stretch" />
+							</Grid>
+
+							<Grid ColumnDefinitions="*,Auto" Margin="0 2"
+								  IsVisible="{Binding CanSubmitCode}">
+								<TextBox Grid.Column="0" Text="{Binding AuthCode}" PlaceholderText="{DynamicResource LOGIN_CodePlaceholder}" />
+								<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitCode}" Command="{Binding SubmitCodeCommand}"
+										Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
+							</Grid>
+
+							<Grid ColumnDefinitions="*,Auto" Margin="0 2"
+								  IsVisible="{Binding CanSubmitPassword}">
+								<TextBox Grid.Column="0" Text="{Binding Password}" PlaceholderText="{DynamicResource LOGIN_PasswordPlaceholder}"
+										PasswordChar="*" />
+								<Button Grid.Column="1" Content="{DynamicResource LOGIN_SubmitPassword}" Command="{Binding SubmitPasswordCommand}"
+										Margin="8 0 0 0" VerticalAlignment="Stretch" Classes="Primary" />
+							</Grid>
+						</StackPanel>
+
+						<!-- Bot token login -->
+						<StackPanel IsVisible="{Binding IsBotLogin}" Spacing="8">
+							<Grid ColumnDefinitions="*,Auto" Margin="0 2">
+								<TextBox Grid.Column="0" Text="{Binding BotToken}" PlaceholderText="{DynamicResource LOGIN_BotTokenPlaceholder}"
+										IsEnabled="{Binding CanSubmitBotToken}" />
+								<Button Grid.Column="1" Content="{DynamicResource LOGIN_Login}" Command="{Binding SubmitBotTokenCommand}"
+										Margin="8 0 0 0" IsEnabled="{Binding CanSubmitBotToken}" VerticalAlignment="Stretch" Classes="Primary" />
+							</Grid>
+						</StackPanel>
+					</StackPanel>
 				</StackPanel>
 			</Border>
 

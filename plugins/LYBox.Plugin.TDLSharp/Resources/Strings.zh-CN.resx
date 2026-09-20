@@ -284,6 +284,8 @@
   <data name="LOGIN_PhoneNumber" xml:space="preserve"><value>手机号</value></data>
   <data name="LOGIN_BotToken" xml:space="preserve"><value>Bot Token</value></data>
   <data name="LOGIN_Initialize" xml:space="preserve"><value>初始化客户端</value></data>
+  <data name="LOGIN_AdvancedLogin" xml:space="preserve"><value>高级登录（手机号 / Bot Token）</value></data>
+  <data name="LOGIN_QrCodeNotGenerated" xml:space="preserve"><value>点击"请求二维码"生成登录二维码。</value></data>
   <data name="LOGIN_Initialized" xml:space="preserve"><value>客户端已初始化，请继续登录。</value></data>
   <data name="LOGIN_InitFailed" xml:space="preserve"><value>初始化失败: {0}</value></data>
   <data name="LOGIN_PhonePlaceholder" xml:space="preserve"><value>+8613800138000</value></data>
@@ -313,6 +315,10 @@
   <data name="LOGIN_Logout" xml:space="preserve"><value>退出登录</value></data>
   <data name="LOGIN_LoggedOut" xml:space="preserve"><value>已成功退出登录。</value></data>
   <data name="LOGIN_LogoutFailed" xml:space="preserve"><value>退出登录失败: {0}</value></data>
+  <data name="LOGIN_LogoutTip" xml:space="preserve"><value>退出当前 Telegram 会话</value></data>
+  <data name="SETTING_TDL_Status" xml:space="preserve"><value>当前状态</value></data>
+  <data name="SETTING_TDL_StatusDesc" xml:space="preserve"><value>当前 TDLib 授权状态。可使用下方按钮进行初始化、扫码登录或退出登录。</value></data>
+  <data name="GROUP_TDL" xml:space="preserve"><value>TDL Sharp</value></data>
   <data name="LOGIN_UserInfoUnavailable" xml:space="preserve"><value>无法获取用户信息</value></data>
   <data name="LOGIN_OtherDeviceConfirmation" xml:space="preserve"><value>请在另一设备上确认</value></data>
   <data name="LOGIN_OtherDeviceDesc" xml:space="preserve"><value>请在另一设备上的 Telegram 应用中确认登录。</value></data>
