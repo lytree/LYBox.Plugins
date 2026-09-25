@@ -71,7 +71,7 @@ public static class TdlPaths
     public static string DefaultMembersDir => DataSubdir(PluginSubDirectories.Exports);
 
     /// <summary>默认转发记录数据库目录(每个 source chat 独立一个 db 文件)。</summary>
-    public static string ForwardDbDir => DataSubdir("data");
+    public static string ForwardDbDir => DataSubdir(PluginSubDirectories.Data);
 
     /// <summary>执行历史数据库目录(每个 script 独立一个 db 文件)。</summary>
     public static string HistoryDir => RequireDataDirProvider().GetPluginHistoryDirectory(PluginId);

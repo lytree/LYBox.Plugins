@@ -1,4 +1,5 @@
 using LYBox.Plugin.Shared;
+using LYBox.Plugin.Shared.Paths;
 using LYBox.Plugin.Shared.Services;
 
 namespace LYBox.Plugin.Downloader.Config;
@@ -13,8 +14,9 @@ public sealed class PluginConfigStore
     /// 抖音子模块在插件数据根目录下的子文件夹名。
     /// 单独占一层是必要的:根目录的 <c>settings.json</c> 属于 <c>Services.BinaryPathsStore</c>
     /// (外部二进制路径,结构不同),两者混用会互相覆盖。
+    /// 该常量与 SDK <see cref="PluginSubDirectories.Douyin"/> 保持一致,便于跨插件对齐。
     /// </summary>
-    public const string DouyinSubFolder = "douyin";
+    public const string DouyinSubFolder = PluginSubDirectories.Douyin;
 
     /// <summary>
     /// 历史独立插件 <c>LYBox.Plugin.DouyinDownloader</c> 的数据目录 ID。
@@ -59,7 +61,11 @@ public sealed class PluginConfigStore
 
     /// <summary>解析抖音子模块数据目录。</summary>
     public static string ResolveDouyinDir(IPluginDataDirectoryProvider? provider)
-        => Path.Combine(ResolveRootDir(provider), DouyinSubFolder);
+        => provider is not null
+            ? provider.GetPluginDouyinDirectory(PluginId)
+            : throw new InvalidOperationException(
+                $"插件数据目录提供器未注册。请确认宿主在 DI 早期已注册 {nameof(IPluginDataDirectoryProvider)},"
+                + $"并通过 ServiceLocator 解析后再调用 {nameof(PluginConfigStore)}.{nameof(ResolveDouyinDir)}。");
 
     /// <summary>
     /// 解析历史数据目录(<c>Data/DouyinDownloader/</c>)。

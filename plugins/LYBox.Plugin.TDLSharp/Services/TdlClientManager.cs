@@ -1,3 +1,4 @@
+using LYBox.Plugin.Shared;
 using LYBox.Plugin.Shared.Services;
 using Microsoft.Extensions.Logging;
 using TdLib;
@@ -184,12 +185,13 @@ public class TdlClientManager : IDisposable
 
     private static string ResolveDefaultTdlRoot()
     {
-        // 默认 TDLib 数据目录：%USERPROFILE%\.tdl。
-        // 与 TDLSharpPlugin.GetDefaultTdlRoot 保持一致，但本类不应反向依赖插件入口，
-        // 故在此独立解析，避免循环依赖。
-        return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            ".tdl");
+        // 默认 TDLib 数据目录:{UserHome}/.tdl。
+        // 与 TDLSharpPlugin.GetDefaultTdlRoot 保持一致,但本类不应反向依赖插件入口,
+        // 故在此独立解析(经 IRuntimeProfile),避免循环依赖。
+        var profile = ServiceLocator.GetService<LYBox.Plugin.Shared.Services.IRuntimeProfile>();
+        var home = profile?.UserHomeDirectory
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return Path.Combine(home, ".tdl");
     }
 
     private async Task ConfigureTdlibParameters(TdClient client, string outputPath, ILogger cbLogger)

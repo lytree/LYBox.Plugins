@@ -2,12 +2,26 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using LYBox.Plugin.Shared;
+using LYBox.Plugin.Shared.Services;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
 
 public partial class TdlService
 {
+    /// <summary>
+    /// TdlPaths 未初始化时的导出目录回退:经 <see cref="IRuntimeProfile"/> 拿到 UserHome/Downloads/TDLSharp。
+    /// 避免写出到启动器根目录(自包含发布 / 只读权限场景)。
+    /// </summary>
+    private static string ResolveFallbackExportDir()
+    {
+        var profile = ServiceLocator.GetService<IRuntimeProfile>();
+        var home = profile?.UserHomeDirectory
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return Path.Combine(home, "Downloads", "TDLSharp");
+    }
+
     public async Task ExportMessagesAsync(string channelLink, string? outputPath, bool exportComments, int limit, CancellationToken ct = default)
     {
         await EnsureReadyAsync();
@@ -26,7 +40,13 @@ public partial class TdlService
 
         if (string.IsNullOrWhiteSpace(outputPath))
         {
-            string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "tdl", "message");
+            // 走插件统一导出目录:Data/{PluginId}/exports/{chatId}.json。
+            // 旧版(独立运行)在 {BaseDirectory}/data/tdl/message 写入,只读场景会失败。
+            // 若 TdlPaths 未初始化(单元测试 / 独立 CLI 模式),退回 UserHome/Downloads,
+            // 避免写出到启动器目录。
+            string saveDir = TdlPaths.IsInitialized
+                ? TdlPaths.DefaultExportDir
+                : ResolveFallbackExportDir();
             Directory.CreateDirectory(saveDir);
             outputPath = Path.Combine(saveDir, $"{chatId}.json");
         }

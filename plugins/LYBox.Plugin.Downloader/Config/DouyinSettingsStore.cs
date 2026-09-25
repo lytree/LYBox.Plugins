@@ -39,9 +39,12 @@ public sealed class DouyinSettings
     public int BrowserFallbackWaitTimeoutSeconds { get; set; } = 600;
 }
 
-/// <summary>抖音子模块设置读写器（文件：<c>Data/{PluginId}/douyin/settings.json</c>）。</summary>
+/// <summary>抖音子模块设置读写器(文件:<c>Data/{PluginId}/douyin/settings.json</c>)。</summary>
 public sealed class DouyinSettingsStore
 {
+    /// <summary>本设置文件的文件名(在抖音子目录内)。</summary>
+    public const string FileName = "settings.json";
+
     private readonly object _lock = new();
     private readonly string _path;
     public DouyinSettings Current { get; private set; } = new();
@@ -88,10 +91,10 @@ public sealed class DouyinSettingsStore
     }
 
     /// <summary>
-    /// 设置文件路径：<c>Data/{PluginId}/douyin/settings.json</c>。
-    /// 数据目录提供器不可用时与 <see cref="PluginConfigStore.DouyinDir"/> 走同一套回退路径，
+    /// 设置文件路径:<c>Data/{PluginId}/douyin/settings.json</c>。
+    /// 数据目录提供器不可用时抛 <see cref="InvalidOperationException"/>(由 <see cref="PluginConfigStore.ResolveRootDir"/> 抛),
     /// 保证 settings / cookies / db 三者始终落在同一个目录。
     /// </summary>
     private static string ResolveSettingsPath()
-        => Path.Combine(PluginConfigStore.ResolveDouyinDir(PluginConfigStore.CurrentProvider), "settings.json");
+        => Path.Combine(PluginConfigStore.ResolveDouyinDir(PluginConfigStore.CurrentProvider), FileName);
 }
