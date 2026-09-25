@@ -44,11 +44,11 @@ public partial class TDLSharpPlugin
     /// <summary>应用退出时显式释放 TdLib 客户端（原生资源）。Dispose 幂等，容器后续释放由守卫兜底。</summary>
     public Task ShutdownAsync()
     {
-        if (ServiceLocator.TryGetService<TdlPluginStatusController>(out var controller))
+        if (ServiceLocator.TryGetService<TdlPluginStatusController>(out var controller) && controller is not null)
         {
             controller.Dispose();
         }
-        if (ServiceLocator.TryGetService<TdlClientManager>(out var manager))
+        if (ServiceLocator.TryGetService<TdlClientManager>(out var manager) && manager is not null)
         {
             manager.Dispose();
         }

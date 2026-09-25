@@ -1,5 +1,4 @@
-using LinqToDB;
-using LinqToDB.Data;
+using Microsoft.EntityFrameworkCore;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
@@ -24,13 +23,13 @@ public partial class TdlService
         var sourceChat = await client.GetChatAsync(sourceChatId);
         _logger.Log($"源: [{sourceChat.Title}] ChatId={sourceChatId}");
 
-        using var db = ForwardDb.CreateForChat(sourceChatId);
+        using var db = ForwardDbContext.CreateForChat(sourceChatId);
         await db.EnsureSchemaInitializedAsync();
 
         // 每次执行前清空该频道的历史转发记录
         var deletedCount = await db.ForwardRecords
             .Where(r => r.SourceChatId == sourceChatId && r.TargetChatId == sourceChatId)
-            .DeleteAsync();
+            .ExecuteDeleteAsync();
         if (deletedCount > 0)
             _logger.Log($"已清空 {deletedCount} 条旧转发记录");
 
@@ -132,7 +131,7 @@ public partial class TdlService
         await EnsureReadyAsync();
         var client = Client;
 
-        using var db = ForwardDb.CreateForChat(chatId);
+        using var db = ForwardDbContext.CreateForChat(chatId);
         await db.EnsureSchemaInitializedAsync();
 
         var successRecordIds = (await db.ForwardRecords

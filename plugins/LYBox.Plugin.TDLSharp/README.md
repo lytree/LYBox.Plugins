@@ -45,7 +45,8 @@
 | `TDLSharpPlugin` | `LYBox.Plugin.TDLSharp` | 插件入口；DI 注册 + 设置注册 + `ShutdownAsync` 释放 TdLib 原生客户端 |
 | `TdlClientManager` | `LYBox.Plugin.TDLSharp.Services` | TdLib 客户端管理器（实现 `IDisposable`） |
 | `TdlService` | `LYBox.Plugin.TDLSharp.Services` | TDLib 操作封装 |
-| `ForwardDb` | 同上 | 转发去重 SQLite |
+| `ForwardDbContext` | 同上 | 转发去重 SQLite（EF Core） |
+| `ExecutionHistoryDbContext` | 同上 | 执行历史 SQLite（EF Core） |
 | `TdlPaths` | 同上 | TDLib 路径解析 |
 | `AuthStateCode` | 同上 | 登录认证状态 |
 | `ListChatsPage` / `DeepCopyPage` / `DownloadPage` | `LYBox.Plugin.TDLSharp.Pages` | 三个主功能页面 |
@@ -59,7 +60,7 @@
 | `TDLib` | `1.8.*` |
 | `TDLib.Api` | `1.8.*` |
 | `tdlib.native` | `1.8.*` |
-| `linq2db` | `5.4.1` |
+| `Microsoft.EntityFrameworkCore.Sqlite` | `9.0.10` |
 | `Microsoft.Data.Sqlite` | `10.0.9` |
 | `LYBox.Plugin.Generators` | `$(PluginSdkVersion)` |
 | `LYBox.Plugin.Shared` | `$(PluginSdkVersion)` |
@@ -69,8 +70,10 @@
 通过 `IPluginDataDirectoryProvider` 解析（位于 `LYBox.DataRoot/{PluginId}/`）：
 
 - `tdl/` —— TDLib 数据根（默认 `TDL.TdlRootPath`）
-- `history/history-{scriptId}.db` —— 历史记录
-- `data/forward-{chatId}.db` —— 转发去重
+- `history/history-{scriptId}.db` —— 执行历史（EF Core / SQLite）
+- `data/forward-{chatId}.db` —— 转发去重（EF Core / SQLite）
+
+所有自有数据均通过 **EF Core** 访问；TDLib 原生数据目录（`~/.tdl`）由 TDLib 原生管理，不属于本插件的数据访问范围。
 
 ## 原生资源生命周期
 

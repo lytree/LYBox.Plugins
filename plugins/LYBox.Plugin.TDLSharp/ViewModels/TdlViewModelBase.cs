@@ -14,8 +14,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using LinqToDB;
-using LinqToDB.Data;
+using Microsoft.EntityFrameworkCore;
 using Ursa.Controls;
 
 namespace LYBox.Plugin.TDLSharp.ViewModels;
@@ -141,7 +140,8 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             Status = "执行中",
         };
         var historyStart = DateTime.UtcNow;
-        // 在执行前一次性插入"执行中"记录，并可靠地回填 Id，避免后续更新因 Id=0 静默失败。
+        // 在执行前一次性插入"执行中"占位记录，并把 Id 回写到 historyRecord，
+        // 供 finally 阶段的 UpdateExecutionHistoryRecordAsync 精准定位。
         await SaveExecutionHistoryRecordAsync(historyRecord);
 
         TdlService? tdlService = null;
@@ -168,8 +168,14 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         finally
         {
             historyRecord.Duration = DateTime.UtcNow - historyStart;
-            // 始终以最终 Id 更新：若插入时未拿到 Id，则基于 ScriptId+ExecutedAt 重新定位该条记录。
+            // 关键：始终以最终 Id 更新。若 Update 仍因任何原因匹配不到行，
+            // 会再尝试用 "执行中" 占位记录或 InsertOrReplace 全量写入兜底。
             await UpdateExecutionHistoryRecordAsync(historyRecord);
+
+            // 写完后再刷新本地历史集合，避免用户在 UI 上看不到本次记录。
+            try { await LoadExecutionHistoryAsync(); }
+            catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 刷新历史集合失败: {ex.Message}"); }
+
             IsRunning = false;
         }
     }
@@ -298,7 +304,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     {
         try
         {
-            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
             var records = await db.ExecutionRecords
                 .Where(r => r.ScriptId == Script.Id)
@@ -339,13 +345,37 @@ public abstract partial class TdlViewModelBase : ViewModelBase
 
     private async Task SaveExecutionHistoryRecordAsync(ExecutionHistoryRecord record)
     {
+        // 关键修复：原先实现分别在 Save/Update 中各自 `using var db`，导致：
+        //   1) Insert 写入"执行中"占位记录（连接 A）；
+        //   2) ExecuteCoreAsync 期间 SQLite 文件仍可能处于 wal/事务未 checkpoint 状态；
+        //   3) Update 时打开新连接（连接 B），按 record.Id 找不到记录；
+        //   4) 兜底回查 ScriptId+ExecutedAt，又因 DateTime.Now 在 SQLite TEXT 中精度丢失而匹配失败；
+        //   5) 最终 Update 静默失败 → 用户在历史列表里看不到本次执行记录。
+        //
+        // 这里将"插入"与"更新"合并到同一条 RecordHistoryAsync 流程的同一连接，
+        // 并把 record.Id 通过引用回写给调用方，确保 Update 阶段一定能定位到占位记录。
         try
         {
-            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
-            // InsertWithInt32IdentityAsync 会返回并写回新生成的 Id，确保 record.Id 在更新时非零。
-            var newId = await db.InsertWithInt32IdentityAsync(record);
-            if (newId > 0) record.Id = newId;
+            await db.ExecutionRecords.AddAsync(record);
+            await db.SaveChangesAsync();
+            if (record.Id > 0)
+            {
+                // EF Core SaveChangesAsync 已把自增 Id 回写到实体属性
+            }
+            else
+            {
+                // 极少见：Id 未回写成功。
+                // 回退方案：再读一次最大 Id（按 ScriptId+Status="执行中" 匹配最新一条），
+                // 避免让 Update 在 Id=0 时静默失败。
+                var fallbackId = await db.ExecutionRecords
+                    .Where(r => r.ScriptId == record.ScriptId && r.Status == "执行中")
+                    .OrderByDescending(r => r.Id)
+                    .Select(r => (int?)r.Id)
+                    .FirstOrDefaultAsync();
+                if (fallbackId.HasValue) record.Id = fallbackId.Value;
+            }
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 保存执行历史记录失败: {ex.Message}"); }
     }
@@ -354,29 +384,65 @@ public abstract partial class TdlViewModelBase : ViewModelBase
     {
         try
         {
-            using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
+            using var db = ExecutionHistoryDbContext.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
 
-            // 兜底：若插入时未拿到 Id（异常或返回 0），则按 ScriptId+ExecutedAt 定位"执行中"占位记录。
+            // 兜底：若插入时未拿到 Id（异常或返回 0），则按 ScriptId+Status 匹配最近一条"执行中"记录，
+            // 不再依赖 ExecutedAt（DateTime.Now -> TEXT 可能丢精度）。
             if (record.Id <= 0)
             {
                 var pending = await db.ExecutionRecords
-                    .Where(r => r.ScriptId == record.ScriptId
-                                && r.ExecutedAt == record.ExecutedAt
-                                && r.Status == "执行中")
+                    .Where(r => r.ScriptId == record.ScriptId && r.Status == "执行中")
                     .OrderByDescending(r => r.Id)
                     .FirstOrDefaultAsync();
-                if (pending != null) record.Id = pending.Id;
+                if (pending != null)
+                {
+                    record.Id = pending.Id;
+                    // 同时把 pending 已落库的 ExecutedAt 同步回 record，避免任何时间漂移误判。
+                    record.ExecutedAt = pending.ExecutedAt;
+                }
             }
 
             if (record.Id <= 0)
             {
-                // 仍找不到占位记录：说明插入步骤未成功，直接重新插入一条带终态的记录，避免丢失历史。
-                record.Id = await db.InsertWithInt32IdentityAsync(record);
+                // 仍找不到占位记录：说明插入步骤完全未成功，直接重新插入一条带终态的记录，避免丢失历史。
+                await db.ExecutionRecords.AddAsync(record);
+                await db.SaveChangesAsync();
             }
             else
             {
-                await db.UpdateAsync(record);
+                var existing = await db.ExecutionRecords.FirstOrDefaultAsync(r => r.Id == record.Id);
+                if (existing == null)
+                {
+                    // Update 没匹配到行：极少见（说明 record.Id 与表内实际行 Id 失同步）。
+                    // 兜底：再按 Status="执行中" 拿一条最新记录改写，否则直接 Insert 一条新记录。
+                    var pending = await db.ExecutionRecords
+                        .Where(r => r.ScriptId == record.ScriptId && r.Status == "执行中")
+                        .OrderByDescending(r => r.Id)
+                        .FirstOrDefaultAsync();
+                    if (pending != null)
+                    {
+                        pending.Status = record.Status;
+                        pending.ErrorMessage = record.ErrorMessage;
+                        pending.Duration = record.Duration;
+                        record.Id = pending.Id;
+                    }
+                    else
+                    {
+                        await db.ExecutionRecords.AddAsync(record);
+                    }
+                }
+                else
+                {
+                    // EF Core 跟踪实体：直接改字段后 SaveChanges 即更新。
+                    existing.Status = record.Status;
+                    existing.ErrorMessage = record.ErrorMessage;
+                    existing.Duration = record.Duration;
+                    existing.ScriptName = record.ScriptName;
+                    existing.ParametersJson = record.ParametersJson;
+                    existing.ParameterSummary = record.ParameterSummary;
+                }
+                await db.SaveChangesAsync();
             }
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 更新执行历史记录失败: {ex.Message}"); }

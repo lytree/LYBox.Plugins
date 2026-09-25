@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -6,8 +8,11 @@ namespace LYBox.Plugin.TDLSharp.Models;
 /// <summary>
 /// 通用执行历史记录，适用于所有脚本。
 /// </summary>
+[Table("ExecutionRecords")]
 public partial class ExecutionHistoryRecord : ObservableObject
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
     /// <summary>脚本 Id</summary>

@@ -77,7 +77,7 @@ public partial class TdlService
 
             try
             {
-                using var db = ForwardDb.OpenFromPath(path);
+                using var db = ForwardDbContext.OpenFromPath(path);
                 await db.EnsureSchemaInitializedAsync();
 
                 var deleted = await db.DeleteForwardRecordsAsync(sourceChatId, targetChatId, onlySuccess, fromMessageId);
