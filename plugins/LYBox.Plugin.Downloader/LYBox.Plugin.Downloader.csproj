@@ -36,9 +36,13 @@
 		<PackageReference Include="CliWrap" Version="3.10.4" />
 		<PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
-		<!-- 抖音子模块依赖（合并自 LYBox.Plugin.DouyinDownloader） -->
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+		<!-- 抖音子模块依赖（合并自 LYBox.Plugin.DouyinDownloader）。
+		     EF Core + SQLite 提供 DbContext / DbSet / LINQ 与 EnsureCreated 迁移，
+		     取代此前的 Microsoft.Data.Sqlite 手写 SQL 实现。
+		     EFCore.Sqlite 依赖 SQLitePCLRaw.bundle_e_sqlite3,因此不再单独引用。 -->
+		<!-- 与 LYBox.Plugin.Shared 传递依赖的 EFCore 10.0.12 对齐,避免 NU1605 包降级。 -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 	</ItemGroup>
 
