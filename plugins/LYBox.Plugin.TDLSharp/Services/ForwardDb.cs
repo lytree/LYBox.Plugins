@@ -87,9 +87,51 @@ public sealed class ForwardDbContext : DbContext
         {
             if (_initialized.Contains(_dbPath)) return;
             await Database.EnsureCreatedAsync();
+            // 旧库兼容：EnsureCreated 不会补列 / 索引，需手动迁移。
+            // 老库 (没有 ExecutionHistoryRecordId / ExecutionHistoryScriptId) 直接写入会触发
+            // "SQLite Error 1: no such column: f.ExecutionHistoryRecordId"。
+            await MigrateLegacySchemaAsync();
             _initialized.Add(_dbPath);
         }
         finally { _initLock.Release(); }
+    }
+
+    /// <summary>
+    /// 旧库补丁：ForwardRecords 表若缺少 ExecutionHistoryRecordId / ExecutionHistoryScriptId 列，
+    /// 则补列并建立配套索引。多次调用幂等（SQLite 无 IF NOT EXISTS for ALTER，这里靠 try/catch 吞"重复添加"）。
+    /// </summary>
+    async Task MigrateLegacySchemaAsync()
+    {
+        try
+        {
+            var conn = Database.GetDbConnection();
+            if (conn.State != System.Data.ConnectionState.Open) await conn.OpenAsync();
+
+            // 1) 补两列（不区分是否存在：SQLite ALTER ADD COLUMN 重复执行会报错，被 try/catch 吞）。
+            var alters = new[]
+            {
+                "ALTER TABLE ForwardRecords ADD COLUMN ExecutionHistoryRecordId INTEGER NULL;",
+                "ALTER TABLE ForwardRecords ADD COLUMN ExecutionHistoryScriptId TEXT NULL;",
+            };
+            foreach (var sql in alters)
+            {
+                try { using var cmd = conn.CreateCommand(); cmd.CommandText = sql; await cmd.ExecuteNonQueryAsync(); }
+                catch (Exception ex) { PluginLoggers.For("LYBox.Plugin.TDLSharp.Services.ForwardDb").LogWarning(ex, "[ForwardDb] 旧库补丁跳过（已存在或失败）: {Sql} | {Message}", sql, ex.Message); }
+            }
+
+            // 2) 补索引（CREATE INDEX IF NOT EXISTS 在 SQLite 3.8+ 可用）。
+            try
+            {
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "CREATE INDEX IF NOT EXISTS IX_ForwardRecords_ExecutionHistory ON ForwardRecords (ExecutionHistoryScriptId, ExecutionHistoryRecordId);";
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex) { PluginLoggers.For("LYBox.Plugin.TDLSharp.Services.ForwardDb").LogWarning(ex, "[ForwardDb] 旧库补丁建索引失败: {Message}", ex.Message); }
+        }
+        catch (Exception ex)
+        {
+            PluginLoggers.For("LYBox.Plugin.TDLSharp.Services.ForwardDb").LogWarning(ex, "[ForwardDb] 旧库补丁整体失败（已记录，不影响主流程）: {Message}", ex.Message);
+        }
     }
 
     /// <summary>根据源 chat ID 创建连接。</summary>
@@ -153,7 +195,7 @@ public sealed class ForwardDbContext : DbContext
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[ForwardDb] 按执行历史清理 {Path.GetFileName(path)} 失败: {ex.Message}");
+                PluginLoggers.For("LYBox.Plugin.TDLSharp.Services.ForwardDb").LogWarning(ex, "[ForwardDb] 按执行历史清理 {File} 失败: {Message}", Path.GetFileName(path), ex.Message);
             }
         }
         return total;

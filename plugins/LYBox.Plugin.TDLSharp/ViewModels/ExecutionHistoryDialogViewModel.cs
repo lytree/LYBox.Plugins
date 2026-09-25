@@ -52,12 +52,14 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
             var deletedFwd = await ForwardDbContext.DeleteByExecutionHistoryAsync(_scriptId, record.Id);
             if (deletedFwd > 0)
             {
-                Debug.WriteLine($"[ExecutionHistory] 删除 ExecutionRecord#{record.Id} 联动清理 {deletedFwd} 条转发记录");
+                PluginLoggers.For<ExecutionHistoryDialogViewModel>()
+                    .LogInformation("[ExecutionHistory] 删除 ExecutionRecord#{RecordId} 联动清理 {Deleted} 条转发记录", record.Id, deletedFwd);
             }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ExecutionHistory] 联动清理转发记录失败: {ex.Message}");
+            PluginLoggers.For<ExecutionHistoryDialogViewModel>()
+                .LogWarning(ex, "[ExecutionHistory] 联动清理转发记录失败: {Message}", ex.Message);
         }
 
         Records.Remove(record);
@@ -87,12 +89,14 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ExecutionHistory] 清空时联动清理 ExecutionRecord#{id} 失败: {ex.Message}");
+                PluginLoggers.For<ExecutionHistoryDialogViewModel>()
+                    .LogWarning(ex, "[ExecutionHistory] 清空时联动清理 ExecutionRecord#{RecordId} 失败: {Message}", id, ex.Message);
             }
         }
         if (totalFwdDeleted > 0)
         {
-            Debug.WriteLine($"[ExecutionHistory] 清空 ExecutionHistory 联动清理 {totalFwdDeleted} 条转发记录");
+            PluginLoggers.For<ExecutionHistoryDialogViewModel>()
+            .LogInformation("[ExecutionHistory] 清空 ExecutionHistory 联动清理 {Deleted} 条转发记录", totalFwdDeleted);
         }
 
         Records.Clear();

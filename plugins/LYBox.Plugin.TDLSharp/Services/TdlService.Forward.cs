@@ -849,7 +849,7 @@ public partial class TdlService
 
             await db.SaveChangesAsync();
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlService] 保存转发记录失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 保存转发记录失败: {Message}", ex.Message); }
     }
 
     // ===== Merged from TdlService.SingleForward.cs =====

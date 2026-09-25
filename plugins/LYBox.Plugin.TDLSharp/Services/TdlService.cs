@@ -144,7 +144,7 @@ public partial class TdlService
                 return linkInfo.Message.ChatId;
             }
         }
-        catch (TdException ex) { Debug.WriteLine($"[TdlService] 链接解析尝试失败: {ex.Message}"); }
+        catch (TdException ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 链接解析尝试失败: {Message}", ex.Message); }
 
         try
         {
@@ -264,11 +264,11 @@ public partial class TdlService
                             return chat.Id;
                         }
                     }
-                    catch (Exception ex) { Debug.WriteLine($"[TdlService] 搜索聊天时获取单个聊天失败 ChatId={id}: {ex.Message}"); }
+                    catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 搜索聊天时获取单个聊天失败 ChatId={ChatId}: {Message}", id, ex.Message); }
                 }
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlService] 搜索聊天列表失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 搜索聊天列表失败: {Message}", ex.Message); }
 
         return 0;
     }
@@ -291,7 +291,7 @@ public partial class TdlService
                     return chat.Id;
                 }
             }
-            catch (Exception ex) { Debug.WriteLine($"[TdlService] 按标题搜索时获取单个聊天失败 ChatId={id}: {ex.Message}"); }
+            catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 按标题搜索时获取单个聊天失败 ChatId={ChatId}: {Message}", id, ex.Message); }
         }
 
         return 0;
@@ -488,7 +488,7 @@ public partial class TdlService
                 return superInfo.IsForum;
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlService] 检查论坛状态失败 ChatId={chatId}: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 检查论坛状态失败 ChatId={ChatId}: {Message}", chatId, ex.Message); }
         return false;
     }
 
@@ -527,7 +527,7 @@ public partial class TdlService
                 }
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlService] 搜索主题失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 搜索主题失败: {Message}", ex.Message); }
 
         try
         {
@@ -741,7 +741,7 @@ public partial class TdlService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[TdlService] 发送标签消息异常: {ex.Message}");
+            PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] 发送标签消息异常: {Message}", ex.Message);
         }
     }
 }

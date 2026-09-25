@@ -88,7 +88,7 @@ public partial class TdlService
             catch (Exception ex)
             {
                 _logger.Log($"清理 {Path.GetFileName(path)} 失败: {ex.Message}");
-                Debug.WriteLine($"[TdlService] ClearForwardHistory 异常: {ex}");
+                PluginLoggers.For<TdlService>().LogWarning(ex, "[TdlService] ClearForwardHistory 异常: {Exception}");
             }
         }
 

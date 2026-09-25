@@ -166,7 +166,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             historyRecord.Status = "失败";
             historyRecord.ErrorMessage = ex.Message;
             StatusText = $"{Strings.Get("STATUS_Failed")}: {ex.Message}";
-            Debug.WriteLine($"[TdlViewModel] 脚本执行异常: {ex}");
+            PluginLoggers.For<TdlViewModelBase>().LogError(ex, "[TdlViewModel] 脚本执行异常");
         }
         finally
         {
@@ -177,7 +177,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
 
             // 写完后再刷新本地历史集合，避免用户在 UI 上看不到本次记录。
             try { await LoadExecutionHistoryAsync(); }
-            catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 刷新历史集合失败: {ex.Message}"); }
+            catch (Exception ex) { PluginLoggers.For<TdlViewModelBase>().LogWarning(ex, "[TdlViewModel] 刷新历史集合失败: {Message}", ex.Message); }
 
             IsRunning = false;
         }
@@ -223,7 +223,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[TdlViewModel] 初始化失败: {ex}");
+            PluginLoggers.For<TdlViewModelBase>().LogError(ex, "[TdlViewModel] 初始化失败");
             StatusText = Strings.Get("LOGIN_InitFailed", ex.Message);
         }
     }
@@ -296,7 +296,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
                     param.DefaultValue = val;
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 应用参数 JSON 失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlViewModelBase>().LogWarning(ex, "[TdlViewModel] 应用参数 JSON 失败: {Message}", ex.Message); }
     }
 
     private Task LoadExecutionHistoryAsync() => LoadExecutionHistoryCoreAsync(setCollection: true);
@@ -331,7 +331,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
                 Dispatcher.UIThread.Post(Apply);
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 加载执行历史失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlViewModelBase>().LogWarning(ex, "[TdlViewModel] 加载执行历史失败: {Message}", ex.Message); }
     }
 
     private static string BuildParameterSummary(Dictionary<string, string> values)
@@ -380,7 +380,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
                 if (fallbackId.HasValue) record.Id = fallbackId.Value;
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 保存执行历史记录失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlViewModelBase>().LogWarning(ex, "[TdlViewModel] 保存执行历史记录失败: {Message}", ex.Message); }
     }
 
     private async Task UpdateExecutionHistoryRecordAsync(ExecutionHistoryRecord record)
@@ -448,6 +448,6 @@ public abstract partial class TdlViewModelBase : ViewModelBase
                 await db.SaveChangesAsync();
             }
         }
-        catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 更新执行历史记录失败: {ex.Message}"); }
+        catch (Exception ex) { PluginLoggers.For<TdlViewModelBase>().LogWarning(ex, "[TdlViewModel] 更新执行历史记录失败: {Message}", ex.Message); }
     }
 }
