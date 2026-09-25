@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using LYBox.Plugin.TDLSharp.Models;
 using LYBox.Plugin.TDLSharp.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -45,6 +46,20 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
             .Where(r => r.Id == record.Id)
             .ExecuteDeleteAsync();
 
+        // 联动删除该执行历史产生的全部转发记录（仅本地库，不动 Telegram）。
+        try
+        {
+            var deletedFwd = await ForwardDbContext.DeleteByExecutionHistoryAsync(_scriptId, record.Id);
+            if (deletedFwd > 0)
+            {
+                Debug.WriteLine($"[ExecutionHistory] 删除 ExecutionRecord#{record.Id} 联动清理 {deletedFwd} 条转发记录");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ExecutionHistory] 联动清理转发记录失败: {ex.Message}");
+        }
+
         Records.Remove(record);
     }
 
@@ -53,11 +68,32 @@ public partial class ExecutionHistoryDialogViewModel : ObservableObject, IDialog
     {
         if (Records.Count == 0) return;
 
+        // 先逐条收集待删的 ExecutionRecord.Id（避免删除过程中 Records 集合变化）。
+        var ids = Records.Select(r => r.Id).ToList();
+
         using var db = ExecutionHistoryDbContext.CreateForScript(_scriptId);
         await db.EnsureSchemaInitializedAsync();
         await db.ExecutionRecords
             .Where(r => r.ScriptId == _scriptId)
             .ExecuteDeleteAsync();
+
+        // 联动删除所有这些执行历史产生的转发记录。
+        int totalFwdDeleted = 0;
+        foreach (var id in ids)
+        {
+            try
+            {
+                totalFwdDeleted += await ForwardDbContext.DeleteByExecutionHistoryAsync(_scriptId, id);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ExecutionHistory] 清空时联动清理 ExecutionRecord#{id} 失败: {ex.Message}");
+            }
+        }
+        if (totalFwdDeleted > 0)
+        {
+            Debug.WriteLine($"[ExecutionHistory] 清空 ExecutionHistory 联动清理 {totalFwdDeleted} 条转发记录");
+        }
 
         Records.Clear();
     }

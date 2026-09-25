@@ -6,6 +6,8 @@ namespace LYBox.Plugin.TDLSharp.Services;
 
 /// <summary>
 /// 转发去重记录。复合主键 (SourceChatId, MessageId) 保证同一源消息只记录一次最新状态。
+/// ExecutionHistoryRecordId / ExecutionHistoryScriptId 记录"本次转发由哪个脚本的哪次执行产生"，
+/// 便于执行历史被删除时联动删除对应转发记录（NULL 表示旧记录，无关联）。
 /// </summary>
 [Table("ForwardRecords")]
 public class ForwardRecord
@@ -20,6 +22,12 @@ public class ForwardRecord
     public bool IsSuccess { get; set; }
     public DateTime ForwardedAt { get; set; }
     public string? ExtraData { get; set; }
+
+    /// <summary>产生本次转发的 ExecutionHistoryRecord.Id（NULL = 老数据，无关联）。</summary>
+    public int? ExecutionHistoryRecordId { get; set; }
+
+    /// <summary>产生本次转发的脚本 Id（与 ExecutionHistoryRecordId 配对使用，跨 db 定位时辅助用）。</summary>
+    public string? ExecutionHistoryScriptId { get; set; }
 
     public static string BuildExtraData(TdApi.Message message)
     {
@@ -64,6 +72,9 @@ public sealed class ForwardDbContext : DbContext
             b.HasIndex(r => r.NewMessageId).HasDatabaseName("IX_ForwardRecords_NewMessageId");
             b.HasIndex(r => r.MediaAlbumId).HasDatabaseName("IX_ForwardRecords_MediaAlbumId");
             b.HasIndex(r => new { r.SourceChatId, r.TargetChatId }).HasDatabaseName("IX_ForwardRecords_SourceChatId_TargetChatId");
+            // 索引用于"按执行历史记录删除其产生的全部转发记录"。
+            b.HasIndex(r => new { r.ExecutionHistoryScriptId, r.ExecutionHistoryRecordId })
+                .HasDatabaseName("IX_ForwardRecords_ExecutionHistory");
         });
     }
 
@@ -112,5 +123,39 @@ public sealed class ForwardDbContext : DbContext
         if (fromMessageId > 0) query = query.Where(r => r.MessageId >= fromMessageId);
 
         return await query.ExecuteDeleteAsync();
+    }
+
+    /// <summary>
+    /// 删除指定执行历史记录产生的全部转发记录。返回总删除数（跨所有 forward-*.db 文件）。
+    /// </summary>
+    public static async Task<int> DeleteByExecutionHistoryAsync(string scriptId, int executionHistoryRecordId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(scriptId) || executionHistoryRecordId <= 0) return 0;
+
+        Directory.CreateDirectory(TdlPaths.ForwardDbDir);
+        var dbFiles = Directory.EnumerateFiles(TdlPaths.ForwardDbDir, "forward-*.db").ToList();
+
+        int total = 0;
+        foreach (var path in dbFiles)
+        {
+            ct.ThrowIfCancellationRequested();
+            if (!File.Exists(path)) continue;
+
+            try
+            {
+                using var db = OpenFromPath(path);
+                await db.EnsureSchemaInitializedAsync();
+                var deleted = await db.ForwardRecords
+                    .Where(r => r.ExecutionHistoryScriptId == scriptId
+                             && r.ExecutionHistoryRecordId == executionHistoryRecordId)
+                    .ExecuteDeleteAsync(ct);
+                total += deleted;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ForwardDb] 按执行历史清理 {Path.GetFileName(path)} 失败: {ex.Message}");
+            }
+        }
+        return total;
     }
 }

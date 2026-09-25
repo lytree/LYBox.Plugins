@@ -148,6 +148,9 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         try
         {
             tdlService = CreateTdlService();
+            // 关联执行历史：让本次执行产生的 ForwardRecord 写入 ExecutionHistoryRecordId / ScriptId，
+            // 删除该执行历史时可联动删除对应转发记录。
+            tdlService.AttachExecutionRecord(historyRecord.Id, Script.Id);
             using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token);
             await ExecuteCoreAsync(tdlService, paramSnapshot, linkedCts.Token);
             historyRecord.Status = "成功";

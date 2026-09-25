@@ -6,6 +6,8 @@ using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
 
+public sealed record ExecutionRecordContext(int RecordId, string ScriptId);
+
 public partial class TdlService
 {
     readonly TdlClientManager _clientManager;
@@ -28,6 +30,32 @@ public partial class TdlService
         _logger = logger;
         _clientManager.RegisterMessageUpdateHandler(HandleMessageUpdateAsync);
     }
+
+    /// <summary>
+    /// 当前 TdlService 实例关联的执行历史记录上下文。
+    /// 由 ViewModel 在插入 ExecutionHistoryRecord 占位记录并拿到 Id 后调用 <see cref="AttachExecutionRecord"/> 设置，
+    /// 后续所有转发操作产生的 ForwardRecord 会写入这些字段，便于"按执行历史删除转发记录"。
+    /// 仅用于本次执行；同一次执行结束（TdlService 释放）后该引用随之失效。
+    /// </summary>
+    public ExecutionRecordContext? ExecutionRecord { get; private set; }
+
+    /// <summary>
+    /// 把本次执行关联到一个 ExecutionHistoryRecord。ViewModel 在 SaveExecutionHistoryRecordAsync
+    /// 拿到 record.Id 后调用，所有后续 RecordForwardedMessages 会写入这两个字段。
+    /// 重复调用以最后一次为准；传 null 表示解除关联。
+    /// </summary>
+    public void AttachExecutionRecord(int recordId, string scriptId)
+    {
+        if (recordId <= 0 || string.IsNullOrEmpty(scriptId))
+        {
+            ExecutionRecord = null;
+            return;
+        }
+        ExecutionRecord = new ExecutionRecordContext(recordId, scriptId);
+    }
+
+    /// <summary>解除执行历史关联。</summary>
+    public void DetachExecutionRecord() => ExecutionRecord = null;
 
     /// <summary>
     /// 处理 TDLib 消息更新：追踪发送成功/失败，记录本地→服务器消息 ID 映射。

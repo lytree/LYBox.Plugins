@@ -777,6 +777,9 @@ public partial class TdlService
     {
         if (messages.Count == 0) return;
 
+        // 当前 TdlService 实例关联的执行历史（用于填充 ForwardRecord 的关联字段）。
+        var execCtx = ExecutionRecord;
+
         var records = new List<ForwardRecord>();
         foreach (var msg in messages)
         {
@@ -799,6 +802,14 @@ public partial class TdlService
                 }
             }
 
+            // 仅在新记录上写入关联字段；已存在的行（按主键命中）不覆盖，
+            // 保持"首次产生该转发的执行历史记录"为唯一关联。
+            if (execCtx != null)
+            {
+                record.ExecutionHistoryRecordId = execCtx.RecordId;
+                record.ExecutionHistoryScriptId = execCtx.ScriptId;
+            }
+
             records.Add(record);
         }
 
@@ -809,20 +820,26 @@ public partial class TdlService
             var keyPairs = records
                 .Select(r => new { r.SourceChatId, r.MessageId })
                 .ToList();
-            var existingKeys = await db.ForwardRecords
+            var existingRows = await db.ForwardRecords
                 .Where(r => keyPairs.Select(k => k.SourceChatId).Contains(r.SourceChatId)
                          && keyPairs.Select(k => k.MessageId).Contains(r.MessageId))
-                .Select(r => new { r.SourceChatId, r.MessageId })
                 .ToListAsync();
-            var existingSet = existingKeys
-                .Select(k => (k.SourceChatId, k.MessageId))
-                .ToHashSet();
+            var existingMap = existingRows.ToDictionary(
+                r => (r.SourceChatId, r.MessageId));
 
             foreach (var record in records)
             {
-                if (existingSet.Contains((record.SourceChatId, record.MessageId)))
+                if (existingMap.TryGetValue((record.SourceChatId, record.MessageId), out var existing))
                 {
-                    db.ForwardRecords.Update(record);
+                    // 已存在的行：仅刷新"本次执行产生的新状态"，关联字段保持原值（避免被覆盖成 NULL）。
+                    existing.TargetChatId = record.TargetChatId;
+                    existing.MediaAlbumId = record.MediaAlbumId;
+                    existing.IsSuccess = record.IsSuccess;
+                    existing.ForwardedAt = record.ForwardedAt;
+                    if (record.NewMessageId != 0)
+                    {
+                        existing.NewMessageId = record.NewMessageId;
+                    }
                 }
                 else
                 {
