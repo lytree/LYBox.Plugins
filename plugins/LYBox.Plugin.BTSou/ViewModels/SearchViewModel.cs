@@ -287,18 +287,21 @@ public partial class SearchViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// 解析资源池缓存路径：优先经 <see cref="LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider"/>
-    /// 拿到主体 Data/{PluginId}/cache/ 目录；不可用时回退到 AppContext.BaseDirectory（兼容早期/独立运行场景）。
+    /// 解析资源池缓存路径:经 <see cref="LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider"/>
+    /// 拿到主体 Data/{PluginId}/cache/ResPool.ryx。
+    /// 提供器不可用时抛 <see cref="InvalidOperationException"/>(不再静默回退到启动器目录)。
     /// </summary>
     private static string ResolveResPoolCachePath()
     {
         const string fallbackPluginId = "BTSou";
-        if (ServiceLocator.TryGetService<LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider>(out var provider)
-            && provider is not null)
+        if (!ServiceLocator.TryGetService<LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider>(out var provider)
+            || provider is null)
         {
-            var dir = provider.GetSubDirectory(fallbackPluginId, "cache");
-            return System.IO.Path.Combine(dir, "ResPool.ryx");
+            throw new InvalidOperationException(
+                "IPluginDataDirectoryProvider 未注册;请确认宿主 DI 在早期已注册该服务,"
+                + "并通过 ServiceLocator 解析后再调用 SearchViewModel.ResolveResPoolCachePath。");
         }
-        return System.IO.Path.Combine(AppContext.BaseDirectory, "ResPool.ryx");
+        var dir = provider.GetPluginCacheDirectory(fallbackPluginId);
+        return System.IO.Path.Combine(dir, "ResPool.ryx");
     }
 }

@@ -34,6 +34,9 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.9" />
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+		<!-- ILogger&lt;T&gt; 的 LogInformation / LogWarning / LogError 扩展方法来自本包,
+		     SDK 包(2.3.0+)不再隐式传递,显式声明以兼容 .NET 10 SDK 的 NuGet 解析。 -->
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
 	</ItemGroup>
 
 	<ItemGroup>

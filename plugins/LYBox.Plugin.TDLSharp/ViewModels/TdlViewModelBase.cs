@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ursa.Controls;
 
 namespace LYBox.Plugin.TDLSharp.ViewModels;

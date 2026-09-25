@@ -1,3 +1,4 @@
+using LYBox.Plugin.Shared.Paths;
 using LYBox.Plugin.Shared.Services;
 using Microsoft.Extensions.Logging;
 
@@ -57,23 +58,23 @@ public static class TdlPaths
 
     public static string DataSubdir(string leaf) => Path.Combine(DataRoot, leaf);
 
-    /// <summary>默认下载目录（脚本未指定输出目录时使用）。</summary>
-    public static string DefaultDownloadDir => DataSubdir("download");
+    /// <summary>默认下载目录(脚本未指定输出目录时使用)。</summary>
+    public static string DefaultDownloadDir => RequireDataDirProvider().GetPluginDownloadsDirectory(PluginId);
 
-    /// <summary>默认消息导出目录（脚本未指定输出目录时使用）。</summary>
-    public static string DefaultExportDir => DataSubdir("message");
+    /// <summary>默认消息导出目录(脚本未指定输出目录时使用)。</summary>
+    public static string DefaultExportDir => DataSubdir(PluginSubDirectories.Exports);
 
     /// <summary>默认聊天列表导出目录。</summary>
-    public static string DefaultChatsDir => DataSubdir("chats");
+    public static string DefaultChatsDir => DataSubdir(PluginSubDirectories.Exports);
 
     /// <summary>默认成员列表导出目录。</summary>
-    public static string DefaultMembersDir => DataSubdir("members");
+    public static string DefaultMembersDir => DataSubdir(PluginSubDirectories.Exports);
 
-    /// <summary>默认转发记录数据库目录（每个 source chat 独立一个 db 文件）。</summary>
+    /// <summary>默认转发记录数据库目录(每个 source chat 独立一个 db 文件)。</summary>
     public static string ForwardDbDir => DataSubdir("data");
 
-    /// <summary>执行历史数据库目录（每个 script 独立一个 db 文件）。</summary>
-    public static string HistoryDir => DataSubdir("history");
+    /// <summary>执行历史数据库目录(每个 script 独立一个 db 文件)。</summary>
+    public static string HistoryDir => RequireDataDirProvider().GetPluginHistoryDirectory(PluginId);
 
     /// <summary>宿主日志目录（与宿主滚动日志 <c>app-yyyy-MM-dd_NNN.log</c> 同目录）。</summary>
     public static string LogsDirectory => RequireHostEnv().LogsDirectory;

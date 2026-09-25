@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;

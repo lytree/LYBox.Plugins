@@ -6,11 +6,11 @@ using LYBox.Plugin.Shared.Services;
 namespace LYBox.Plugin.ProDataGrid;
 
 /// <summary>
-/// 数据导出工具类，将集合序列化为 JSON 并保存到文件。
-/// 存储位置：优先主体 Data/{PluginId}/Exports/（<see cref="IPluginDataDirectoryProvider"/>），
-/// 不可用时回退到 %USERPROFILE%/Documents/ProDataGrid_Exports/。
-/// </summary>
-internal static class ExportHelper
+    /// 数据导出工具类，将集合序列化为 JSON 并保存到文件。
+    /// 存储位置:经宿主 <see cref="IPluginDataDirectoryProvider"/> 拿到主体 Data/{PluginId}/exports/。
+    /// 提供器不可用时抛 <see cref="InvalidOperationException"/>(不再静默回退到用户文档目录)。
+    /// </summary>
+    internal static class ExportHelper
 {
     /// <summary>PluginId 必须与 csproj 中的 PluginId 保持一致。</summary>
     private const string PluginId = "0F2F7DB6-0E9B-D872-442F-2CBC3DAC1FA1";
@@ -50,16 +50,13 @@ internal static class ExportHelper
 
     private static string ResolveExportDirectory()
     {
-        if (ServiceLocator.TryGetService<IPluginDataDirectoryProvider>(out var provider)
-            && provider is not null)
+        if (!ServiceLocator.TryGetService<IPluginDataDirectoryProvider>(out var provider)
+            || provider is null)
         {
-            return provider.GetSubDirectory(PluginId, "Exports");
+            throw new InvalidOperationException(
+                "IPluginDataDirectoryProvider 未注册;请确认宿主 DI 在早期已注册该服务,"
+                + "并通过 ServiceLocator 解析后再调用 ExportHelper.ResolveExportDirectory。");
         }
-        // 旧版兼容路径：早期版本会把导出写到用户文档目录。
-        var legacyDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            "ProDataGrid_Exports");
-        Directory.CreateDirectory(legacyDir);
-        return legacyDir;
+        return provider.GetPluginExportsDirectory(PluginId);
     }
 }

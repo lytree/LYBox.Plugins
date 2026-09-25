@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;

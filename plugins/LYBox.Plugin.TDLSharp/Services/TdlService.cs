@@ -2,6 +2,7 @@ using LYBox.Plugin.Shared.Services;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;

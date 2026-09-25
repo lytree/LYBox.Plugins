@@ -172,11 +172,12 @@ public partial class TDLSharpPlugin
 
     private static string GetDefaultTdlRoot()
     {
-        // 默认 TDLib 数据目录：%USERPROFILE%\.tdl（按 Windows 当前用户隔离，与系统 / 程序目录解耦）。
+        // 默认 TDLib 数据目录：{UserHome}/.tdl（按当前用户隔离，与系统 / 程序目录解耦）。
         // 注意：这是本插件的约定，TDLib 本身没有默认目录。
-        return Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            ".tdl");
+        var profile = ServiceLocator.GetService<LYBox.Plugin.Shared.Services.IRuntimeProfile>();
+        var home = profile?.UserHomeDirectory
+            ?? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        return Path.Combine(home, ".tdl");
     }
 
     private static string GetSettingValue(IServiceProvider serviceProvider, string settingKey, string? envKey, string defaultValue)

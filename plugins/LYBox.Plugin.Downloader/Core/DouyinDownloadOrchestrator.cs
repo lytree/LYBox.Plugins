@@ -152,7 +152,17 @@ public sealed class DouyinDownloadOrchestrator : IHostedServiceLite
     {
         var root = _settings.Current.DownloadPath;
         if (!Path.IsPathRooted(root))
-            root = Path.Combine(AppContext.BaseDirectory, root);
+        {
+            // 用户配置了相对路径时,统一解析到插件数据目录下的 downloads/,
+            // 避免写入启动器根目录(自包含发布 / 只读权限场景)。
+            var provider = LYBox.Plugin.Shared.ServiceLocator
+                .TryGetService<LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider>(out var p) ? p : null;
+            var downloadsDir = provider?.GetPluginDownloadsDirectory(PluginConfigStore.PluginId)
+                ?? throw new InvalidOperationException(
+                    "下载路径为相对路径,但 IPluginDataDirectoryProvider 未注册;"
+                    + "请检查宿主 DI 是否在早期注册了 " + nameof(LYBox.Plugin.Shared.Services.IPluginDataDirectoryProvider) + "。");
+            root = Path.Combine(downloadsDir, root);
+        }
         Directory.CreateDirectory(root);
         var modeName = row.Mode.ToString().ToLowerInvariant();
         var sub = Path.Combine(root, modeName);
