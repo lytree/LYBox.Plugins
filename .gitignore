@@ -10,7 +10,8 @@ artifacts/
 # except nuget/, which may hold a committed local feed
 !**/[Pp]ackages/nuget/
 !**/[Pp]ackages/nuget/*.nupkg
-
+**/[Oo]bj/*
+**/[Bb]in/*
 # NuGet v3 project.json files
 *.nuget.props
 *.nuget.targets

@@ -91,6 +91,31 @@ public sealed class ForwardDb : DataConnection
         var newPath = Path.Combine(TdlPaths.ForwardDbDir, $"forward-{chatId}.db");
         return new ForwardDb(newPath);
     }
+
+    /// <summary>根据已知的 db 文件路径创建连接（用于按文件遍历清理等场景）。</summary>
+    public static ForwardDb OpenFromPath(string dbPath)
+    {
+        return new ForwardDb(dbPath);
+    }
+
+    /// <summary>
+    /// 按条件删除 ForwardRecords 中的记录。所有过滤参数都为 0 / null 时表示不过滤。
+    /// 返回实际删除的记录数。
+    /// </summary>
+    public async Task<int> DeleteForwardRecordsAsync(
+        long sourceChatId = 0,
+        long targetChatId = 0,
+        bool? onlySuccess = null,
+        long fromMessageId = 0)
+    {
+        var query = ForwardRecords.AsQueryable();
+        if (sourceChatId > 0) query = query.Where(r => r.SourceChatId == sourceChatId);
+        if (targetChatId > 0) query = query.Where(r => r.TargetChatId == targetChatId);
+        if (onlySuccess.HasValue) query = query.Where(r => r.IsSuccess == onlySuccess.Value);
+        if (fromMessageId > 0) query = query.Where(r => r.MessageId >= fromMessageId);
+
+        return await query.DeleteAsync();
+    }
 }
 
 /// <summary>转发记录库的迁移步骤定义。</summary>

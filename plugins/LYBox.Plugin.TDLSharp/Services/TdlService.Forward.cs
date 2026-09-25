@@ -884,19 +884,8 @@ public partial class TdlService
         var albumMessages = await CollectAlbumMessagesAsync(client, sourceChatId, message, ct);
         _logger.Log($"收集到 {albumMessages.Count} 条消息（含同组媒体）");
 
-        var (idsToForward, skippedIds) = await FilterAlreadyForwarded(db, sourceChatId, targetChatId, albumMessages);
-        if (skippedIds.Count > 0)
-        {
-            _logger.Log($"跳过已转发消息 {skippedIds.Count} 条");
-        }
-
-        if (idsToForward.Count == 0)
-        {
-            _logger.Log("所有消息均已转发，无需重复操作");
-            return;
-        }
-
-        var messagesToForward = albumMessages.Where(m => idsToForward.Contains(m.Id)).ToList();
+        // 单记录转发按用户要求：不再过滤已转发记录，总是转发全部同组消息。
+        var messagesToForward = albumMessages;
         var groups = GroupMessagesByAlbum(messagesToForward);
 
         int totalForwarded = 0;
@@ -954,7 +943,7 @@ public partial class TdlService
                     }
 
                     await Task.Delay(1000, ct);
-                    var forwardedMessages = group.Where(m => idsToForward.Contains(m.Id)).ToList();
+                    var forwardedMessages = group.ToList();
                     await RecordForwardedMessages(db, sourceChatId, targetChatId, forwardedMessages, isSuccess: true, result.Messages_);
 
                     totalForwarded += ids.Length;
@@ -988,7 +977,7 @@ public partial class TdlService
 
             if (!success)
             {
-                var failedMessages = group.Where(m => idsToForward.Contains(m.Id)).ToList();
+                var failedMessages = group.ToList();
                 await RecordForwardedMessages(db, sourceChatId, targetChatId, failedMessages, isSuccess: false, error: lastError);
                 _logger.Log($"消息转发失败 (MediaAlbumId: {group.First().MediaAlbumId})");
             }

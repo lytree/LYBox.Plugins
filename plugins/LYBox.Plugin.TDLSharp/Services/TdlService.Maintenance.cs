@@ -1,9 +1,100 @@
+using System.Diagnostics;
 using TdLib;
 
 namespace LYBox.Plugin.TDLSharp.Services;
 
 public partial class TdlService
 {
+    /// <summary>
+    /// 删除指定源 chat 的本地转发历史记录（ForwardRecords 表）。
+    /// 用于将某源/某目标/某次转发的"已转发"标记清理掉，以便下次重新转发。
+    /// 不会删除 Telegram 上的实际消息。
+    /// </summary>
+    /// <param name="sourceLink">源链接/用户名/chatId，用于定位源 DB 文件。留空=操作所有源 DB。</param>
+    /// <param name="targetLink">可选的目标过滤。0=不过滤。</param>
+    /// <param name="scope">清理范围：all=全部, success=仅成功, failed=仅失败。</param>
+    /// <param name="fromMessageId">可选，仅清理 MessageId &gt;= fromMessageId 的记录。0=不过滤。</param>
+    /// <param name="ct">取消令牌。</param>
+    /// <returns>删除的记录数。</returns>
+    public async Task<int> ClearForwardHistoryAsync(
+        string? sourceLink,
+        string? targetLink = null,
+        string scope = "all",
+        long fromMessageId = 0,
+        CancellationToken ct = default)
+    {
+        await EnsureReadyAsync();
+
+        var sourceChatId = 0L;
+        if (!string.IsNullOrWhiteSpace(sourceLink))
+        {
+            // 源链接可能指向单条消息（含 messageId），先尝试解析，否则按 chatId/username 解析。
+            var (resolvedChatId, _) = await ResolveSourceLinkAsync(sourceLink);
+            sourceChatId = resolvedChatId;
+            if (sourceChatId == 0)
+            {
+                sourceChatId = await ResolveChatIdAsync(sourceLink);
+            }
+        }
+
+        long targetChatId = 0;
+        if (!string.IsNullOrWhiteSpace(targetLink))
+        {
+            targetChatId = await ResolveChatIdAsync(targetLink);
+        }
+
+        var scopeNorm = (scope ?? "all").Trim().ToLowerInvariant();
+        bool? onlySuccess = scopeNorm switch
+        {
+            "success" => true,
+            "failed" => false,
+            _ => null,
+        };
+
+        // 收集要操作的 db 文件路径。sourceChatId>0 时只操作单个 db，否则遍历所有 db 文件。
+        var dbFiles = new List<string>();
+        if (sourceChatId > 0)
+        {
+            dbFiles.Add(Path.Combine(TdlPaths.ForwardDbDir, $"forward-{sourceChatId}.db"));
+        }
+        else
+        {
+            Directory.CreateDirectory(TdlPaths.ForwardDbDir);
+            dbFiles.AddRange(Directory.EnumerateFiles(TdlPaths.ForwardDbDir, "forward-*.db"));
+        }
+
+        if (dbFiles.Count == 0)
+        {
+            _logger.Log("未找到任何转发记录数据库");
+            return 0;
+        }
+
+        int totalDeleted = 0;
+        foreach (var path in dbFiles)
+        {
+            ct.ThrowIfCancellationRequested();
+            if (!File.Exists(path)) continue;
+
+            try
+            {
+                using var db = ForwardDb.OpenFromPath(path);
+                await db.EnsureSchemaInitializedAsync();
+
+                var deleted = await db.DeleteForwardRecordsAsync(sourceChatId, targetChatId, onlySuccess, fromMessageId);
+                totalDeleted += deleted;
+
+                _logger.Log($"已清理 {Path.GetFileName(path)}: {deleted} 条 (累计 {totalDeleted})");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log($"清理 {Path.GetFileName(path)} 失败: {ex.Message}");
+                Debug.WriteLine($"[TdlService] ClearForwardHistory 异常: {ex}");
+            }
+        }
+
+        _logger.Log($"清理转发历史完成，共删除 {totalDeleted} 条记录");
+        return totalDeleted;
+    }
     public async Task ClearMessagesAsync(string? channelLink, string containsText, bool silent, int limit, CancellationToken ct = default)
     {
         await EnsureReadyAsync();

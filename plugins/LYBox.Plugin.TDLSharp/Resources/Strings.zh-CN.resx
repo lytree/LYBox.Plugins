@@ -60,7 +60,7 @@
   <data name="NAV_TDL_MessageExport" xml:space="preserve"><value>消息导出</value></data>
   <data name="NAV_TDL_SingleForward" xml:space="preserve"><value>单条深度转发</value></data>
   <data name="BTN_ClearAll" xml:space="preserve"><value>清除全部</value></data>
-  <data name="BTN_ClearHistory" xml:space="preserve"><value>清除历史</value></data>
+  <data name="BTN_ClearForwardHistory" xml:space="preserve"><value>清除历史</value></data>
   <data name="BTN_Apply" xml:space="preserve"><value>应用</value></data>
   <data name="LBL_ParameterConfig" xml:space="preserve"><value>参数配置</value></data>
   <data name="LBL_LogOutput" xml:space="preserve"><value>日志输出</value></data>
@@ -341,4 +341,19 @@
   <data name="BTN_QrLogin_Tip" xml:space="preserve"><value>打开登录对话框并切换到二维码登录方式</value></data>
   <data name="BTN_InitializeClient" xml:space="preserve"><value>初始化</value></data>
   <data name="BTN_InitializeClient_Tip" xml:space="preserve"><value>初始化 TDLib 客户端（不弹出登录窗口）</value></data>
+  <data name="TOOLTIP_ClearHistory" xml:space="preserve"><value>清理本地转发历史记录（不会删除 Telegram 上的消息）</value></data>
+  <data name="PARAM_HistorySource" xml:space="preserve"><value>历史源</value></data>
+  <data name="PARAM_HistorySourceDesc" xml:space="preserve"><value>源频道/群聊链接、用户名或 ChatId。留空=清理所有源的转发记录</value></data>
+  <data name="PARAM_HistoryTarget" xml:space="preserve"><value>历史目标（可选）</value></data>
+  <data name="PARAM_HistoryTargetDesc" xml:space="preserve"><value>可选目标过滤，仅清理目标为该聊天的记录</value></data>
+  <data name="PARAM_HistoryScope" xml:space="preserve"><value>清理范围</value></data>
+  <data name="PARAM_HistoryScopeDesc" xml:space="preserve"><value>all=全部，success=仅成功，failed=仅失败</value></data>
+  <data name="PARAM_HistoryFromMsgId" xml:space="preserve"><value>起始消息 ID</value></data>
+  <data name="PARAM_HistoryFromMsgIdDesc" xml:space="preserve"><value>可选：仅清理 MessageId 大于等于该值的记录。0=不限制</value></data>
+  <data name="LOG_ClearHistoryTitle" xml:space="preserve"><value>清理转发历史</value></data>
+  <data name="FMT_ClearHistoryConfirm" xml:space="preserve"><value>确认清理源 "{0}" 的本地转发历史？该操作只会删除本地数据库中的记录，不会删除 Telegram 上的任何消息。</value></data>
+  <data name="FMT_ClearHistoryQuickConfirm" xml:space="preserve"><value>确认清理源 "{0}" 的本地转发历史（范围：{1}）？不会删除 Telegram 上的消息。</value></data>
+  <data name="WORD_HistoryScope_All" xml:space="preserve"><value>全部</value></data>
+  <data name="WORD_HistoryScope_Success" xml:space="preserve"><value>仅成功</value></data>
+  <data name="WORD_HistoryScope_Failed" xml:space="preserve"><value>仅失败</value></data>
 </root>

@@ -141,6 +141,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
             Status = "执行中",
         };
         var historyStart = DateTime.UtcNow;
+        // 在执行前一次性插入"执行中"记录，并可靠地回填 Id，避免后续更新因 Id=0 静默失败。
         await SaveExecutionHistoryRecordAsync(historyRecord);
 
         TdlService? tdlService = null;
@@ -167,6 +168,7 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         finally
         {
             historyRecord.Duration = DateTime.UtcNow - historyStart;
+            // 始终以最终 Id 更新：若插入时未拿到 Id，则基于 ScriptId+ExecutedAt 重新定位该条记录。
             await UpdateExecutionHistoryRecordAsync(historyRecord);
             IsRunning = false;
         }
@@ -341,7 +343,9 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         {
             using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
-            record.Id = await db.InsertWithInt32IdentityAsync(record);
+            // InsertWithInt32IdentityAsync 会返回并写回新生成的 Id，确保 record.Id 在更新时非零。
+            var newId = await db.InsertWithInt32IdentityAsync(record);
+            if (newId > 0) record.Id = newId;
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 保存执行历史记录失败: {ex.Message}"); }
     }
@@ -352,7 +356,28 @@ public abstract partial class TdlViewModelBase : ViewModelBase
         {
             using var db = ExecutionHistoryDb.CreateForScript(Script.Id);
             await db.EnsureSchemaInitializedAsync();
-            await db.UpdateAsync(record);
+
+            // 兜底：若插入时未拿到 Id（异常或返回 0），则按 ScriptId+ExecutedAt 定位"执行中"占位记录。
+            if (record.Id <= 0)
+            {
+                var pending = await db.ExecutionRecords
+                    .Where(r => r.ScriptId == record.ScriptId
+                                && r.ExecutedAt == record.ExecutedAt
+                                && r.Status == "执行中")
+                    .OrderByDescending(r => r.Id)
+                    .FirstOrDefaultAsync();
+                if (pending != null) record.Id = pending.Id;
+            }
+
+            if (record.Id <= 0)
+            {
+                // 仍找不到占位记录：说明插入步骤未成功，直接重新插入一条带终态的记录，避免丢失历史。
+                record.Id = await db.InsertWithInt32IdentityAsync(record);
+            }
+            else
+            {
+                await db.UpdateAsync(record);
+            }
         }
         catch (Exception ex) { Debug.WriteLine($"[TdlViewModel] 更新执行历史记录失败: {ex.Message}"); }
     }

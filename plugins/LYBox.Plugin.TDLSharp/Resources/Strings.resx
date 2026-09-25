@@ -60,7 +60,7 @@
   <data name="NAV_TDL_MessageExport" xml:space="preserve"><value>Message Export</value></data>
   <data name="NAV_TDL_SingleForward" xml:space="preserve"><value>Single Deep Forward</value></data>
   <data name="BTN_ClearAll" xml:space="preserve"><value>Clear All</value></data>
-  <data name="BTN_ClearHistory" xml:space="preserve"><value>Clear History</value></data>
+  <data name="BTN_ClearForwardHistory" xml:space="preserve"><value>Clear History</value></data>
   <data name="BTN_Apply" xml:space="preserve"><value>Apply</value></data>
   <data name="LBL_ParameterConfig" xml:space="preserve"><value>Parameter Configuration</value></data>
   <data name="LBL_LogOutput" xml:space="preserve"><value>Log Output</value></data>
@@ -341,4 +341,19 @@
   <data name="BTN_QrLogin_Tip" xml:space="preserve"><value>Open the login dialog and switch to QR code login</value></data>
   <data name="BTN_InitializeClient" xml:space="preserve"><value>Initialize</value></data>
   <data name="BTN_InitializeClient_Tip" xml:space="preserve"><value>Initialize the TDLib client without opening the login dialog</value></data>
+  <data name="TOOLTIP_ClearHistory" xml:space="preserve"><value>Clear local forward history records (does not delete Telegram messages)</value></data>
+  <data name="PARAM_HistorySource" xml:space="preserve"><value>History Source</value></data>
+  <data name="PARAM_HistorySourceDesc" xml:space="preserve"><value>Source chat link/username/ID. Leave empty to clear records for ALL source chats.</value></data>
+  <data name="PARAM_HistoryTarget" xml:space="preserve"><value>History Target (optional)</value></data>
+  <data name="PARAM_HistoryTargetDesc" xml:space="preserve"><value>Optional target filter. Only clear records whose target matches this chat.</value></data>
+  <data name="PARAM_HistoryScope" xml:space="preserve"><value>Scope</value></data>
+  <data name="PARAM_HistoryScopeDesc" xml:space="preserve"><value>all=both, success=successful forwards only, failed=failed forwards only</value></data>
+  <data name="PARAM_HistoryFromMsgId" xml:space="preserve"><value>From Message ID</value></data>
+  <data name="PARAM_HistoryFromMsgIdDesc" xml:space="preserve"><value>Optional: only clear records with MessageId >= this value. 0=ignore.</value></data>
+  <data name="LOG_ClearHistoryTitle" xml:space="preserve"><value>Clear Forward History</value></data>
+  <data name="FMT_ClearHistoryConfirm" xml:space="preserve"><value>Clear forward history for source "{0}"? This only deletes local DB records and will NOT delete any Telegram messages.</value></data>
+  <data name="FMT_ClearHistoryQuickConfirm" xml:space="preserve"><value>Clear local forward history for source "{0}" (scope: {1})? Telegram messages will NOT be deleted.</value></data>
+  <data name="WORD_HistoryScope_All" xml:space="preserve"><value>All</value></data>
+  <data name="WORD_HistoryScope_Success" xml:space="preserve"><value>Successful only</value></data>
+  <data name="WORD_HistoryScope_Failed" xml:space="preserve"><value>Failed only</value></data>
 </root>
