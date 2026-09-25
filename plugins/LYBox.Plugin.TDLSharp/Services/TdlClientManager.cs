@@ -67,11 +67,13 @@ public class TdlClientManager : IDisposable
         ProxyPort = proxyPort;
         EnableProxy = enableProxy;
 
-        // 默认 TDLib 数据目录：Data/{PluginId}/tdl/（由 IPluginDataDirectoryProvider 解析）。
-        // 设置项 TDL.TdlRootPath 为空时使用此默认。
+        // 默认 TDLib 数据目录：%USERPROFILE%\.tdl（解析逻辑在 GetDefaultTdlRoot 中）。
+        // 设置项 TDL.TdlRootPath 为空时使用此默认；正常情况下 tdlRootPath 不会为空字符串，
+        // 因为 ResolveSettings 已经兜底为 GetDefaultTdlRoot()。此处保留空值保险但默认指向同一处。
         TdlRoot = string.IsNullOrWhiteSpace(tdlRootPath)
-            ? TdlPaths.DataSubdir("tdl")
+            ? ResolveDefaultTdlRoot()
             : tdlRootPath;
+
         if (!Directory.Exists(TdlRoot))
         {
             Directory.CreateDirectory(TdlRoot);
@@ -179,6 +181,16 @@ public class TdlClientManager : IDisposable
     }
 
     public string GetTdlRoot() => TdlRoot;
+
+    private static string ResolveDefaultTdlRoot()
+    {
+        // 默认 TDLib 数据目录：%USERPROFILE%\.tdl。
+        // 与 TDLSharpPlugin.GetDefaultTdlRoot 保持一致，但本类不应反向依赖插件入口，
+        // 故在此独立解析，避免循环依赖。
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".tdl");
+    }
 
     private async Task ConfigureTdlibParameters(TdClient client, string outputPath, ILogger cbLogger)
     {

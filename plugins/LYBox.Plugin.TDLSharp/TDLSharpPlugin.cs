@@ -99,7 +99,10 @@ public partial class TDLSharpPlugin
         string proxyServer = GetSettingValue(serviceProvider, "TDL.ProxyServer", "tdl_proxy_server", "127.0.0.1");
         string proxyPortStr = GetSettingValue(serviceProvider, "TDL.ProxyPort", "tdl_proxy_port", "7897");
         string enableProxyStr = GetSettingValue(serviceProvider, "TDL.EnableProxy", "tdl_enable_proxy", "true");
-        string tdlRootPath = GetSettingValue(serviceProvider, "TDL.TdlRootPath", "tdl_root_path", GetDefaultTdlRoot());
+        // TDLib 数据目录优先使用用户在设置页显式配置的值；未配置时回落默认 %USERPROFILE%\.tdl。
+        // 不再使用 %APPDATA% 或 tdl_root_path 用户环境变量。
+        string tdlRootPath = GetSettingValue(serviceProvider, "TDL.TdlRootPath", null, GetDefaultTdlRoot())
+            ?? GetDefaultTdlRoot();
 
         int proxyPort = int.TryParse(proxyPortStr, out var port) ? port : 7897;
         bool enableProxy = bool.TryParse(enableProxyStr, out var enabled) && enabled;
@@ -109,11 +112,14 @@ public partial class TDLSharpPlugin
 
     private static string GetDefaultTdlRoot()
     {
-        // 默认 TDLib 数据目录：Data/{PluginId}/tdl/（由 IPluginDataDirectoryProvider 解析）。
-        return TdlPaths.DataSubdir("tdl");
+        // 默认 TDLib 数据目录：%USERPROFILE%\.tdl（按 Windows 当前用户隔离，与系统 / 程序目录解耦）。
+        // 注意：这是本插件的约定，TDLib 本身没有默认目录。
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            ".tdl");
     }
 
-    private static string GetSettingValue(IServiceProvider serviceProvider, string settingKey, string envKey, string defaultValue)
+    private static string GetSettingValue(IServiceProvider serviceProvider, string settingKey, string? envKey, string defaultValue)
     {
         var settingsService = serviceProvider.GetService<ISettingsService>();
         if (settingsService != null)
@@ -122,6 +128,8 @@ public partial class TDLSharpPlugin
             if (!string.IsNullOrWhiteSpace(value)) return value;
         }
 
+        // envKey 为 null 时跳过环境变量兜底，避免污染默认目录（典型场景：TDL.TdlRootPath）。
+        if (envKey is null) return defaultValue;
         return GetEnvDefault(envKey) ?? defaultValue;
     }
 

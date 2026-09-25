@@ -10,18 +10,20 @@ namespace LYBox.Plugin.TDLSharp.Services;
 /// 解析顺序：
 /// <list type="number">
 /// <item>经 <see cref="IPluginDataDirectoryProvider"/> 拿 <c>Data/{PluginId}/{leaf}</c>（推荐）；</item>
-/// <item>回退到 <c>%APPDATA%/AvaloniaTemplate/TDLSharp/{leaf}</c>（旧版路径，保留兼容）；</item>
+/// <item>回退到程序目录下 <c>Data/{PluginId}/{leaf}</c>（无 %APPDATA% 依赖）；</item>
 /// </list>
+///
+/// TDLib 会话数据（tdl/）的默认位置由 <c>TDLSharpPlugin.GetDefaultTdlRoot()</c> 单独管理
+/// （%USERPROFILE%\.tdl），不经过本类。
 /// </summary>
 public static class TdlPaths
 {
     /// <summary>PluginId 必须与 csproj 中的 PluginId 保持一致。</summary>
     public const string PluginId = "A1B2C3D4-E5F6-7890-ABCD-TDLSHARP00001";
 
-    /// <summary>旧版数据根目录（%APPDATA%/AvaloniaTemplate/TDLSharp），用于迁移。</summary>
-    private static readonly string LegacyDataRoot = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "AvaloniaTemplate", "TDLSharp");
+    /// <summary>程序目录下的回退数据根（不再依赖 %APPDATA%）。</summary>
+    public static readonly string FallbackDataRoot = Path.Combine(
+        AppContext.BaseDirectory, "Data", PluginId);
 
     /// <summary>解析后的数据根目录（不创建目录，仅算路径）。</summary>
     public static string DataRoot
@@ -33,8 +35,8 @@ public static class TdlPaths
             {
                 return provider.GetPluginDataDirectory(PluginId);
             }
-            // 回退到旧路径（早期版本会在此创建子目录）
-            return LegacyDataRoot;
+            // 回退到程序目录下的 Data/{PluginId}/，避免再写入系统用户目录。
+            return FallbackDataRoot;
         }
     }
 
