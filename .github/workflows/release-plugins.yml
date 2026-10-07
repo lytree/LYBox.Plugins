@@ -1,31 +1,37 @@
 name: Release Plugins
 
 # 插件发布工作流（独立仓库，无宿主源码；SDK 从 nuget.org 或可选本地 feed 解析）
-# 触发标签：
-#   plugin-V*                  例如 plugin-V1.0.0、plugin-V1.0.0-preview.1  → 打包全部插件
-#   plugin-<ProjectName>-V*     例如 plugin-LYBox.Plugin.DateTime-V1.2.0  → 仅打包指定插件
-# 产物：各插件 zip（含 plugin.json 清单，剥离 .pdb/.xml/.deps.json/.runtimeconfig.json）
-# SDK 来源：
-#   默认从 nuget.org 解析（需 SDK 已发布）。
-#   可选：workflow_dispatch 输入 sdk-feed=local + sdk-feed-path（指向宿主仓库 artifacts/packages/sdk）
-#         + sdk-version（注入 PluginSdkVersion），用于 SDK 刚发版尚未上 nuget.org 时的先行插件发布。
+#
+# 触发方式：仅手动触发（Actions → Release Plugins → Run workflow）
+#   不再由 tag push 触发，避免误推 tag 产生半成品 Release。
+#
+# 产物：每个插件一个独立 zip（含根目录 plugin.json 清单，剥离 .pdb/.xml/.deps.json/.runtimeconfig.json），
+#       打包结构与宿主 PluginInstallationManager 的安装约定一致（plugin.json 必须在 zip 根目录）。
+#
+# 幂等：若目标 tag 的 Release 已存在，先删除旧 Release 与旧 tag，再重新发布。
 
 on:
-  push:
-    tags:
-      - 'plugin-V*'
-      - 'plugin-*-V*'
   workflow_dispatch:
     inputs:
       version:
-        description: '插件版本号（例如 1.2.3、1.2.3-preview.1、1.2.3-beta.1；手动触发必填）'
+        description: '发布版本号（例如 1.2.3、1.2.3-preview.1；用于生成 tag 与 Release 标题）'
         required: true
         type: string
       plugin_filter:
-        description: '插件过滤器（逗号分隔 ProjectName；留空=全部插件）'
+        description: '选择要构建的插件（逗号分隔 ProjectName，留空=全部）。可选值：LYBox.Plugin.BTSou, LYBox.Plugin.ButtonsInputs, LYBox.Plugin.DateTime, LYBox.Plugin.DialogFeedbacks, LYBox.Plugin.Downloader, LYBox.Plugin.LayoutDisplay, LYBox.Plugin.NavigationMenus, LYBox.Plugin.ProDataGrid, LYBox.Plugin.ScottPlot, LYBox.Plugin.TDLSharp, LYBox.Plugin.ViteSample, LYBox.Plugin.WebTemplate'
         required: false
         default: ''
         type: string
+      plugin_version:
+        description: '可选：强制覆盖所选插件的业务版本（对应 build.cs --plugin-version）。留空=使用各 csproj 内的 PluginVersion。仅在需要「同一版本号重发全部插件」时填写。'
+        required: false
+        default: ''
+        type: string
+      prerelease:
+        description: '将 Release 标记为预发布'
+        required: false
+        default: true
+        type: boolean
       sdk_feed:
         description: 'SDK 来源（local|nuget；默认 nuget）'
         required: false
@@ -49,7 +55,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-plugin-${{ github.ref_name || inputs.version }}-${{ inputs.plugin_filter }}
+  group: release-plugin-${{ inputs.version }}-${{ inputs.plugin_filter }}
   cancel-in-progress: false
 
 env:
@@ -68,52 +74,75 @@ jobs:
       sdk_feed: ${{ steps.ctx.outputs.sdk_feed }}
       sdk_feed_path: ${{ steps.ctx.outputs.sdk_feed_path }}
       sdk_version: ${{ steps.ctx.outputs.sdk_version }}
+      prerelease: ${{ steps.ctx.outputs.prerelease }}
     steps:
-      - name: Parse version, filter, and tag
+      - uses: actions/checkout@v7
+
+      - name: Parse and validate version, filter, and tag
         id: ctx
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ inputs.version }}"
-            FILTER="${{ inputs.plugin_filter }}"
-            if [ -n "$FILTER" ]; then
-              TAG="plugin-${FILTER}-V${VERSION}"
-              NAME="Plugin ${FILTER} V${VERSION}"
-            else
-              TAG="plugin-V${VERSION}"
-              NAME="Plugins V${VERSION}"
-            fi
-          else
-            TAG="${GITHUB_REF_NAME}"
-            if [[ "$TAG" =~ ^plugin-V([0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?)$ ]]; then
-              FILTER=""
-              VERSION="${BASH_REMATCH[1]}"
-              NAME="Plugins V${VERSION}"
-            elif [[ "$TAG" =~ ^plugin-(.+)-V([0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?)$ ]]; then
-              FILTER="${BASH_REMATCH[1]}"
-              VERSION="${BASH_REMATCH[2]}"
-              NAME="Plugin ${FILTER} V${VERSION}"
-            else
-              echo "::error::无法识别的插件标签格式: $TAG"
-              exit 1
-            fi
-          fi
+          VERSION='${{ inputs.version }}'
+          FILTER='${{ inputs.plugin_filter }}'
+          PLUGIN_VERSION='${{ inputs.plugin_version }}'
 
+          # 版本号格式校验
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?$ ]]; then
-            echo "::error::版本号格式无效: $VERSION"
+            echo "::error::版本号格式无效: $VERSION（期望形如 1.2.3 / 1.2.3-preview.1）"
             exit 1
           fi
 
+          # 可选：业务版本号格式校验
+          if [ -n "$PLUGIN_VERSION" ] && [[ ! "$PLUGIN_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-(preview|beta|bate)(\.[0-9]+)?)?$ ]]; then
+            echo "::error::plugin_version 格式无效: $PLUGIN_VERSION"
+            exit 1
+          fi
+
+          # 归一化过滤器：去空格、转小写（项目名大小写不敏感）
+          FILTER="$(echo "$FILTER" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+
+          # 校验所选插件确实存在，避免拼写错误导致空发布
+          if [ -n "$FILTER" ]; then
+            IFS=',' read -ra SELECTED <<< "$FILTER"
+            for name in "${SELECTED[@]}"; do
+              [ -z "$name" ] && continue
+              if [ ! -d "plugins/$name" ]; then
+                echo "::error::插件不存在: $name（可选值见 workflow 输入说明）"
+                exit 1
+              fi
+            done
+            # 统计有效插件数：单个插件走独立 tag，多个或全部走统一 tag
+            count=0
+            for name in "${SELECTED[@]}"; do
+              [ -n "$name" ] && count=$((count + 1))
+            done
+          else
+            count=0
+          fi
+
+          if [ "$count" -eq 1 ]; then
+            TAG="plugin-${FILTER}-V${VERSION}"
+            NAME="Plugin ${FILTER} V${VERSION}"
+          else
+            TAG="plugin-V${VERSION}"
+            if [ "$count" -gt 1 ]; then
+              NAME="Plugins V${VERSION} (${count} plugins)"
+            else
+              NAME="Plugins V${VERSION}"
+            fi
+          fi
+
           echo "plugin_filter=$FILTER" >> "$GITHUB_OUTPUT"
-          echo "plugin_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "plugin_version=$PLUGIN_VERSION" >> "$GITHUB_OUTPUT"
           echo "tag_name=$TAG" >> "$GITHUB_OUTPUT"
           echo "release_name=$NAME" >> "$GITHUB_OUTPUT"
-          echo "sdk_feed=${{ inputs.sdk_feed || 'nuget' }}" >> "$GITHUB_OUTPUT"
+          echo "sdk_feed=${{ inputs.sdk_feed }}" >> "$GITHUB_OUTPUT"
           echo "sdk_feed_path=${{ inputs.sdk_feed_path }}" >> "$GITHUB_OUTPUT"
           echo "sdk_version=${{ inputs.sdk_version }}" >> "$GITHUB_OUTPUT"
-          echo "Resolved plugin release: tag=$TAG filter='$FILTER' version=$VERSION"
+          echo "prerelease=${{ inputs.prerelease }}" >> "$GITHUB_OUTPUT"
+          echo "Resolved: tag=$TAG filter='$FILTER' count=$count version=$VERSION plugin_version='$PLUGIN_VERSION'"
 
   build_plugins:
     name: Build Plugins
@@ -128,6 +157,7 @@ jobs:
 
       - name: Build & pack plugins
         run: |
+          set -euo pipefail
           ARGS="--build=plugin --configuration=Release"
           if [ -n "${{ needs.resolve_context.outputs.plugin_filter }}" ]; then
             ARGS="$ARGS --plugin=${{ needs.resolve_context.outputs.plugin_filter }}"
@@ -143,17 +173,34 @@ jobs:
           if [ -n "${{ needs.resolve_context.outputs.sdk_version }}" ]; then
             ARGS="$ARGS --sdk-version=${{ needs.resolve_context.outputs.sdk_version }}"
           fi
+          if [ -n "${{ needs.resolve_context.outputs.plugin_version }}" ]; then
+            ARGS="$ARGS --plugin-version=${{ needs.resolve_context.outputs.plugin_version }}"
+          fi
           echo "Running: dotnet build/build.cs $ARGS"
           dotnet build/build.cs $ARGS
 
-      - name: List plugin zips
-        run: ls -lh artifacts/packages/plugins/
+      - name: Verify and collect plugin zips
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          shopt -s nullglob
+          zips=(artifacts/packages/plugins/*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then
+            echo "::error::未产出任何插件 zip，请检查上方构建日志"
+            exit 1
+          fi
+          for z in "${zips[@]}"; do
+            cp "$z" dist/
+          done
+          echo "Collected ${#zips[@]} plugin zip(s):"
+          ls -lh dist/
 
       - name: Upload plugin zips
         uses: actions/upload-artifact@v7
         with:
           name: plugin-zips
-          path: artifacts/packages/plugins/*.zip
+          path: dist/*.zip
           if-no-files-found: error
           retention-days: 7
 
@@ -162,26 +209,45 @@ jobs:
     needs: [resolve_context, build_plugins]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-        if: github.event_name == 'workflow_dispatch'
-        with:
-          fetch-depth: 0
-
-      - name: Create tag for manual release
-        if: github.event_name == 'workflow_dispatch'
+      - name: Delete existing release and tag if present
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ needs.resolve_context.outputs.tag_name }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag "${{ needs.resolve_context.outputs.tag_name }}"
-          git push origin "${{ needs.resolve_context.outputs.tag_name }}"
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG 已存在，删除后重新发布"
+            gh release delete "$TAG" --yes --cleanup-tag
+          else
+            echo "Release $TAG 不存在，新建"
+          fi
+          # 清理可能残留的游离 tag（Release 不存在但 tag 存在的情况）
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "删除已存在的 tag: $TAG"
+            git push origin ":refs/tags/$TAG"
+          fi
 
-      - name: Download all artifacts
+      - name: Download plugin zips
         uses: actions/download-artifact@v8
         with:
-          path: artifacts
+          path: dist
+          pattern: plugin-zips
+          merge-multiple: true
 
-      - name: List artifacts
-        run: find artifacts -type f | sort
+      - name: Verify downloaded zips
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          zips=(dist/*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then
+            echo "::error::下载后未找到任何 zip，终止发布以避免产生空 Release"
+            exit 1
+          fi
+          echo "Releasing ${#zips[@]} plugin zip(s):"
+          ls -lh dist/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
@@ -189,5 +255,7 @@ jobs:
           tag_name: ${{ needs.resolve_context.outputs.tag_name }}
           name: ${{ needs.resolve_context.outputs.release_name }}
           generate_release_notes: true
-          files: |
-            artifacts/plugin-zips/*.zip
+          prerelease: ${{ needs.resolve_context.outputs.prerelease }}
+          # 关键：glob 未匹配时直接失败，杜绝「流水线全绿但 Release 为空」
+          fail_on_unmatched_files: true
+          files: dist/*.zip
