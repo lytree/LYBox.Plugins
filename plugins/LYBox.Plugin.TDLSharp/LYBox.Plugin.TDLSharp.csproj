@@ -9,7 +9,7 @@
 		<PluginName>TDLSharp Plugin</PluginName>
 		<PluginAuthor>TDLSharp</PluginAuthor>
 		<PluginDescription>Telegram TDLib integration plugin providing batch forward, message export, media download and more.</PluginDescription>
-		<PluginVersion>1.0.0-preview.1</PluginVersion>
+		<PluginVersion>1.0.0-preview.2</PluginVersion>
 		<Version>$(PluginVersion)</Version>
 		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
 		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
