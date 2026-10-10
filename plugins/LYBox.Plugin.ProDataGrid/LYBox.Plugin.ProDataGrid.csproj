@@ -30,7 +30,7 @@
 	<ItemGroup>
 		<PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
-		<PackageReference Include="ProDataGrid" Version="12.0.4" />
+		<PackageReference Include="ProDataGrid" Version="12.1.0.6" />
 		<PackageReference Include="SkiaSharp" Version="3.119.4" />
 	</ItemGroup>
 
