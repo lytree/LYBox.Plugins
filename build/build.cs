@@ -166,6 +166,12 @@ Task("PackPlugins")
     static void CopyPluginWwwroot(ICakeContext ctx, BuildContext bctx, PluginProjectInfo plugin, string publishDir)
     {
         var pluginSrcDir = Path.Combine(bctx.RootDir, "plugins", plugin.ProjectName);
+
+        // Vite 前端插件：先跑 pnpm build，再把产物注入 wwwroot/。
+        // 否则打出来的 zip 会缺少 /index.html，宿主按 entryPage 加载时直接 404。
+        if (plugin.UiDir is { Length: > 0 } uiDir)
+            BuildPluginFrontend(ctx, bctx, plugin, pluginSrcDir, uiDir);
+
         var wwwrootSrc = Path.Combine(pluginSrcDir, "wwwroot");
 
         if (!Directory.Exists(wwwrootSrc))
@@ -177,6 +183,51 @@ Task("PackPlugins")
         var wwwrootDest = Path.Combine(publishDir, "wwwroot");
         CopyDirectoryRecursive(wwwrootSrc, wwwrootDest);
         ctx.Log.Information("插件 {0} wwwroot 已复制到 {1}", plugin.ProjectName, wwwrootDest);
+    }
+
+    /// <summary>
+    /// 构建 Vite 前端并把 dist/ 同步到插件 wwwroot/。
+    /// 约定：csproj 声明 &lt;ZitieUiDir&gt;ui&lt;/ZitieUiDir&gt;；ui/dist 即 wwwroot 内容。
+    /// 失败时告警而不中断——调用方随后会在缺 index.html 时给出更明确的错误。
+    /// </summary>
+    static void BuildPluginFrontend(
+        ICakeContext ctx, BuildContext bctx, PluginProjectInfo plugin, string pluginSrcDir, string uiDir)
+    {
+        var uiPath = Path.Combine(pluginSrcDir, uiDir);
+        if (!Directory.Exists(uiPath))
+        {
+            ctx.Log.Warning("插件 {0} 声明了 ZitieUiDir={1}，但目录不存在，跳过前端构建", plugin.ProjectName, uiDir);
+            return;
+        }
+
+        ctx.Log.Information("插件 {0}：构建前端（{1}）", plugin.ProjectName, uiPath);
+
+        // 优先用仓库约定的 pnpm（lockfile / packageManager 已锁定），缺失时回退 npm。
+        // 必须解析为完整路径：Windows 上 pnpm/npm 是 .cmd shim，
+        // UseShellExecute=false 时 Process.Start 不会自行补 .cmd 后缀。
+        var exe = bctx.ResolvePackageManager("pnpm") ?? bctx.ResolvePackageManager("npm");
+        if (exe is null)
+        {
+            ctx.Log.Warning(
+                "插件 {0}：PATH 中未找到 pnpm / npm，跳过前端构建，将使用现有 wwwroot/ 内容",
+                plugin.ProjectName);
+            return;
+        }
+
+        var exitCode = bctx.RunProcess(exe, "run build", uiPath);
+
+        var distDir = Path.Combine(uiPath, "dist");
+        if (exitCode != 0 || !Directory.Exists(distDir))
+        {
+            ctx.Log.Warning(
+                "插件 {0}：前端构建失败（{1} run build 退出码 {2}），将使用现有 wwwroot/ 内容",
+                plugin.ProjectName, exe, exitCode);
+            return;
+        }
+
+        var wwwrootDest = Path.Combine(pluginSrcDir, "wwwroot");
+        CopyDirectoryRecursive(distDir, wwwrootDest);
+        ctx.Log.Information("插件 {0}：前端产物已注入 wwwroot/", plugin.ProjectName);
     }
 
     static void CopyDirectoryRecursive(string sourceDir, string destDir)
@@ -244,7 +295,7 @@ Task("PackPlugins")
                         continue;
                     }
 
-                    var entry = archive.CreateEntry(relativePath);
+                    var entry = archive.CreateEntry(ToZipEntryPath(relativePath));
                     using (var entryStream = entry.Open())
                     using (var fileStream = File.OpenRead(file))
                     {
@@ -258,6 +309,21 @@ Task("PackPlugins")
 
         ctx.Log.Information("All plugin zip packages created in: {0}", zipOutputDir);
     }
+
+    /// <summary>
+    /// 把相对路径转换为符合 ZIP 规范的条目名：分隔符统一为 '/'。
+    /// </summary>
+    /// <remarks>
+    /// <see cref="Path.GetRelativePath"/> 在 Windows 上返回反斜杠（<c>wwwroot\data\a.json</c>）。
+    /// ZIP 规范（APPNOTE 4.4.17.1）规定条目名用 '/'，反斜杠是普通文件名字符而非分隔符。
+    /// 严格解压器（如 .NET <c>ZipFile.ExtractToDirectory</c>）会照字面创建一个名为
+    /// <c>wwwroot\index.html</c> 的文件，使插件 wwwroot 目录结构完全失效。
+    /// <see cref="ZipArchive.CreateEntry"/> 不做规范化，故须在此显式转换。
+    /// </remarks>
+    static string ToZipEntryPath(string relativePath)
+        => relativePath
+            .Replace(Path.DirectorySeparatorChar, '/')
+            .Replace(Path.AltDirectorySeparatorChar, '/');
 
     static void EnsurePluginManifest(string publishDir, PluginProjectInfo plugin, BuildContext bctx, ICakeContext ctx)
     {
@@ -420,7 +486,86 @@ public class BuildContext
     public void CleanDirectory(string path) => Cake.CleanDirectory(path);
     public void DotNetBuild(string project, DotNetBuildSettings settings) => Cake.DotNetBuild(project, settings);
     public void DotNetPublish(string project, DotNetPublishSettings settings) => Cake.DotNetPublish(project, settings);
+    /// <summary>
+    /// 运行外部构建命令并返回退出码。
+    /// 用 <see cref="System.Diagnostics.Process"/> 而非 Cake.Process：
+    /// Cake 6.x 未把 ProcessSettings.Environment 暴露为可写字典，
+    /// 而前端构建依赖继承当前 PATH 才能找到 pnpm / node。
+    /// </summary>
+    public int RunProcess(string fileName, string arguments, string workingDirectory)
+    {
+        try
+        {
+            var psi = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+            };
+
+            // Windows 上 pnpm / npm 是 .cmd 批处理 shim，不能被 CreateProcess 直接加载
+            // （ERROR_BAD_EXE_FORMAT）。经 cmd.exe 转一层即可正常执行。
+            if (OperatingSystem.IsWindows())
+            {
+                psi.FileName = Environment.GetEnvironmentVariable("COMSPEC") ?? "cmd.exe";
+                psi.Arguments = "/c \"" + fileName + "\" " + arguments;
+            }
+
+            using var process = System.Diagnostics.Process.Start(psi);
+            if (process is null) return -1;
+
+            process.WaitForExit();
+            return process.ExitCode;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("启动进程失败: " + ex.Message);
+            return -1;
+        }
+    }
+
     public IEnumerable<Cake.Core.IO.FilePath> GetFiles(string pattern) => Cake.GetFiles(pattern);
+
+    /// <summary>
+    /// 在 PATH 中解析包管理器的可执行文件完整路径；未找到返回 null。
+    /// </summary>
+    /// <remarks>
+    /// 必须返回完整路径而非裸名：Windows 上 pnpm / npm 是 <c>pnpm.cmd</c> / <c>npm.cmd</c> shim，
+    /// <see cref="System.Diagnostics.Process"/> 在 <c>UseShellExecute=false</c> 时
+    /// 不会自行补 <c>.cmd</c> 后缀，裸名会抛「系统找不到指定的文件」。
+    /// 附带返回 <c>.exe</c> / 无扩展名候选以兼容跨平台（Unix 下 pnpm 是无扩展名的可执行文件或 sh 脚本）。
+    /// </remarks>
+    public string? ResolvePackageManager(string name)
+    {
+        var pathVar = System.Environment.GetEnvironmentVariable("PATH");
+        if (string.IsNullOrWhiteSpace(pathVar)) return null;
+
+        // Windows：按 PATHEXT 顺序尝试；Unix：仅无扩展名。
+        var suffixes = OperatingSystem.IsWindows()
+            ? new[] { ".cmd", ".exe", ".bat", "" }
+            : new[] { "" };
+
+        foreach (var dir in pathVar.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            foreach (var suffix in suffixes)
+            {
+                string candidate;
+                try
+                {
+                    candidate = Path.Combine(dir.Trim(), name + suffix);
+                }
+                catch (ArgumentException)
+                {
+                    // PATH 中可能有非法路径片段（如引号残留），跳过即可
+                    continue;
+                }
+
+                if (File.Exists(candidate)) return candidate;
+            }
+        }
+        return null;
+    }
 
     private static string ResolveRepositoryRoot([CallerFilePath] string sourceFilePath = "")
     {
@@ -514,8 +659,12 @@ public class BuildContext
                              ?? "1.0.0";
             var minPluginSdkVersion = doc.Descendants("MinPluginSdkVersion").FirstOrDefault()?.Value ?? "0.0.0";
 
+            // Vite 前端目录：声明了才在打包阶段自动跑前端构建（见 BuildPluginFrontend）。
+            // 其他插件不声明此属性，UiDir 为空，行为与之前完全一致。
+            var uiDir = doc.Descendants("ZitieUiDir").FirstOrDefault()?.Value ?? "";
+
             plugins.Add(new PluginProjectInfo(
-                Path.GetFullPath(csprojFile), projectName, pluginId, pluginName, pluginVersion, pluginAuthor, pluginDescription, minPluginSdkVersion));
+                Path.GetFullPath(csprojFile), projectName, pluginId, pluginName, pluginVersion, pluginAuthor, pluginDescription, minPluginSdkVersion, uiDir));
         }
 
         return plugins.OrderBy(plugin => plugin.ProjectPath, StringComparer.OrdinalIgnoreCase).ToArray();
@@ -660,7 +809,8 @@ public record PluginProjectInfo(
     string PluginVersion,
     string PluginAuthor,
     string PluginDescription,
-    string MinPluginSdkVersion)
+    string MinPluginSdkVersion,
+    string UiDir)
 {
     public string ShortName =>
         ProjectName.StartsWith("LYBox.Plugin.", StringComparison.OrdinalIgnoreCase)

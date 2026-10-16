@@ -12,5 +12,6 @@
         <Project Path="plugins/LYBox.Plugin.ViteSample/LYBox.Plugin.ViteSample.csproj" />
         <Project Path="plugins/LYBox.Plugin.WebTemplate/LYBox.Plugin.WebTemplate.csproj" />
         <Project Path="plugins/LYBox.Plugin.BTSou/LYBox.Plugin.BTSou.csproj" />
+        <Project Path="plugins/LYBox.Plugin.Zitie/LYBox.Plugin.Zitie.csproj" />
     </Folder>
 </Solution>

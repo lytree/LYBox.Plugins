@@ -1,0 +1,28 @@
+{
+  "name": "zitie-offline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "字帖生成器 · 离线版（Vue 3 + TSX 实现）",
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "verify": "node tools/verify-export.mjs",
+    "fetch:strokes": "node tools/fetch-strokes.js"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vue-tsc": "^2.2.0"
+  }
+}

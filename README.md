@@ -147,6 +147,8 @@ $env:LYBOX_SDK_FEED = "F:\Code\Dotnet\AvaloniaTemplate\artifacts\packages\sdk"
 | ViteSample（Vite dev） | `Debug Plugin - ViteSample (Vite dev + C# break)` |
 | ViteSample（WebView prod） | `Debug Plugin - ViteSample (WebView prod)` |
 | WebTemplate | `Debug Plugin - WebTemplate` |
+| 字帖生成器（Vite dev） | `Debug Plugin - Zitie (Vite dev + C# break)` |
+| 字帖生成器（WebView prod） | `Debug Plugin - Zitie (WebView prod)` |
 
 同时提供 `Debug All Plugins` compound（`preLaunchTask=build-all-plugins`，`stopAll=true`）一次性启动全部插件调试。`Attach to LYBox.Launcher.Desktop` 用于附加到已运行的宿主进程。
 
@@ -196,6 +198,26 @@ $env:LYBOX_SDK_FEED = "F:\Code\Dotnet\AvaloniaTemplate\artifacts\packages\sdk"
 完整端到端示例：[`plugins/LYBox.Plugin.ViteSample`](plugins/LYBox.Plugin.ViteSample) —— Vite + TypeScript 双形态联调。
 
 > 原 `LYBox.Plugin.Template` 与 `LYBox.Plugin.WebTemplate` 的可复制模板已迁移到 `templates/`；这些目录**不参与** `build.cs` 打包，也不进 `Plugins.slnx`，开发者复制为自己的插件后即可使用。
+
+### Vite 前端插件
+
+插件 csproj 声明 `<ZitieUiDir>ui</ZitieUiDir>` 后，`build.cs` 会在打包阶段自动执行 `pnpm run build`（PATH 中无 pnpm 时回退 npm），并把 `ui/dist/*` 注入 `wwwroot/`。这样打包产物不会因忘记手动同步前端而缺少 `index.html`。
+
+目录约定：
+
+```
+plugins/LYBox.Plugin.Xxx/
+├── Xxx.csproj            # <PluginKind>Web</PluginKind> + <ZitieUiDir>ui</ZitieUiDir>
+├── wwwroot/              # 构建产物（由 ui/dist 覆盖，勿手改）
+└── ui/                   # Vite 工程，源码唯一副本
+    ├── vite.config.ts    # base:'./' + production 下 alias 切 lybox.prod
+    ├── index.html        # 头部加 <script src="/sdk/lybox-plugin-sdk.js">
+    └── src/lybox{,.dev,.prod}.ts
+```
+
+前端构建失败时 `build.cs` 只告警并沿用现有 `wwwroot/`，不中断其余插件的打包。
+
+参考实现：[`plugins/LYBox.Plugin.Zitie`](plugins/LYBox.Plugin.Zitie)（字帖生成器，Vue 3 + TSX，导出/导入走宿主原生对话框）。
 
 ---
 

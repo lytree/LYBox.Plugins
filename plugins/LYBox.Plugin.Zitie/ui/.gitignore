@@ -1,0 +1,16 @@
+# 依赖与构建产物
+node_modules/
+dist/
+*.tsbuildinfo
+
+# 运行时生成
+.test-downloads/
+
+# 源生成器产物（dotnet build 时写入，随 build 重建）
+.lybox/
+
+# 临时导出样本（仓库根的 yaml 试写文件）
+/after-esc.yaml
+/toolbar.yaml
+/multi.yaml
+/multi2.yaml

@@ -146,6 +146,18 @@
       "problemMatcher": "$msCompile"
     },
     {
+      "label": "build-plugin: Zitie",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.Zitie/LYBox.Plugin.Zitie.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": [],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "build-plugin: WebTemplate",
       "command": "dotnet",
       "type": "process",
@@ -401,6 +413,26 @@
         "-ExecutionPolicy", "Bypass",
         "-File", "${workspaceFolder}/build.ps1",
         "--plugin=LYBox.Plugin.ViteSample",
+        "--configuration=Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "publish-plugin: Zitie",
+      "command": "powershell.exe",
+      "type": "shell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", "${workspaceFolder}/build.ps1",
+        "--plugin=LYBox.Plugin.Zitie",
         "--configuration=Debug"
       ],
       "options": {

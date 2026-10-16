@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:web="clr-namespace:LYBox.Plugin.Shared.Web;assembly=LYBox.Plugin.Shared.Web"
+             xmlns:vm="clr-namespace:LYBox.Plugin.Zitie.ViewModels"
+             x:Class="LYBox.Plugin.Zitie.Pages.ZitiePage"
+             x:DataType="vm:ZitiePageViewModel">
+    <!-- 字帖应用自带工具栏与侧边栏，宿主侧不再叠加控制栏，整块区域交给 WebView。 -->
+    <web:WebPluginView PluginId="{Binding PluginId}" />
+</UserControl>

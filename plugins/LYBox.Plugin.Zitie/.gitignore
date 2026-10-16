@@ -1,0 +1,15 @@
+# 前端构建产物 / 依赖
+ui/node_modules/
+ui/dist/
+ui/.test-downloads/
+ui/.lybox/
+
+# 临时导出样本
+ui/after-esc.yaml
+ui/toolbar.yaml
+ui/multi.yaml
+ui/multi2.yaml
+
+# 构建中间产物由 Directory.Build.props 重定向到 artifacts/，此处兜底
+bin/
+obj/

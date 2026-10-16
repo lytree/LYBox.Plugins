@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    LYBox.Plugin.Zitie
+    字帖生成器 Web 插件（Vue 3 + TSX + Vite）。
+
+    关键设计：
+    - 前端：ui/ 是完整 Vite 工程（Vue3 + vue-jsx + TypeScript），源码唯一副本。
+    - 生产：wwwroot/ 由 ui/dist 构建产物填充（build.ps1 打包前需先 pnpm build，
+            或由 build.cs 的 BuildFrontend 步骤自动触发）。
+    - dev ：LYBOX_VITE_DIR 指向 ui/，启动器拉起 Vite dev server，经同源代理访问宿主 RPC。
+    - 原生能力：导出 PDF/PNG、导入 TXT、打印走 [RpcCommand] → 宿主原生对话框与写盘，
+            不依赖 WebView 的 blob 下载器（后者在 WebView2 中常无落地路径）。
+
+    @version 2.3.0-preview.9   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+
+    <PluginId>5e3f7a21-9c48-4d6b-b1f2-7a8e3c4d5b60</PluginId>
+    <PluginName>字帖生成器</PluginName>
+    <PluginAuthor>lytree</PluginAuthor>
+    <PluginDescription>离线字帖生成器：10 种字帖类型 / 10 种方格 / 笔顺拼音 / 描红，可打印与导出 PDF、PNG。</PluginDescription>
+    <PluginVersion>1.0.0-preview.1</PluginVersion>
+    <Version>$(PluginVersion)</Version>
+    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+
+    <!-- S1/S2：声明 Web 插件类别，构建期写入 plugin.json（kind/web），宿主据此统一注册 wwwroot -->
+    <IsPluginProject>true</IsPluginProject>
+    <PluginKind>Web</PluginKind>
+    <PluginWwwroot>wwwroot</PluginWwwroot>
+    <PluginEntryPage>index.html</PluginEntryPage>
+
+    <!-- 纯前端 + 原生对话框，跨平台可用 -->
+    <PluginSupportedPlatforms>*</PluginSupportedPlatforms>
+
+    <!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载 -->
+    <PluginIconResources>PluginIcons.axaml</PluginIconResources>
+
+    <!-- 前端工程目录（build.cs 读取此属性以定位 ui/ 并执行 pnpm build） -->
+    <ZitieUiDir>ui</ZitieUiDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="PluginIcons.axaml" />
+
+    <!-- wwwroot/ 内的静态资源（index.html / assets / data / vendor）随构建产出，无需显式枚举；
+         build.cs 的 CopyPluginWwwroot 负责把源目录拷进 publish 输出。 -->
+    <None Remove="wwwroot\**" />
+    <None Include="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+    <PackageReference Include="LYBox.Plugin.Shared.Web" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- UI 工程本身不进 dotnet 构建，仅作为 Vite 输入目录存在 -->
+    <Compile Remove="ui\**" />
+    <EmbeddedResource Remove="ui\**" />
+    <AvaloniaResource Remove="ui\**" />
+  </ItemGroup>
+
+</Project>

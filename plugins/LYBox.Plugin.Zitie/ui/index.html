@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>字帖生成器</title>
+    <!--
+      LYBox 宿主嵌入式 SDK：生产由宿主 /sdk/ 直接提供，dev 经 vite proxy 转发。
+      见 LYBox.Plugin.Shared.Web/Assets/lybox-plugin-sdk.js。
+
+      为什么用内联脚本注入，而不是直接写 <script src> / <link>：
+      Vite 构建期会把 index.html 里以 "/" 开头的静态资源当项目内文件解析，
+      直接写会直接构建失败（Failed to resolve /sdk/lybox-plugin-sdk.js）。
+      运行时注入让 Vite 完全忽略这两项，dev 与生产行为一致。
+
+      为什么 SDK 必须是 type="module"：
+      SDK 是 ES Module（文末有 export 语句），以经典脚本加载会抛 SyntaxError，
+      整份脚本不执行、window.LyboxPlugin 永远挂不上（表现为「LYBox SDK 未挂载」）。
+      注入的模块脚本不阻塞首屏，而 window.LyboxPlugin 只在真正发起 RPC 时才被读取，
+      时序上足够；window.__lybox（宿主 ipc.js 注入）则在导航完成时已就绪。
+    -->
+    <script>
+      (function () {
+        var head = document.head;
+
+        // SDK 主题变量（宿主 Fluent 色板 / 间距 / 圆角 / 阴影 + 浅深色自适应）
+        var theme = document.createElement('link');
+        theme.rel = 'stylesheet';
+        theme.href = '/sdk/lybox-plugin-theme.css';
+        head.appendChild(theme);
+
+        var sdk = document.createElement('script');
+        sdk.type = 'module';
+        sdk.src = '/sdk/lybox-plugin-sdk.js';
+        head.appendChild(sdk);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

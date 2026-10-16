@@ -1,0 +1,5 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 字帖生成器：「田」字格造型，呼应核心功能（田字格 / 米字格字帖）。 -->
+    <StreamGeometry x:Key="Plugin.Zitie.Grid">M3 3h18v18H3V3Zm0 0v18M3 12h18M12 3v18</StreamGeometry>
+</ResourceDictionary>
