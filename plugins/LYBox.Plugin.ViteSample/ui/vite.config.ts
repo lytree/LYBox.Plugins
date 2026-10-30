@@ -7,10 +7,10 @@ import { fileURLToPath } from 'node:url';
  *  dev  : Vite dev server (5173) → 同源代理到宿主 (58080)。HMR 全功能联调。
  *  prod : Vite build 产物 dist/ → 拷入插件 wwwroot/。运行时由宿主 /sdk/lybox-plugin-sdk.js 接管。
  *
- * @version 2.3.0-preview.7   ← 与 LYBox/version.props 同步（CI 替换）。
+ * @version 2.4.0-beta.1   ← 与 LYBox/version.props 同步（CI 替换）。
  */
 
-const SDK_VERSION = '2.3.0-preview.7';
+const SDK_VERSION = '2.4.0-beta.1';
 
 // 宿主 WebHostService 地址：与启动器侧 LYBOX_WEB_PORT 保持一致（默认 58080）。
 // Vite 形态：浏览器视角所有请求都来自 5173，绕开宿主无 CORS 响应头的问题。

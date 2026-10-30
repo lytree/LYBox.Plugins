@@ -1,7 +1,7 @@
 /**
  * LYBox.Plugin.ViteSample 前端入口。
  *
- * @version 2.3.0-preview.7   ← 与 LYBox/version.props 同步（CI 替换）。
+ * @version 2.4.0-beta.1   ← 与 LYBox/version.props 同步（CI 替换）。
  *
  * 演示：环境检测 + 强类型 RPC + SSE 事件订阅。
  */

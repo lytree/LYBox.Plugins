@@ -8,7 +8,7 @@
 | PluginName | TDLSharp Plugin |
 | PluginAuthor | TDLSharp |
 | PluginVersion | `1.0.0-preview.1` |
-| MinPluginSdkVersion | `2.0.0` |
+| MinPluginSdkVersion | `2.4.0` |
 | 类型 | 原生 Avalonia 插件（含 TDLib 原生客户端） |
 
 ## 功能

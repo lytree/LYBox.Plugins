@@ -8,7 +8,7 @@ BTSOU 资源搜索插件（精简版）。
 | PluginName | BTSou Search |
 | PluginAuthor | KiongChan |
 | PluginVersion | `1.1.0-preview.1` |
-| MinPluginSdkVersion | `2.0.0` |
+| MinPluginSdkVersion | `2.4.0` |
 | 支持平台 | **仅 Windows**（依赖迅雷 COM 互操作） |
 | 类型 | 原生 Avalonia 插件 |
 

@@ -1,16 +1,18 @@
 /**
  * LYBox.Plugin.ViteSample — 生产构建形态适配层（仅 vite build 引用）。
  *
- * @version 2.3.0-preview.7   ← 与 LYBox/version.props 同步（CI 替换）。
+ * @version 2.4.0-beta.1   ← 与 LYBox/version.props 同步（CI 替换）。
  *
  * 由 vite alias 在 production 模式下把 ./lybox.dev 重写为本文件。
  * 所有运行时方法委托给宿主嵌入式 SDK（window.LyboxPlugin 来自 /sdk/lybox-plugin-sdk.js）。
  * dist/*.js 中不含 lybox.dev / lybox.prod 的实现字节；SDK 由宿主按需加载。
  */
 
+import type { LyboxBridge } from './lybox.dev';
+
 declare const __LYBOX_PLUGIN_ID__: string;
 
-export const SDK_VERSION = '2.3.0-preview.7';
+export const SDK_VERSION = '2.4.0-beta.1';
 export const PLUGIN_ID = __LYBOX_PLUGIN_ID__;
 
 export interface RpcInvokeOptions {
@@ -29,7 +31,7 @@ interface LyboxPublicApi {
 
 declare global {
     interface Window {
-        __lybox?: { rpc: (...args: unknown[]) => Promise<unknown> };
+        __lybox?: LyboxBridge;
         LyboxPlugin?: LyboxPublicApi;
     }
 }

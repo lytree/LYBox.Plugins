@@ -1,7 +1,7 @@
 /**
  * LYBox 宿主桥接 —— 生产构建形态（仅 vite build 引用）。
  *
- * @version 2.3.0-preview.9   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
+ * @version 2.4.0-beta.1   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
  *
  * 由 vite alias 在 production 模式下把 ./lybox.dev 重写为本文件。
  * 所有调用委托给宿主嵌入式 SDK（window.LyboxPlugin，

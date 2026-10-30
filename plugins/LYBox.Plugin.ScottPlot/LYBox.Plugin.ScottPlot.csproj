@@ -11,7 +11,7 @@
 		<PluginDescription>ScottPlot charting and plotting controls demo plugin</PluginDescription>
 		<PluginVersion>1.0.0-preview.2</PluginVersion>
 		<Version>$(PluginVersion)</Version>
-		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+		<MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
 		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
 		<PluginIconResources>PluginIcons.axaml</PluginIconResources>
 	</PropertyGroup>

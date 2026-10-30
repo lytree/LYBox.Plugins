@@ -41,7 +41,7 @@ Linux/macOS 用 `./build.sh` 替代 `.\build.ps1`。
 
 ## 构建与运行
 
-**Cake.Sdk 文件化应用**（`build/build.cs`，Cake.Sdk **6.2.0**）。通过 `.\build.ps1`（Windows）或 `./build.sh`（Linux/macOS）调用。
+**Cake.Sdk 文件化应用**（`build/build.cs`，Cake.Sdk **6.3.0**）。通过 `.\build.ps1`（Windows）或 `./build.sh`（Linux/macOS）调用。
 
 ```powershell
 # 构建并打包所有插件为 zip
@@ -54,7 +54,7 @@ Linux/macOS 用 `./build.sh` 替代 `.\build.ps1`。
 .\build.ps1 --build=plugin --sdk-feed=local --sdk-feed-path=<dir>
 
 # 覆盖 SDK 包版本
-.\build.ps1 --build=plugin --sdk-version=2.3.0
+.\build.ps1 --build=plugin --sdk-version=2.4.0
 
 # 仅构建指定插件（逗号分隔多个）
 .\build.ps1 --build=plugin --plugin=LYBox.Plugin.Template
@@ -174,7 +174,7 @@ $env:LYBOX_SDK_FEED = "F:\Code\Dotnet\AvaloniaTemplate\artifacts\packages\sdk"
     <PluginAuthor>Author</PluginAuthor>
     <PluginDescription>Description</PluginDescription>
     <PluginVersion>1.0.0</PluginVersion>
-    <MinPluginSdkVersion>2.3.0-preview.3</MinPluginSdkVersion>
+    <MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)"

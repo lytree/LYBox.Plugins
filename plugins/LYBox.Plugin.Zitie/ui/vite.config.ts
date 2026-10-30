@@ -10,10 +10,10 @@ import { fileURLToPath, URL } from 'node:url';
  *  prod : Vite build 产物 dist/ → 拷入插件 wwwroot/。
  *         运行时由宿主 /sdk/lybox-plugin-sdk.js 接管。
  *
- * @version 2.3.0-preview.9   ← 与 LYBox.Plugins/version.props 同步。
+ * @version 2.4.0-beta.1   ← 与 LYBox.Plugins/version.props 同步。
  */
 
-const SDK_VERSION = '2.3.0-preview.9';
+const SDK_VERSION = '2.4.0-beta.1';
 
 // 必须与 LYBox.Plugin.Zitie.csproj 的 <PluginId> 一致。
 const PLUGIN_ID = '5e3f7a21-9c48-4d6b-b1f2-7a8e3c4d5b60';
