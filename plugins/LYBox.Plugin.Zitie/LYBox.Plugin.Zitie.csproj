@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!--
     LYBox.Plugin.Zitie
@@ -12,7 +12,7 @@
     - 原生能力：导出 PDF/PNG、导入 TXT、打印走 [RpcCommand] → 宿主原生对话框与写盘，
             不依赖 WebView 的 blob 下载器（后者在 WebView2 中常无落地路径）。
 
-    @version 2.3.0-preview.9   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
+    @version 2.4.0-beta.1   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
   -->
 
   <PropertyGroup>
@@ -27,7 +27,7 @@
     <PluginDescription>离线字帖生成器：10 种字帖类型 / 10 种方格 / 笔顺拼音 / 描红，可打印与导出 PDF、PNG。</PluginDescription>
     <PluginVersion>1.0.0-preview.1</PluginVersion>
     <Version>$(PluginVersion)</Version>
-    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+    <MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
 
     <!-- S1/S2：声明 Web 插件类别，构建期写入 plugin.json（kind/web），宿主据此统一注册 wwwroot -->
     <IsPluginProject>true</IsPluginProject>

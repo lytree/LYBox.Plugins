@@ -8,7 +8,7 @@
 | PluginName | Date & Time Plugin |
 | PluginAuthor | LYBoxPlugin |
 | PluginVersion | `1.0.0-preview.1` |
-| MinPluginSdkVersion | `2.0.0` |
+| MinPluginSdkVersion | `2.4.0` |
 | RootNamespace | `LYBox.Plugin.DateTimeControls` |
 | 类型 | 原生 Avalonia 插件 |
 

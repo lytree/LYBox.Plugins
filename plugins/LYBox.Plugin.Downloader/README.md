@@ -8,7 +8,7 @@
 | PluginName | Downloader Plugin |
 | PluginAuthor | Downloader |
 | PluginVersion | `1.0.0-preview.1` |
-| MinPluginSdkVersion | `2.0.0` |
+| MinPluginSdkVersion | `2.4.0` |
 | 支持平台 | **Windows + Linux**（macOS 未覆盖） |
 | 类型 | 原生 Avalonia 插件（含 5 个主 Tab + 2 个 Dialog） |
 

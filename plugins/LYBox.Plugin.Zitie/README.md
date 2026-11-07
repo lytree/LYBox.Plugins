@@ -2,7 +2,7 @@
 
 **字帖生成器** Web 插件 —— Vue 3 + TSX + Vite 前端，嵌入 LYBox 桌面宿主的 `<web:WebPluginView>`。
 
-@version 2.3.0-preview.9
+@version 2.4.0-beta.1
 
 对标 [z2h.cn](https://z2h.cn) 的离线复刻版：10 种字帖类型、10 种方格、942 字笔顺路径、描红/拼音/A4 排版，可导出 PDF / PNG。
 

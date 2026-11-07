@@ -11,7 +11,7 @@
 		<PluginDescription>Pure C# HLS/DASH/MSS downloader (N_m3u8DL-RE compatible): VOD download, live record, decrypt &amp; mux, tool settings.</PluginDescription>
 		<PluginVersion>1.0.0-preview.2</PluginVersion>
 		<Version>$(PluginVersion)</Version>
-		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+		<MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
 		<!-- Downloader 仅在 Windows + Linux 上验证过；macOS 上抖音/B 站签名路径尚未覆盖，宿主据此跳过加载。
 		     使用 ',' 而不是 ';' 作为分隔符：Roslyn 源生成器从 .editorconfig 读取
 		     MSBuild 属性时会把 ';' 视为段分隔符并截断；',' 在两端均兼容。 -->
@@ -40,9 +40,9 @@
 		     EF Core + SQLite 提供 DbContext / DbSet / LINQ 与 EnsureCreated 迁移，
 		     取代此前的 Microsoft.Data.Sqlite 手写 SQL 实现。
 		     EFCore.Sqlite 依赖 SQLitePCLRaw.bundle_e_sqlite3,因此不再单独引用。 -->
-		<!-- 与 LYBox.Plugin.Shared 传递依赖的 EFCore 10.0.12 对齐,避免 NU1605 包降级。 -->
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
+		<!-- 不低于 LYBox.Plugin.Shared 传递依赖的 EFCore 10.0.12,避免 NU1605 包降级。 -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 	</ItemGroup>
 

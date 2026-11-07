@@ -11,7 +11,7 @@
 		<PluginDescription>Telegram TDLib integration plugin providing batch forward, message export, media download and more.</PluginDescription>
 		<PluginVersion>1.0.0-preview.2</PluginVersion>
 		<Version>$(PluginVersion)</Version>
-		<MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+		<MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
 		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
 		<PluginIconResources>PluginIcons.axaml</PluginIconResources>
 	</PropertyGroup>
@@ -31,12 +31,13 @@
 		<PackageReference Include="TDLib" Version="1.8.*" />
 		<PackageReference Include="TDLib.Api" Version="1.8.*" />
 		<PackageReference Include="tdlib.native" Version="1.8.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
-		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
+		<!-- 保持 2.x 线: EF Core 10.0.14 传递依赖 SQLitePCLRaw 2.1.13,升 3.x 会破坏依赖解析。 -->
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.14" />
 		<!-- ILogger&lt;T&gt; 的 LogInformation / LogWarning / LogError 扩展方法来自本包,
 		     SDK 包(2.3.0+)不再隐式传递,显式声明以兼容 .NET 10 SDK 的 NuGet 解析。 -->
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
 	</ItemGroup>
 
 	<ItemGroup>

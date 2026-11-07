@@ -1,7 +1,7 @@
 /**
  * LYBox.Plugin.ViteSample — Vite dev 形态适配层。
  *
- * @version 2.3.0-preview.7   ← 与 LYBox/version.props 同步（CI 替换）。
+ * @version 2.4.0-beta.1   ← 与 LYBox/version.props 同步（CI 替换）。
  *
  * 本文件实现：Vite dev server 经同源代理访问宿主 WebHostService；
  * 生产构建由 vite alias 整体替换为 ./lybox.prod.ts，运行时透传宿主 window.LyboxPlugin。
@@ -11,7 +11,7 @@
 
 declare const __LYBOX_PLUGIN_ID__: string;
 
-export const SDK_VERSION = '2.3.0-preview.7';
+export const SDK_VERSION = '2.4.0-beta.1';
 
 /** 当前插件 ID（与 csproj <PluginId> 一致）。 */
 export const PLUGIN_ID = __LYBOX_PLUGIN_ID__;

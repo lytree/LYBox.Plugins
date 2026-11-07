@@ -9,7 +9,7 @@
   - `ui/`：Vite + TypeScript 工程，IDE 从生成器 .d.ts 拿完整强类型提示
   - dev 经 Vite 同源代理访问宿主 RPC/SSE；prod dist 拷入 wwwroot 后由宿主 `/sdk/lybox-plugin-sdk.js` 接管
 
-@version 2.3.0-preview.7
+@version 2.4.0-beta.1
 
 ## 快速开始（Vite dev）
 

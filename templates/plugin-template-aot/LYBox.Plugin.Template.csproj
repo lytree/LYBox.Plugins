@@ -23,7 +23,7 @@
     <PluginDescription>Native Avalonia plugin template (CLI greeting + counter demo)</PluginDescription>
     <PluginVersion>1.0.0-preview.1</PluginVersion>
     <Version>$(PluginVersion)</Version>
-    <MinPluginSdkVersion>2.0.0</MinPluginSdkVersion>
+    <MinPluginSdkVersion>2.4.0</MinPluginSdkVersion>
     <IsPluginProject>true</IsPluginProject>
     <GeneratePluginCliIndex>true</GeneratePluginCliIndex>
     <PluginCliAlias>template-aot</PluginCliAlias>

@@ -7,7 +7,7 @@
  *
  * 业务代码统一 `import { ... } from './lybox'`，由 vite alias 在 dev/prod 间自动切换。
  *
- * @version 2.3.0-preview.7   ← 与 LYBox/version.props 同步（CI 替换）。
+ * @version 2.4.0-beta.1   ← 与 LYBox/version.props 同步（CI 替换）。
  */
 
 export {

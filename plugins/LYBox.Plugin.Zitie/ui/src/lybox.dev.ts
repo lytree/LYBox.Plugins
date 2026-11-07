@@ -1,7 +1,7 @@
 /**
  * LYBox 宿主桥接 —— Vite dev 形态。
  *
- * @version 2.3.0-preview.9   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
+ * @version 2.4.0-beta.1   ← 与 LYBox.Plugins/version.props 的 <LyboxVersion> 同步。
  *
  * 浏览器打开 Vite dev server（5178）时，宿主 WebView 并不存在，
  * window.__lybox 也不会注入。此形态改为经同源代理走宿主的 HTTP RPC 桥：
