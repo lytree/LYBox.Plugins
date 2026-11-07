@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+		<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+		<PluginId>6C2E4A18-9D53-4F7B-8E21-3A7C5B9D0F44</PluginId>
+		<PluginName>Serilog Log Viewer</PluginName>
+		<PluginAuthor>LYBoxPlugin</PluginAuthor>
+		<PluginDescription>Viewer for Serilog structured logs (JSON Lines / CLEF): filter, live tail, property search and export</PluginDescription>
+		<PluginVersion>1.0.0-preview.1</PluginVersion>
+		<Version>$(PluginVersion)</Version>
+		<MinPluginSdkVersion>2.3.0</MinPluginSdkVersion>
+		<IsPluginProject>true</IsPluginProject>
+		<!-- 插件自带图标：宿主启动期通过 avares://{AssemblyName}/PluginIcons.axaml 加载并合并到 Application.Resources.MergedDictionaries -->
+		<PluginIconResources>PluginIcons.axaml</PluginIconResources>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\Strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Strings.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="PluginIcons.axaml" />
+	</ItemGroup>
+
+	<!-- 示例日志：Serilog Compact JSON (CLEF) 与 JsonFormatter 输出，随构建复制到输出目录便于直接试用 -->
+	<ItemGroup>
+		<None Include="samples\**\*.jsonl" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LYBox.Plugin.Generators" Version="$(PluginSdkVersion)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<PackageReference Include="LYBox.Plugin.Shared" Version="$(PluginSdkVersion)" PrivateAssets="all" />
+	</ItemGroup>
+
+</Project>

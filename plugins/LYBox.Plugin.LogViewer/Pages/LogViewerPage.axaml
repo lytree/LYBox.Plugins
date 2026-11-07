@@ -1,0 +1,303 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:LYBox.Plugin.LogViewer.ViewModels"
+             xmlns:models="clr-namespace:LYBox.Plugin.LogViewer.Models"
+             xmlns:conv="clr-namespace:LYBox.Plugin.LogViewer.Converters"
+             x:Class="LYBox.Plugin.LogViewer.Pages.LogViewerPage"
+             x:DataType="vm:LogViewerPageViewModel"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720">
+
+    <UserControl.Resources>
+        <conv:LogLevelToBrushConverter x:Key="LevelBrush" />
+        <conv:LogLevelToRowBrushConverter x:Key="LevelRowBrush" />
+        <conv:LogLevelToTextBrushConverter x:Key="LevelTextBrush" />
+        <x:Double x:Key="ColTimeWidth">104</x:Double>
+        <x:Double x:Key="ColLevelWidth">56</x:Double>
+        <x:Double x:Key="ColSourceWidth">120</x:Double>
+        <x:Double x:Key="ColModuleWidth">160</x:Double>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="ToggleButton.chip">
+            <Setter Property="Padding" Value="9,3" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style Selector="ListBoxItem.logRow">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="TextBlock.logCell">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style Selector="TextBlock.caption">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Opacity" Value="0.62" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="14,12,14,10" RowSpacing="8">
+
+        <!-- 工具栏 -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6">
+                <Button Content="{DynamicResource BTN_OpenFiles}" Command="{Binding OpenFilesCommand}"
+                        ToolTip.Tip="{DynamicResource TIP_OpenFiles}" />
+                <Button Content="{DynamicResource BTN_Reload}" Command="{Binding ReloadCommand}" />
+                <Button Content="{DynamicResource BTN_Export}" Command="{Binding ExportCsvCommand}"
+                        ToolTip.Tip="{DynamicResource TIP_Export}" />
+                <Button Content="{DynamicResource BTN_Clear}" Command="{Binding ClearCommand}" />
+                <ToggleButton Content="{DynamicResource BTN_Follow}" IsChecked="{Binding IsFollowing}"
+                              ToolTip.Tip="{DynamicResource TIP_Follow}" Margin="4,0,0,0" />
+            </StackPanel>
+
+            <TextBox Grid.Column="1" Text="{Binding SearchText}" PlaceholderText="{DynamicResource PH_Search}"
+                     VerticalAlignment="Center" MinHeight="30" />
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
+                <ToggleButton Content=".*" IsChecked="{Binding UseRegex}" ToolTip.Tip="{DynamicResource TIP_Regex}"
+                              Width="34" HorizontalContentAlignment="Center" />
+                <ToggleButton Content="Aa" IsChecked="{Binding CaseSensitive}"
+                              ToolTip.Tip="{DynamicResource TIP_CaseSensitive}" Width="34"
+                              HorizontalContentAlignment="Center" />
+                <CheckBox Content="{DynamicResource BTN_AutoScroll}" IsChecked="{Binding AutoScroll}"
+                          VerticalAlignment="Center" />
+                <Button Content="{DynamicResource BTN_Copy}" Click="OnCopyClick" />
+            </StackPanel>
+        </Grid>
+
+        <!-- 级别筛选 -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="6">
+            <TextBlock Text="{DynamicResource LBL_Levels}" Classes="caption" Margin="2,0,4,0" />
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowTrace}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#6E7781" />
+                    <TextBlock Text="{DynamicResource LEVEL_Trace}" />
+                    <TextBlock Text="{Binding TraceCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowDebug}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#8B949E" />
+                    <TextBlock Text="{DynamicResource LEVEL_Debug}" />
+                    <TextBlock Text="{Binding DebugCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowInfo}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#2F81F7" />
+                    <TextBlock Text="{DynamicResource LEVEL_Info}" />
+                    <TextBlock Text="{Binding InfoCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowWarn}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#BF8700" />
+                    <TextBlock Text="{DynamicResource LEVEL_Warn}" />
+                    <TextBlock Text="{Binding WarnCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowError}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#DA3633" />
+                    <TextBlock Text="{DynamicResource LEVEL_Error}" />
+                    <TextBlock Text="{Binding ErrorCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton Classes="chip" IsChecked="{Binding ShowFatal}">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#8250DF" />
+                    <TextBlock Text="{DynamicResource LEVEL_Fatal}" />
+                    <TextBlock Text="{Binding FatalCount}" Opacity="0.55" />
+                </StackPanel>
+            </ToggleButton>
+            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" Width="90" Height="3"
+                         VerticalAlignment="Center" Margin="12,0,0,0" />
+        </StackPanel>
+
+        <!-- 主体：来源列表 / 日志列表 / 详情 -->
+        <Grid Grid.Row="2" ColumnDefinitions="210,6,*,6,Auto" ColumnSpacing="0">
+
+            <Border Grid.Column="0" BorderThickness="1" CornerRadius="8"
+                    BorderBrush="#22808080">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Text="{DynamicResource LBL_Sources}" Classes="caption"
+                               Margin="10,8,10,4" />
+                    <ListBox Grid.Row="1" x:Name="SourceList" ItemsSource="{Binding Sources}"
+                             Background="Transparent" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:LogSource">
+                                <Grid ColumnDefinitions="*,Auto" Margin="2,3">
+                                    <StackPanel Grid.Column="0" Spacing="1">
+                                        <TextBlock Text="{Binding FileName}" FontSize="12"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Classes="caption" TextTrimming="CharacterEllipsis">
+                                            <Run Text="{Binding ParserName}" />
+                                            <Run Text=" · " />
+                                            <Run Text="{Binding SizeDisplay}" />
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding Notice}" FontSize="11" Foreground="#DA3633"
+                                                   TextWrapping="Wrap"
+                                                   IsVisible="{Binding Notice, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="{Binding CountDisplay}" Classes="caption"
+                                               VerticalAlignment="Center" Margin="4,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" Background="Transparent" />
+
+            <Grid Grid.Column="2" RowDefinitions="Auto,*">
+
+                <!-- 列头 -->
+                <Grid Grid.Row="0" ColumnDefinitions="104,56,120,160,*" Height="26" IsVisible="{Binding HasVisibleEntries}" Margin="0,0,8,0">
+                    <TextBlock Grid.Column="0" Text="{DynamicResource COL_Time}" Classes="caption" Margin="6,0" />
+                    <TextBlock Grid.Column="1" Text="{DynamicResource COL_Level}" Classes="caption" Margin="6,0" />
+                    <TextBlock Grid.Column="2" Text="{DynamicResource COL_Source}" Classes="caption" Margin="6,0" />
+                    <TextBlock Grid.Column="3" Text="{DynamicResource COL_Module}" Classes="caption" Margin="6,0" />
+                    <TextBlock Grid.Column="4" Text="{DynamicResource COL_Message}" Classes="caption" Margin="6,0" />
+                </Grid>
+
+                <ListBox x:Name="LogList" Grid.Row="1"
+                         ItemsSource="{Binding VisibleEntries}"
+                         SelectedItem="{Binding SelectedEntry}"
+                         SelectionMode="Multiple"
+                         Background="Transparent" BorderThickness="0"
+                         IsVisible="{Binding HasVisibleEntries}">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="MinHeight" Value="0" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:LogEntry">
+                            <Grid ColumnDefinitions="104,56,120,160,*" Height="23"
+                                  Background="{Binding Level, Converter={StaticResource LevelRowBrush}}">
+                                <TextBlock Grid.Column="0" Classes="logCell" FontSize="12"
+                                           FontFamily="Consolas, Cascadia Mono, Menlo, monospace"
+                                           Text="{Binding TimeDisplay}" />
+                                <Border Grid.Column="1" Background="{Binding Level, Converter={StaticResource LevelBrush}}"
+                                        CornerRadius="3" Padding="5,1" Margin="4,0" Height="16"
+                                        VerticalAlignment="Center" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding LevelText}" FontSize="10" FontWeight="SemiBold"
+                                               Foreground="White" />
+                                </Border>
+                                <TextBlock Grid.Column="2" Classes="logCell" FontSize="12" Opacity="0.8"
+                                           Text="{Binding SourceName}" />
+                                <TextBlock Grid.Column="3" Classes="logCell" FontSize="12" Opacity="0.8"
+                                           Text="{Binding ModuleDisplay}" />
+                                <Grid Grid.Column="4" ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0" Classes="logCell" FontSize="12"
+                                               Text="{Binding Message}" />
+                                    <TextBlock Grid.Column="1" FontSize="11" Opacity="0.5"
+                                               Text="{Binding Template}" VerticalAlignment="Center"
+                                               Margin="0,0,6,0" MaxWidth="280" TextTrimming="CharacterEllipsis"
+                                               IsVisible="{Binding HasTemplate}" />
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- 空状态 -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8"
+                            IsVisible="{Binding !HasVisibleEntries}">
+                    <TextBlock Text="{DynamicResource LBL_NoSources}" Classes="caption"
+                               IsVisible="{Binding !HasSources}" TextAlignment="Center" />
+                    <TextBlock Text="{DynamicResource LBL_NoEntries}" Classes="caption"
+                               IsVisible="{Binding HasSources}" TextAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+            <GridSplitter Grid.Column="3" ResizeDirection="Columns" Background="Transparent" />
+
+            <!-- 详情 -->
+            <Border Grid.Column="4" Width="320" BorderThickness="1" CornerRadius="8"
+                    BorderBrush="#22808080">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Text="{DynamicResource LBL_Details}" Classes="caption"
+                               Margin="10,8,10,4" />
+                    <ScrollViewer Grid.Row="1" Padding="10,0,10,10">
+                        <StackPanel Spacing="8" IsVisible="{Binding HasSelection}">
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="{DynamicResource COL_Time}" Classes="caption" />
+                                <TextBlock Text="{Binding SelectedEntry.TimeDisplay}" FontSize="12"
+                                           FontFamily="Consolas, Cascadia Mono, Menlo, monospace" />
+                            </StackPanel>
+                            <StackPanel Spacing="2" IsVisible="{Binding SelectedEntry.Module, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <TextBlock Text="{DynamicResource COL_Module}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.Module}" FontSize="12"
+                                                     TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="2" IsVisible="{Binding SelectedEntry.Thread, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <TextBlock Text="{DynamicResource COL_Thread}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.Thread}" FontSize="12" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="{DynamicResource COL_Message}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.Message}" FontSize="12"
+                                                     TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="2" IsVisible="{Binding SelectedEntry.HasTemplate}">
+                                <TextBlock Text="{DynamicResource LBL_Template}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.Template}" FontSize="12"
+                                                     FontFamily="Consolas, Cascadia Mono, Menlo, monospace"
+                                                     TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="2"
+                                        IsVisible="{Binding SelectedEntry.EventId, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <TextBlock Text="{DynamicResource LBL_EventId}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.EventId}" FontSize="12" />
+                            </StackPanel>
+                            <StackPanel Spacing="4" IsVisible="{Binding SelectedEntry.HasProperties}">
+                                <TextBlock Text="{DynamicResource LBL_Properties}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.PropertiesText}" FontSize="11"
+                                                     FontFamily="Consolas, Cascadia Mono, Menlo, monospace"
+                                                     TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="2" IsVisible="{Binding SelectedEntry.HasException}">
+                                <TextBlock Text="{DynamicResource LBL_Exception}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.Exception}" FontSize="11"
+                                                     FontFamily="Consolas, Cascadia Mono, Menlo, monospace"
+                                                     TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="{DynamicResource LBL_Raw}" Classes="caption" />
+                                <SelectableTextBlock Text="{Binding SelectedEntry.RawLine}" FontSize="11"
+                                                     FontFamily="Consolas, Cascadia Mono, Menlo, monospace"
+                                                     TextWrapping="Wrap" Opacity="0.75" />
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <TextBlock Grid.Row="1" Text="{DynamicResource LBL_NoSelection}" Classes="caption"
+                               IsVisible="{Binding !HasSelection}" TextAlignment="Center"
+                               VerticalAlignment="Center" Margin="16" TextWrapping="Wrap" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 状态栏 -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
+            <TextBlock Grid.Column="0" Text="{Binding StatusText}" Classes="caption" />
+            <TextBlock Grid.Column="1" Classes="caption">
+                <Run Text="{Binding VisibleCount}" />
+                <Run Text=" / " />
+                <Run Text="{Binding TotalCount}" />
+            </TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

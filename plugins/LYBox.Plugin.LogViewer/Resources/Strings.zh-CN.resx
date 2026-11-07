@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+
+  <data name="NAV_LogViewer" xml:space="preserve"><value>Serilog 结构化日志</value></data>
+  <data name="NAV_LogViewerDesc" xml:space="preserve"><value>解析、过滤并实时跟踪 Serilog 结构化日志</value></data>
+
+  <data name="BTN_OpenFiles" xml:space="preserve"><value>打开日志</value></data>
+  <data name="BTN_Reload" xml:space="preserve"><value>重新加载</value></data>
+  <data name="BTN_Export" xml:space="preserve"><value>导出 CSV</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>清空</value></data>
+  <data name="BTN_Follow" xml:space="preserve"><value>实时跟踪</value></data>
+  <data name="BTN_Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="BTN_RemoveSource" xml:space="preserve"><value>移除</value></data>
+  <data name="BTN_OpenFolder" xml:space="preserve"><value>在文件夹中显示</value></data>
+  <data name="BTN_AutoScroll" xml:space="preserve"><value>自动滚动</value></data>
+
+  <data name="PH_Search" xml:space="preserve"><value>过滤消息（子串 / 正则 / 属性名=值）</value></data>
+  <data name="LBL_Template" xml:space="preserve"><value>消息模板</value></data>
+  <data name="LBL_Properties" xml:space="preserve"><value>结构化属性</value></data>
+  <data name="LBL_EventId" xml:space="preserve"><value>事件 ID</value></data>
+  <data name="TIP_Regex" xml:space="preserve"><value>把过滤条件当作正则表达式</value></data>
+  <data name="TIP_CaseSensitive" xml:space="preserve"><value>区分大小写</value></data>
+  <data name="TIP_OpenFiles" xml:space="preserve"><value>打开一个或多个日志文件</value></data>
+  <data name="TIP_Export" xml:space="preserve"><value>把当前视图导出为 CSV 文件</value></data>
+  <data name="TIP_Follow" xml:space="preserve"><value>持续读取文件新增内容</value></data>
+
+  <data name="LBL_Levels" xml:space="preserve"><value>级别</value></data>
+  <data name="LBL_Sources" xml:space="preserve"><value>来源文件</value></data>
+  <data name="LBL_Details" xml:space="preserve"><value>详情</value></data>
+  <data name="LBL_NoSources" xml:space="preserve"><value>尚未加载日志文件。点「打开日志」或把文件拖进来。</value></data>
+  <data name="LBL_NoEntries" xml:space="preserve"><value>没有符合当前过滤条件的消息。</value></data>
+  <data name="LBL_NoSelection" xml:space="preserve"><value>选中一条消息以查看它的原始内容。</value></data>
+  <data name="LBL_Raw" xml:space="preserve"><value>原始行</value></data>
+  <data name="LBL_Exception" xml:space="preserve"><value>异常 / 堆栈</value></data>
+  <data name="LBL_Format" xml:space="preserve"><value>格式</value></data>
+
+  <data name="COL_Index" xml:space="preserve"><value>#</value></data>
+  <data name="COL_Time" xml:space="preserve"><value>时间</value></data>
+  <data name="COL_Level" xml:space="preserve"><value>级别</value></data>
+  <data name="COL_Source" xml:space="preserve"><value>来源</value></data>
+  <data name="COL_Module" xml:space="preserve"><value>模块</value></data>
+  <data name="COL_Thread" xml:space="preserve"><value>线程</value></data>
+  <data name="COL_Message" xml:space="preserve"><value>消息</value></data>
+
+  <data name="LEVEL_Trace" xml:space="preserve"><value>跟踪</value></data>
+  <data name="LEVEL_Debug" xml:space="preserve"><value>调试</value></data>
+  <data name="LEVEL_Info" xml:space="preserve"><value>信息</value></data>
+  <data name="LEVEL_Warn" xml:space="preserve"><value>警告</value></data>
+  <data name="LEVEL_Error" xml:space="preserve"><value>错误</value></data>
+  <data name="LEVEL_Fatal" xml:space="preserve"><value>致命</value></data>
+  <data name="LEVEL_Unknown" xml:space="preserve"><value>—</value></data>
+
+  <data name="STATUS_Ready" xml:space="preserve"><value>就绪</value></data>
+  <data name="STATUS_Loading" xml:space="preserve"><value>加载中…</value></data>
+  <data name="STATUS_Loaded" xml:space="preserve"><value>已加载 {0} 条消息</value></data>
+  <data name="STATUS_Filtered" xml:space="preserve"><value>{0} / {1} 条消息</value></data>
+  <data name="STATUS_Following" xml:space="preserve"><value>实时跟踪中</value></data>
+
+  <data name="MSG_OpenFailed" xml:space="preserve"><value>打开日志文件失败：{0}</value></data>
+  <data name="MSG_ExportDone" xml:space="preserve"><value>已导出 {0} 条消息到 {1}</value></data>
+  <data name="MSG_ExportFailed" xml:space="preserve"><value>导出失败：{0}</value></data>
+  <data name="MSG_NothingToExport" xml:space="preserve"><value>没有可导出的内容。</value></data>
+  <data name="MSG_InvalidRegex" xml:space="preserve"><value>正则表达式无效：{0}</value></data>
+  <data name="MSG_Copied" xml:space="preserve"><value>已复制 {0} 条消息到剪贴板。</value></data>
+  <data name="MSG_NoStructuredLogs" xml:space="preserve"><value>该文件中未发现 Serilog 结构化日志（需要 JSON Lines / CLEF 格式）。</value></data>
+  <data name="MSG_FileMissing" xml:space="preserve"><value>文件不存在：{0}</value></data>
+</root>

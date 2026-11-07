@@ -144,6 +144,7 @@ $env:LYBOX_SDK_FEED = "F:\Code\Dotnet\AvaloniaTemplate\artifacts\packages\sdk"
 | ScottPlot | `Debug Plugin - ScottPlot` |
 | TDLSharp | `Debug Plugin - TDLSharp` |
 | BTSou | `Debug Plugin - BTSou` |
+| LogViewer | `Debug Plugin - LogViewer` |
 | ViteSample（Vite dev） | `Debug Plugin - ViteSample (Vite dev + C# break)` |
 | ViteSample（WebView prod） | `Debug Plugin - ViteSample (WebView prod)` |
 | WebTemplate | `Debug Plugin - WebTemplate` |

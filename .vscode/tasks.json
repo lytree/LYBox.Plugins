@@ -170,6 +170,18 @@
       "problemMatcher": "$msCompile"
     },
     {
+      "label": "build-plugin: LogViewer",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/plugins/LYBox.Plugin.LogViewer/LYBox.Plugin.LogViewer.csproj",
+        "-c", "Debug"
+      ],
+      "dependsOn": [],
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "build-all-plugins",
       "command": "dotnet",
       "type": "process",

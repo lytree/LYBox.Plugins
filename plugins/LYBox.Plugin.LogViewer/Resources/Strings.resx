@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+
+  <data name="NAV_LogViewer" xml:space="preserve"><value>Serilog Structured Logs</value></data>
+  <data name="NAV_LogViewerDesc" xml:space="preserve"><value>Parse, filter and follow Serilog structured logs</value></data>
+
+  <data name="BTN_OpenFiles" xml:space="preserve"><value>Open Logs</value></data>
+  <data name="BTN_Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="BTN_Export" xml:space="preserve"><value>Export CSV</value></data>
+  <data name="BTN_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="BTN_Follow" xml:space="preserve"><value>Live tail</value></data>
+  <data name="BTN_Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="BTN_RemoveSource" xml:space="preserve"><value>Remove</value></data>
+  <data name="BTN_OpenFolder" xml:space="preserve"><value>Show in folder</value></data>
+  <data name="BTN_AutoScroll" xml:space="preserve"><value>Auto scroll</value></data>
+
+  <data name="PH_Search" xml:space="preserve"><value>Filter messages (substring, regex, or Name=Value)</value></data>
+  <data name="LBL_Template" xml:space="preserve"><value>Message template</value></data>
+  <data name="LBL_Properties" xml:space="preserve"><value>Structured properties</value></data>
+  <data name="LBL_EventId" xml:space="preserve"><value>Event ID</value></data>
+  <data name="TIP_Regex" xml:space="preserve"><value>Treat the filter as a regular expression</value></data>
+  <data name="TIP_CaseSensitive" xml:space="preserve"><value>Match case</value></data>
+  <data name="TIP_OpenFiles" xml:space="preserve"><value>Open one or more log files</value></data>
+  <data name="TIP_Export" xml:space="preserve"><value>Export the current view to a CSV file</value></data>
+  <data name="TIP_Follow" xml:space="preserve"><value>Keep reading new lines appended to the file</value></data>
+
+  <data name="LBL_Levels" xml:space="preserve"><value>Levels</value></data>
+  <data name="LBL_Sources" xml:space="preserve"><value>Sources</value></data>
+  <data name="LBL_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="LBL_NoSources" xml:space="preserve"><value>No log file loaded. Open a file or drop it here.</value></data>
+  <data name="LBL_NoEntries" xml:space="preserve"><value>No messages match the current filter.</value></data>
+  <data name="LBL_NoSelection" xml:space="preserve"><value>Select a message to inspect its raw content.</value></data>
+  <data name="LBL_Raw" xml:space="preserve"><value>Raw line</value></data>
+  <data name="LBL_Exception" xml:space="preserve"><value>Exception / stack trace</value></data>
+  <data name="LBL_Format" xml:space="preserve"><value>Format</value></data>
+
+  <data name="COL_Index" xml:space="preserve"><value>#</value></data>
+  <data name="COL_Time" xml:space="preserve"><value>Time</value></data>
+  <data name="COL_Level" xml:space="preserve"><value>Level</value></data>
+  <data name="COL_Source" xml:space="preserve"><value>Source</value></data>
+  <data name="COL_Module" xml:space="preserve"><value>Module</value></data>
+  <data name="COL_Thread" xml:space="preserve"><value>Thread</value></data>
+  <data name="COL_Message" xml:space="preserve"><value>Message</value></data>
+
+  <data name="LEVEL_Trace" xml:space="preserve"><value>TRACE</value></data>
+  <data name="LEVEL_Debug" xml:space="preserve"><value>DEBUG</value></data>
+  <data name="LEVEL_Info" xml:space="preserve"><value>INFO</value></data>
+  <data name="LEVEL_Warn" xml:space="preserve"><value>WARN</value></data>
+  <data name="LEVEL_Error" xml:space="preserve"><value>ERROR</value></data>
+  <data name="LEVEL_Fatal" xml:space="preserve"><value>FATAL</value></data>
+  <data name="LEVEL_Unknown" xml:space="preserve"><value>—</value></data>
+
+  <data name="STATUS_Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="STATUS_Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="STATUS_Loaded" xml:space="preserve"><value>Loaded {0} messages</value></data>
+  <data name="STATUS_Filtered" xml:space="preserve"><value>{0} / {1} messages</value></data>
+  <data name="STATUS_Following" xml:space="preserve"><value>Live tail active</value></data>
+
+  <data name="MSG_OpenFailed" xml:space="preserve"><value>Failed to open the log file: {0}</value></data>
+  <data name="MSG_ExportDone" xml:space="preserve"><value>Exported {0} messages to {1}</value></data>
+  <data name="MSG_ExportFailed" xml:space="preserve"><value>Export failed: {0}</value></data>
+  <data name="MSG_NothingToExport" xml:space="preserve"><value>Nothing to export.</value></data>
+  <data name="MSG_InvalidRegex" xml:space="preserve"><value>Invalid regular expression: {0}</value></data>
+  <data name="MSG_Copied" xml:space="preserve"><value>Copied {0} message(s) to the clipboard.</value></data>
+  <data name="MSG_NoStructuredLogs" xml:space="preserve"><value>No Serilog structured logs found in this file (expected JSON Lines / CLEF).</value></data>
+  <data name="MSG_FileMissing" xml:space="preserve"><value>File not found: {0}</value></data>
+</root>
