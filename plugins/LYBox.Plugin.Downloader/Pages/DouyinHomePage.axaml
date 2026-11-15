@@ -10,13 +10,11 @@
   <Grid>
     <!-- 底层：主页面（标题栏 + TabControl） -->
     <DockPanel Margin="12">
-      <!-- 顶部：标题 + 登录 / 设置 按钮 -->
+      <!-- 顶部：标题 + 登录 按钮 -->
       <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
-        <Grid ColumnDefinitions="*,Auto,Auto">
+        <Grid ColumnDefinitions="*,Auto">
           <TextBlock Grid.Column="0" Text="{Binding TitleText}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
           <Button Grid.Column="1" Content="{Binding LoginButtonText}" Command="{Binding OpenLoginCommand}" Margin="0,0,8,0"
-                  Theme="{DynamicResource SolidButton}" Classes="Small"/>
-          <Button Grid.Column="2" Content="{Binding SettingsButtonText}" Command="{Binding OpenSettingsCommand}"
                   Theme="{DynamicResource SolidButton}" Classes="Small"/>
         </Grid>
       </Border>
@@ -64,27 +62,6 @@
             </Grid>
           </Border>
           <pages:LoginPage DataContext="{Binding Login}"/>
-        </DockPanel>
-      </Border>
-    </Border>
-
-    <!-- 设置弹窗 -->
-    <Border Background="#80000000"
-            IsVisible="{Binding IsSettingsDialogOpen}"
-            IsHitTestVisible="{Binding IsSettingsDialogOpen}">
-      <Border HorizontalAlignment="Center" VerticalAlignment="Center"
-              Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
-              BorderBrush="{DynamicResource SystemControlForegroundBaseHighBrush}"
-              BorderThickness="1" CornerRadius="8" Padding="0"
-              MinWidth="700" MaxWidth="900" MaxHeight="700">
-        <DockPanel>
-          <Border DockPanel.Dock="Top" Padding="12" BorderBrush="{DynamicResource AppBackgroundBorderBrush}" BorderThickness="0 0 0 1">
-            <Grid ColumnDefinitions="*,Auto">
-              <TextBlock Grid.Column="0" Text="{Binding SettingsDialogTitle}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
-              <Button Grid.Column="1" Content="{Binding CloseButtonText}" Command="{Binding CloseSettingsCommand}" Classes="Small"/>
-            </Grid>
-          </Border>
-          <pages:SettingsPage DataContext="{Binding Settings}"/>
         </DockPanel>
       </Border>
     </Border>

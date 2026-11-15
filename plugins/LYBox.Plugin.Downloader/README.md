@@ -28,7 +28,7 @@
 - 自定义录制时长/分段
 
 ### 抖音子模块（合并自原 `LYBox.Plugin.DouyinDownloader`）
-- 首页聚合页（Submit / Jobs / History / Login / Settings 4 Tab + 2 Dialog）
+- 首页聚合页（Submit / Jobs / History / Account 4 Tab + 登录 Dialog）；抖音设置统一注册到宿主设置页，插件不再自建设置 UI
 - 提交下载（视频/图集解析、签名、Cookie + msToken 管理）
 - 任务管理（队列、状态、重试、并发限速）
 - 历史记录（SQLite）
@@ -41,7 +41,11 @@
 
 ## 设置项
 
-插件在 `RegisterAsync` 中通过 `ISettingsService` 注册设置（分组 `Downloader`）：
+插件在 `RegisterAsync` 中通过 `ISettingsService` 主动注册全部设置项，宿主设置页统一渲染与持久化（SQLite）：
+
+- 分组 `Downloader`：外部二进制路径 / 代理 / 日志级别
+- 分组 `Douyin`：抖音下载目录 / 签名服务 / 并发 / 重试 / 命名模板 / Webhook / 转写 / Web 控制台
+- 分组 `DouyinAdvanced`：历史库路径 / 直播录制参数 / 浏览器兜底参数
 
 | Key | 类型 | 说明 |
 |---|---|---|
@@ -52,6 +56,9 @@
 | `DL.Proxy` | Text | HTTP 代理 |
 | `DL.UseSystemProxy` | Switch | 是否使用系统代理 |
 | `DL.LogLevel` | Text | 日志级别（默认 `INFO`） |
+| `DL.Douyin.*` | Text/Switch/Path | 抖音下载设置（键常量见 `DouyinSettingKeys`） |
+
+历史版本保存在 `Data/{PluginId}/douyin/settings.json`；首次启动自动导入到宿主设置库并重命名为 `settings.json.migrated`。
 
 ## 主要类型
 
@@ -63,7 +70,7 @@
 | `JobsViewModel` | 同上 | 任务页 VM |
 | `HistoryViewModel` | 同上 | 历史页 VM |
 | `LoginViewModel` | 同上 | 登录页 VM |
-| `SettingsViewModel` | 同上 | 设置页 VM |
+| `DouyinSettingsStore` | `LYBox.Plugin.Downloader.Config` | 抖音设置读写（宿主 `ISettingsService`，含旧 JSON 导入） |
 | `LiveRecordViewModel` | 同上 | 直播录制页 VM |
 | `DecryptMuxViewModel` | 同上 | 解密/合并页 VM |
 | `VodDownloadViewModel` | 同上 | VOD 下载页 VM |

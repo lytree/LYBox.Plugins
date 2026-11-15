@@ -36,15 +36,13 @@ public partial class DownloaderPlugin
         services.AddSingleton<DouyinDownloadOrchestrator>();
         services.AddSingleton<DownloadCoordinator>();
 
-        // Home 单页面聚合 4 Tab + 2 Dialog。注册 Home VM 与 5 个子 VM（Home 通过 IServiceProvider 懒加载子 VM）。
+        // Home 单页面聚合 4 Tab + 1 Dialog。注册 Home VM 与 4 个子 VM（Home 通过 IServiceProvider 懒加载子 VM）。
         services.AddSingleton<SubmitViewModel>();
         services.AddSingleton<JobsViewModel>();
         services.AddSingleton<HistoryViewModel>();
         services.AddSingleton<LoginViewModel>();
-        services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<DouyinHomeViewModel>();
 
-        // ================ 原有 Downloader 设置（保留） ================
         return Task.CompletedTask;
     }
 
@@ -86,6 +84,93 @@ public partial class DownloaderPlugin
                 "Downloader", 10, 5, true, PluginId),
             SettingDefinition.Text("DL.LogLevel", Strings.Get("LBL_LogLevel"), null, "",
                 "Downloader", 10, 6, "INFO", PluginId),
+
+            // ================ 抖音下载设置（原插件内自建设置弹窗，现由宿主设置页统一渲染） ================
+            SettingDefinition.Text(DouyinSettingKeys.SignerEndpoint,
+                Strings.Get("LBL_DouyinSignerEndpoint"), Strings.Get("DESC_DouyinSignerEndpoint"),
+                "http://127.0.0.1:8888/sign", DouyinSettingKeys.Group, 11, 0, "", PluginId),
+            SettingDefinition.Path(DouyinSettingKeys.DownloadPath,
+                Strings.Get("LBL_DouyinDownloadPath"), Strings.Get("DESC_DouyinDownloadPath"),
+                DouyinSettingKeys.Group, 11, 1, new DouyinSettings().DownloadPath, PluginId, isFolder: true),
+            SettingDefinition.Text(DouyinSettingKeys.Proxy,
+                Strings.Get("LBL_DouyinProxy"), Strings.Get("DESC_DouyinProxy"),
+                Strings.Get("HINT_Proxy"), DouyinSettingKeys.Group, 11, 2, "", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.Concurrency,
+                Strings.Get("LBL_DouyinConcurrency"), Strings.Get("DESC_DouyinConcurrency"),
+                "5", DouyinSettingKeys.Group, 11, 3,
+                new DouyinSettings().Concurrency.ToString(), PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.RetryTimes,
+                Strings.Get("LBL_DouyinRetryTimes"), Strings.Get("DESC_DouyinRetryTimes"),
+                "3", DouyinSettingKeys.Group, 11, 4,
+                new DouyinSettings().RetryTimes.ToString(), PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.EnableDatabase,
+                Strings.Get("LBL_DouyinEnableDatabase"), Strings.Get("DESC_DouyinEnableDatabase"),
+                DouyinSettingKeys.Group, 11, 5, true, PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.EnableIncremental,
+                Strings.Get("LBL_DouyinEnableIncremental"), Strings.Get("DESC_DouyinEnableIncremental"),
+                DouyinSettingKeys.Group, 11, 6, true, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.FileTemplate,
+                Strings.Get("LBL_DouyinFileTemplate"), Strings.Get("DESC_DouyinFileTemplate"),
+                "{date}_{title}_{id}", DouyinSettingKeys.Group, 11, 7,
+                new DouyinSettings().FileTemplate, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.FolderTemplate,
+                Strings.Get("LBL_DouyinFolderTemplate"), Strings.Get("DESC_DouyinFolderTemplate"),
+                "{date}_{title}_{id}", DouyinSettingKeys.Group, 11, 8,
+                new DouyinSettings().FolderStyle, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.WebhookUrl,
+                Strings.Get("LBL_DouyinWebhookUrl"), Strings.Get("DESC_DouyinWebhookUrl"),
+                "https://example.com/hook", DouyinSettingKeys.Group, 11, 9, "", PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.EnableTranscript,
+                Strings.Get("LBL_DouyinEnableTranscript"), Strings.Get("DESC_DouyinEnableTranscript"),
+                DouyinSettingKeys.Group, 11, 10, false, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.TranscriptApiKey,
+                Strings.Get("LBL_DouyinTranscriptApiKey"), Strings.Get("DESC_DouyinTranscriptApiKey"),
+                "sk-...", DouyinSettingKeys.Group, 11, 11, "", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.TranscriptModel,
+                Strings.Get("LBL_DouyinTranscriptModel"), Strings.Get("DESC_DouyinTranscriptModel"),
+                "gpt-4o-mini-transcribe", DouyinSettingKeys.Group, 11, 12,
+                new DouyinSettings().TranscriptModel, PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.EnableWebConsole,
+                Strings.Get("LBL_DouyinEnableWebConsole"), Strings.Get("DESC_DouyinEnableWebConsole"),
+                DouyinSettingKeys.Group, 11, 13, true, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.WebConsoleHost,
+                Strings.Get("LBL_DouyinWebConsoleHost"), null,
+                "127.0.0.1", DouyinSettingKeys.Group, 11, 14,
+                new DouyinSettings().WebConsoleHost, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.WebConsolePort,
+                Strings.Get("LBL_DouyinWebConsolePort"), null,
+                "8765", DouyinSettingKeys.Group, 11, 15,
+                new DouyinSettings().WebConsolePort.ToString(), PluginId),
+
+            // ================ 抖音下载高级设置（原先只能手工改 settings.json） ================
+            SettingDefinition.Text(DouyinSettingKeys.DatabasePath,
+                Strings.Get("LBL_DouyinDatabasePath"), Strings.Get("DESC_DouyinDatabasePath"),
+                "dy_downloader.db", DouyinSettingKeys.AdvancedGroup, 12, 0,
+                new DouyinSettings().DatabasePath, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.LiveMaxDurationSeconds,
+                Strings.Get("LBL_DouyinLiveMaxDuration"), Strings.Get("DESC_DouyinLiveMaxDuration"),
+                "0", DouyinSettingKeys.AdvancedGroup, 12, 1, "0", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.LiveChunkSize,
+                Strings.Get("LBL_DouyinLiveChunkSize"), Strings.Get("DESC_DouyinLiveChunkSize"),
+                "65536", DouyinSettingKeys.AdvancedGroup, 12, 2, "65536", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.LiveIdleTimeoutSeconds,
+                Strings.Get("LBL_DouyinLiveIdleTimeout"), Strings.Get("DESC_DouyinLiveIdleTimeout"),
+                "30", DouyinSettingKeys.AdvancedGroup, 12, 3, "30", PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.BrowserFallbackEnabled,
+                Strings.Get("LBL_DouyinBrowserFallback"), Strings.Get("DESC_DouyinBrowserFallback"),
+                DouyinSettingKeys.AdvancedGroup, 12, 4, true, PluginId),
+            SettingDefinition.Switch(DouyinSettingKeys.BrowserFallbackHeadless,
+                Strings.Get("LBL_DouyinBrowserHeadless"), Strings.Get("DESC_DouyinBrowserHeadless"),
+                DouyinSettingKeys.AdvancedGroup, 12, 5, false, PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.BrowserFallbackMaxScrolls,
+                Strings.Get("LBL_DouyinBrowserMaxScrolls"), Strings.Get("DESC_DouyinBrowserMaxScrolls"),
+                "240", DouyinSettingKeys.AdvancedGroup, 12, 6, "240", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.BrowserFallbackIdleRounds,
+                Strings.Get("LBL_DouyinBrowserIdleRounds"), Strings.Get("DESC_DouyinBrowserIdleRounds"),
+                "8", DouyinSettingKeys.AdvancedGroup, 12, 7, "8", PluginId),
+            SettingDefinition.Text(DouyinSettingKeys.BrowserFallbackWaitTimeoutSeconds,
+                Strings.Get("LBL_DouyinBrowserWaitTimeout"), Strings.Get("DESC_DouyinBrowserWaitTimeout"),
+                "600", DouyinSettingKeys.AdvancedGroup, 12, 8, "600", PluginId),
         ]);
     }
 }

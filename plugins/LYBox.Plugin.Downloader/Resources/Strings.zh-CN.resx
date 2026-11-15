@@ -127,6 +127,57 @@
   <data name="LBL_Proxy" xml:space="preserve"><value>代理</value></data>
   <data name="LBL_UseSystemProxy" xml:space="preserve"><value>使用系统代理</value></data>
   <data name="LBL_LogLevel" xml:space="preserve"><value>日志级别</value></data>
+  <!-- 抖音下载（宿主设置页分组与条目，由插件注册） -->
+  <data name="GROUP_DOUYIN" xml:space="preserve"><value>抖音下载</value></data>
+  <data name="GROUP_DOUYINADVANCED" xml:space="preserve"><value>抖音下载（高级）</value></data>
+  <data name="LBL_DouyinSignerEndpoint" xml:space="preserve"><value>第三方签名服务</value></data>
+  <data name="LBL_DouyinDownloadPath" xml:space="preserve"><value>下载根目录</value></data>
+  <data name="LBL_DouyinProxy" xml:space="preserve"><value>抖音代理</value></data>
+  <data name="LBL_DouyinConcurrency" xml:space="preserve"><value>并发数</value></data>
+  <data name="LBL_DouyinRetryTimes" xml:space="preserve"><value>失败重试次数</value></data>
+  <data name="LBL_DouyinEnableDatabase" xml:space="preserve"><value>启用 SQLite 历史/去重</value></data>
+  <data name="LBL_DouyinEnableIncremental" xml:space="preserve"><value>增量下载</value></data>
+  <data name="LBL_DouyinFileTemplate" xml:space="preserve"><value>文件命名模板</value></data>
+  <data name="LBL_DouyinFolderTemplate" xml:space="preserve"><value>文件夹模板</value></data>
+  <data name="LBL_DouyinWebhookUrl" xml:space="preserve"><value>完成回调地址</value></data>
+  <data name="LBL_DouyinEnableTranscript" xml:space="preserve"><value>启用视频转写</value></data>
+  <data name="LBL_DouyinTranscriptApiKey" xml:space="preserve"><value>OpenAI API Key</value></data>
+  <data name="LBL_DouyinTranscriptModel" xml:space="preserve"><value>转写模型</value></data>
+  <data name="LBL_DouyinEnableWebConsole" xml:space="preserve"><value>启用内置 Web 控制台</value></data>
+  <data name="LBL_DouyinWebConsoleHost" xml:space="preserve"><value>Web 控制台 Host</value></data>
+  <data name="LBL_DouyinWebConsolePort" xml:space="preserve"><value>Web 控制台 Port</value></data>
+  <data name="LBL_DouyinDatabasePath" xml:space="preserve"><value>历史数据库路径</value></data>
+  <data name="LBL_DouyinLiveMaxDuration" xml:space="preserve"><value>直播最长录制（秒）</value></data>
+  <data name="LBL_DouyinLiveChunkSize" xml:space="preserve"><value>直播分片大小（字节）</value></data>
+  <data name="LBL_DouyinLiveIdleTimeout" xml:space="preserve"><value>直播空闲超时（秒）</value></data>
+  <data name="LBL_DouyinBrowserFallback" xml:space="preserve"><value>启用浏览器兜底</value></data>
+  <data name="LBL_DouyinBrowserHeadless" xml:space="preserve"><value>浏览器无头模式</value></data>
+  <data name="LBL_DouyinBrowserMaxScrolls" xml:space="preserve"><value>浏览器最大滚动次数</value></data>
+  <data name="LBL_DouyinBrowserIdleRounds" xml:space="preserve"><value>浏览器空闲轮次</value></data>
+  <data name="LBL_DouyinBrowserWaitTimeout" xml:space="preserve"><value>浏览器等待超时（秒）</value></data>
+  <data name="DESC_DouyinSignerEndpoint" xml:space="preserve"><value>留空使用本地 X-Bogus 算法。</value></data>
+  <data name="DESC_DouyinDownloadPath" xml:space="preserve"><value>抖音作品的保存根目录，相对路径基于插件数据目录。</value></data>
+  <data name="DESC_DouyinProxy" xml:space="preserve"><value>http://host:port 或 socks5://host:port。</value></data>
+  <data name="DESC_DouyinConcurrency" xml:space="preserve"><value>同时下载的任务数（1-32）。</value></data>
+  <data name="DESC_DouyinRetryTimes" xml:space="preserve"><value>单个文件下载失败后的重试次数（0-10）。</value></data>
+  <data name="DESC_DouyinEnableDatabase" xml:space="preserve"><value>记录下载历史并按作品去重。</value></data>
+  <data name="DESC_DouyinEnableIncremental" xml:space="preserve"><value>仅对 post/like/mix/music 生效。</value></data>
+  <data name="DESC_DouyinFileTemplate" xml:space="preserve"><value>默认 {date}_{title}_{id}。</value></data>
+  <data name="DESC_DouyinFolderTemplate" xml:space="preserve"><value>默认 {date}_{title}_{id}。</value></data>
+  <data name="DESC_DouyinWebhookUrl" xml:space="preserve"><value>下载完成后 POST JSON 回调地址。</value></data>
+  <data name="DESC_DouyinEnableTranscript" xml:space="preserve"><value>使用 OpenAI Whisper 兼容接口转写视频。</value></data>
+  <data name="DESC_DouyinTranscriptApiKey" xml:space="preserve"><value>转写服务的 API Key。</value></data>
+  <data name="DESC_DouyinTranscriptModel" xml:space="preserve"><value>转写模型名称。</value></data>
+  <data name="DESC_DouyinEnableWebConsole" xml:space="preserve"><value>启动后提供内置 Web 控制台。</value></data>
+  <data name="DESC_DouyinDatabasePath" xml:space="preserve"><value>留空使用 douyin 目录下的 dy_downloader.db。</value></data>
+  <data name="DESC_DouyinLiveMaxDuration" xml:space="preserve"><value>0 表示一直录到主播下播。</value></data>
+  <data name="DESC_DouyinLiveChunkSize" xml:space="preserve"><value>直播录制分片大小，默认 65536。</value></data>
+  <data name="DESC_DouyinLiveIdleTimeout" xml:space="preserve"><value>直播流空闲多久后结束录制。</value></data>
+  <data name="DESC_DouyinBrowserFallback" xml:space="preserve"><value>接口失败时用 Playwright 打开浏览器兜底采集。</value></data>
+  <data name="DESC_DouyinBrowserHeadless" xml:space="preserve"><value>兜底浏览器是否无头运行。</value></data>
+  <data name="DESC_DouyinBrowserMaxScrolls" xml:space="preserve"><value>兜底采集时的最大滚动次数。</value></data>
+  <data name="DESC_DouyinBrowserIdleRounds" xml:space="preserve"><value>连续无新内容的轮次后停止滚动。</value></data>
+  <data name="DESC_DouyinBrowserWaitTimeout" xml:space="preserve"><value>等待人工验证的最长秒数。</value></data>
   <!-- 字段描述 -->
   <data name="DESC_AutoSelect" xml:space="preserve"><value>未设置过滤条件时自动选择最佳流。</value></data>
   <data name="DESC_SubOnly" xml:space="preserve"><value>仅下载字幕，跳过视频/音频。</value></data>

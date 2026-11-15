@@ -127,6 +127,57 @@
   <data name="LBL_Proxy" xml:space="preserve"><value>Proxy</value></data>
   <data name="LBL_UseSystemProxy" xml:space="preserve"><value>Use System Proxy</value></data>
   <data name="LBL_LogLevel" xml:space="preserve"><value>Log Level</value></data>
+  <!-- 抖音下载（宿主设置页分组与条目，由插件注册） -->
+  <data name="GROUP_DOUYIN" xml:space="preserve"><value>Douyin Download</value></data>
+  <data name="GROUP_DOUYINADVANCED" xml:space="preserve"><value>Douyin Download (Advanced)</value></data>
+  <data name="LBL_DouyinSignerEndpoint" xml:space="preserve"><value>Third-party Signing Service</value></data>
+  <data name="LBL_DouyinDownloadPath" xml:space="preserve"><value>Download Root</value></data>
+  <data name="LBL_DouyinProxy" xml:space="preserve"><value>Douyin Proxy</value></data>
+  <data name="LBL_DouyinConcurrency" xml:space="preserve"><value>Concurrency</value></data>
+  <data name="LBL_DouyinRetryTimes" xml:space="preserve"><value>Retry Count</value></data>
+  <data name="LBL_DouyinEnableDatabase" xml:space="preserve"><value>Enable SQLite History &amp; Dedup</value></data>
+  <data name="LBL_DouyinEnableIncremental" xml:space="preserve"><value>Incremental Download</value></data>
+  <data name="LBL_DouyinFileTemplate" xml:space="preserve"><value>File Name Template</value></data>
+  <data name="LBL_DouyinFolderTemplate" xml:space="preserve"><value>Folder Template</value></data>
+  <data name="LBL_DouyinWebhookUrl" xml:space="preserve"><value>Completion Webhook</value></data>
+  <data name="LBL_DouyinEnableTranscript" xml:space="preserve"><value>Enable Transcription</value></data>
+  <data name="LBL_DouyinTranscriptApiKey" xml:space="preserve"><value>OpenAI API Key</value></data>
+  <data name="LBL_DouyinTranscriptModel" xml:space="preserve"><value>Transcription Model</value></data>
+  <data name="LBL_DouyinEnableWebConsole" xml:space="preserve"><value>Enable Web Console</value></data>
+  <data name="LBL_DouyinWebConsoleHost" xml:space="preserve"><value>Web Console Host</value></data>
+  <data name="LBL_DouyinWebConsolePort" xml:space="preserve"><value>Web Console Port</value></data>
+  <data name="LBL_DouyinDatabasePath" xml:space="preserve"><value>History Database Path</value></data>
+  <data name="LBL_DouyinLiveMaxDuration" xml:space="preserve"><value>Max Live Duration (s)</value></data>
+  <data name="LBL_DouyinLiveChunkSize" xml:space="preserve"><value>Live Chunk Size (bytes)</value></data>
+  <data name="LBL_DouyinLiveIdleTimeout" xml:space="preserve"><value>Live Idle Timeout (s)</value></data>
+  <data name="LBL_DouyinBrowserFallback" xml:space="preserve"><value>Enable Browser Fallback</value></data>
+  <data name="LBL_DouyinBrowserHeadless" xml:space="preserve"><value>Headless Browser</value></data>
+  <data name="LBL_DouyinBrowserMaxScrolls" xml:space="preserve"><value>Max Scrolls</value></data>
+  <data name="LBL_DouyinBrowserIdleRounds" xml:space="preserve"><value>Idle Rounds</value></data>
+  <data name="LBL_DouyinBrowserWaitTimeout" xml:space="preserve"><value>Wait Timeout (s)</value></data>
+  <data name="DESC_DouyinSignerEndpoint" xml:space="preserve"><value>Leave empty to use the local X-Bogus algorithm.</value></data>
+  <data name="DESC_DouyinDownloadPath" xml:space="preserve"><value>Root folder for Douyin downloads; relative paths resolve against the plugin data directory.</value></data>
+  <data name="DESC_DouyinProxy" xml:space="preserve"><value>http://host:port or socks5://host:port.</value></data>
+  <data name="DESC_DouyinConcurrency" xml:space="preserve"><value>Number of concurrent downloads (1-32).</value></data>
+  <data name="DESC_DouyinRetryTimes" xml:space="preserve"><value>Retry attempts after a failed file download (0-10).</value></data>
+  <data name="DESC_DouyinEnableDatabase" xml:space="preserve"><value>Record download history and deduplicate by item.</value></data>
+  <data name="DESC_DouyinEnableIncremental" xml:space="preserve"><value>Only applies to post/like/mix/music.</value></data>
+  <data name="DESC_DouyinFileTemplate" xml:space="preserve"><value>Default: {date}_{title}_{id}.</value></data>
+  <data name="DESC_DouyinFolderTemplate" xml:space="preserve"><value>Default: {date}_{title}_{id}.</value></data>
+  <data name="DESC_DouyinWebhookUrl" xml:space="preserve"><value>POST JSON callback invoked after a download completes.</value></data>
+  <data name="DESC_DouyinEnableTranscript" xml:space="preserve"><value>Transcribe videos through an OpenAI Whisper compatible API.</value></data>
+  <data name="DESC_DouyinTranscriptApiKey" xml:space="preserve"><value>API key for the transcription service.</value></data>
+  <data name="DESC_DouyinTranscriptModel" xml:space="preserve"><value>Transcription model name.</value></data>
+  <data name="DESC_DouyinEnableWebConsole" xml:space="preserve"><value>Start the built-in web console after launch.</value></data>
+  <data name="DESC_DouyinDatabasePath" xml:space="preserve"><value>Leave empty to use dy_downloader.db in the douyin folder.</value></data>
+  <data name="DESC_DouyinLiveMaxDuration" xml:space="preserve"><value>0 means record until the streamer goes offline.</value></data>
+  <data name="DESC_DouyinLiveChunkSize" xml:space="preserve"><value>Segment size for live recording, default 65536.</value></data>
+  <data name="DESC_DouyinLiveIdleTimeout" xml:space="preserve"><value>Stop recording after the stream stays idle for this long.</value></data>
+  <data name="DESC_DouyinBrowserFallback" xml:space="preserve"><value>Fall back to Playwright browser capture when the API fails.</value></data>
+  <data name="DESC_DouyinBrowserHeadless" xml:space="preserve"><value>Run the fallback browser headless.</value></data>
+  <data name="DESC_DouyinBrowserMaxScrolls" xml:space="preserve"><value>Maximum scroll count during fallback capture.</value></data>
+  <data name="DESC_DouyinBrowserIdleRounds" xml:space="preserve"><value>Stop scrolling after this many rounds without new items.</value></data>
+  <data name="DESC_DouyinBrowserWaitTimeout" xml:space="preserve"><value>Maximum seconds to wait for manual verification.</value></data>
   <!-- 字段描述 -->
   <data name="DESC_AutoSelect" xml:space="preserve"><value>Select best stream automatically when no filter set.</value></data>
   <data name="DESC_SubOnly" xml:space="preserve"><value>Download subtitles only, skip video/audio.</value></data>

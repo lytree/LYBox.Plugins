@@ -197,9 +197,10 @@ public sealed class WebConsoleServer : IDisposable
                     var patch = JsonSerializer.Deserialize<DouyinSettings>(body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                     if (patch != null)
                     {
+                        var current = _settings.Current;
                         foreach (var p in typeof(DouyinSettings).GetProperties())
-                            if (p.CanWrite) p.SetValue(_settings.Current, p.GetValue(patch) ?? p.GetValue(_settings.Current));
-                        _settings.Save();
+                            if (p.CanWrite) p.SetValue(current, p.GetValue(patch) ?? p.GetValue(current));
+                        _settings.Save(current);
                     }
                     WriteJson(ctx, 200, _settings.Current);
                     return;
