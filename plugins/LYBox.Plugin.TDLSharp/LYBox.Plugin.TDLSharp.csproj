@@ -31,13 +31,13 @@
 		<PackageReference Include="TDLib" Version="1.8.*" />
 		<PackageReference Include="TDLib.Api" Version="1.8.*" />
 		<PackageReference Include="tdlib.native" Version="1.8.*" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
-		<!-- 保持 2.x 线: EF Core 10.0.14 传递依赖 SQLitePCLRaw 2.1.13,升 3.x 会破坏依赖解析。 -->
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.15" />
+		<!-- 保持 2.x 线: EF Core 10.0.15 传递依赖 SQLitePCLRaw 2.1.13,升 3.x 会破坏依赖解析。 -->
 		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.14" />
 		<!-- ILogger&lt;T&gt; 的 LogInformation / LogWarning / LogError 扩展方法来自本包,
 		     SDK 包(2.3.0+)不再隐式传递,显式声明以兼容 .NET 10 SDK 的 NuGet 解析。 -->
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
 	</ItemGroup>
 
 	<ItemGroup>
